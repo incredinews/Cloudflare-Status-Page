@@ -70,7 +70,7 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     const requestTime = Math.round(performance.now() - requestStartTime)
 
     // Determine whether operational and status changed
-    const monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
+    let monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
     // const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
 
     // Save monitor's last check response status
