@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .yarn
-#          key: ${{ steps.get-machine.outputs.machine }}-yarn_poller-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
+         #key: ${{ steps.get-machine.outputs.machine }}-yarn_poller-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
           key: ${{ steps.get-machine.outputs.machine }}-yarn_poller-${{ steps.get-code-cachekey.outputs.codecachekey }}
       - run: yarn build
         working-directory: poller

@@ -36,7 +36,7 @@ export default {
     //  console.log("fetch_hander_prcoc")
     //  event.waitUntil(processCronTrigger(event))
     //}));
-    await processCronTrigger(request)
+    await processCronTrigger(event)
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")
