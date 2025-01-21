@@ -36,6 +36,11 @@ export default {
       event.waitUntil(processCronTrigger(event))
     }));
   },
-
+  async fetch(request, env, ctx) {
+    ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
+      event.waitUntil(processCronTrigger(event))
+    }));
+    return new Response('DONE');
+  },
 }
 
