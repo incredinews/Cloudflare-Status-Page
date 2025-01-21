@@ -192,7 +192,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   // Save monitorMonth to KV storage
   console.log("KV_write_1")
-  await setKVMonitors(env,checkDay.slice(0, 7), monitorMonth)
+  await setKVMonitors(namespace,checkDay.slice(0, 7), monitorMonth)
 
   return new Response('OK')
 }

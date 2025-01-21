@@ -12,10 +12,12 @@ export async function setKVMonitors(env,key: string, data: any) {
   return setKV(env,key, JSON.stringify(data))
 }
 
-export async function setKV(env,key: string, value: string, metadata?: any | null, expirationTtl?: number) {
+export async function setKV(namespace: KVNamespace,key: string, value: string, metadata?: any | null, expirationTtl?: number) {
+
   //@ts-ignore
   //return (KV_STATUS_PAGE as KVNamespace).put(key, value, { metadata, expirationTtl })
-  return this.env.KV_STATUS_PAGE.put(key, value, { metadata, expirationTtl })
+  //return this.env.KV_STATUS_PAGE.put(key, value, { metadata, expirationTtl })
+  return namespace.put(key, value, { metadata, expirationTtl })
 
 }
 
