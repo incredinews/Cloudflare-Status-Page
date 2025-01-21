@@ -49,13 +49,14 @@ export async function processCronTrigger(_event: ScheduledEvent) {
       [index: string]: number | null
     }
   } = { t: now, l: checkLocation, ms: {} }
-
+  let counter=0;
+  let monitorCount=config.monitors.length
   for (const monitor of config.monitors) {
     let displayname = monitor.name || monitor.id;
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
     let timediff=monitorMonth.lastCheck-now
-    console.log(`Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
+    console.log(` [ ${counter} / ${monitorCount}  ]  Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
     // Fetch the monitors URL
     const init: Parameters<typeof fetch>[1] = {
       method: monitor.method || 'GET',
@@ -122,6 +123,7 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     //   const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
     //   monitorMonth.monitors[monitor.id].checks[checkDay].incidents.push(incidentNumber)
     // }
+  counter=counter+1
   }
 
   monitorMonth.checks[checkDay].res.push(res)
