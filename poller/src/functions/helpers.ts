@@ -1,8 +1,10 @@
-export async function getKVMonitors(key: string): Promise<any> {
+export async function getKVMonitors( namespace: KVNamespace, key: string): Promise<any> {
   // trying both to see performance difference
   //@ts-ignore
   //return (KV_STATUS_PAGE as KVNamespace).get(key, 'json')
-  return this.env.KV_STATUS_PAGE.get(key, 'json')
+  //return this.env.KV_STATUS_PAGE.get(key, 'json')
+  return namespace.get(key, 'json')
+
   //return JSON.parse(await KV_STATUS_PAGE.get(kvDataKey, 'text'))
 }
 

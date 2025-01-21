@@ -12,7 +12,7 @@ function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
 
-export async function processCronTrigger(env , trigger, event: ScheduledEvent) {
+export async function processCronTrigger(namespace: KVNamespace, trigger, event: ScheduledEvent) {
   console.log("cron_function_init "+trigger)
   // Get Worker PoP and save it to monitorMonthMetadata
   const checkLocation = await getCheckLocation()
@@ -21,12 +21,12 @@ export async function processCronTrigger(env , trigger, event: ScheduledEvent) {
   const preset_debounce = config.debounce || 345 
   // Get monitors state from KV
   console.log("KV_read_1")
-  let monitorMonth: MonitorMonth = await getKVMonitors(this.env,checkDay.slice(0, 7))
+  let monitorMonth: MonitorMonth = await getKVMonitors(namespace,checkDay.slice(0, 7))
   // Create empty state objects if not exists in KV storage yet
   if (!monitorMonth) {
     const lastDay = getDate(now - 86400000)
     console.log("KV_read_2")
-    const lastMonitorMonth: MonitorMonth = await getKVMonitors(lastDay.slice(0, 7))
+    const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastDay.slice(0, 7))
 
     monitorMonth = {
       lastCheck: now,
