@@ -22,7 +22,9 @@
       "url": "https://bbc.co.uk",
       "method": "GET",
       "expectStatus": 200,
-      "followRedirect": true
+      "followRedirect": true,
+      "matchText": "BBC"
+
     },
     {
       "id": "cnn",
