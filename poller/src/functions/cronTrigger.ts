@@ -17,7 +17,7 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   const checkLocation = await getCheckLocation()
   const now = Date.now()
   const checkDay = getDate(now)
-
+  const debounce = config.debounce || 300 
   // Get monitors state from KV
   let monitorMonth: MonitorMonth = await getKVMonitors(checkDay.slice(0, 7))
   // Create empty state objects if not exists in KV storage yet
@@ -55,8 +55,15 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     let displayname = monitor.name || monitor.id;
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
-    let timediff=monitorMonth.lastCheck-now
+    let timediff=now-monitorMonth.lastCheck
+    const timesec=timediff/1000
     console.log(` [ ${counter} / ${monitorCount}  ]  Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
+
+
+    if( timesec > debounce  ) {
+     
+  // end timediff
+  ]} 
     // Fetch the monitors URL
     const init: Parameters<typeof fetch>[1] = {
       method: monitor.method || 'GET',
