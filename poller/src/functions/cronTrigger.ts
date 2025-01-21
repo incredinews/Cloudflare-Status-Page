@@ -90,7 +90,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       reasons=reasons+" "
     }
     if (do_request) {
-      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
+      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timesec}`)
       let monitorOperational=false
     let parserFound=false
     let requestTime = -2
@@ -110,6 +110,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       const checkResponse = await fetch(monitor.url, init)
       requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
+      monitorMonth.lastFetched[monitor.id]=localnow
       // Determine whether operational and status changed
       monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
       // const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
