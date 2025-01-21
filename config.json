@@ -473,7 +473,7 @@
     "url": "https://rt.com",
     "method": "GET",
     "expectStatus": 200,
-    "followRedirect": true
+    "followRedirect": true,
     "debounce": 3600
     },
     {
