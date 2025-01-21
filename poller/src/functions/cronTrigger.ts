@@ -59,8 +59,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   let sentRequests=1;
   let monitorCount=config.monitors.length
   for (const monitor of config.monitors) {
-    console.error("start_mon")
-    console.log(JSON.stringify(monitor))
+    //console.error("start_mon")
+    //console.log(JSON.stringify(monitor))
     const localnow=Date.now()
     const realdebounce=monitor.debounce||preset_debounce
     let displayname = monitor.name || monitor.id;
