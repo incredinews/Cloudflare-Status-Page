@@ -147,7 +147,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
       requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
-
+      monitorMonth.lastFetched[monitor.id]=localnow
     }
     if (do_request && config.settings.collectResponseTimes && monitorOperational) {
       // make sure location exists in current checkDay
