@@ -7,7 +7,7 @@ export async function getKVMonitors(env,key: string): Promise<any> {
 }
 
 export async function setKVMonitors(env,key: string, data: any) {
-  return setKV(key, JSON.stringify(data))
+  return setKV(env,key, JSON.stringify(data))
 }
 
 export async function setKV(env,key: string, value: string, metadata?: any | null, expirationTtl?: number) {
