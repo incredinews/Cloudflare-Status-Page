@@ -7,6 +7,7 @@ on:
     paths:
       - "poller/**"
       - ".github/workflows/deployPoller.yml"
+      - "config.json"
   repository_dispatch:
 
 jobs:

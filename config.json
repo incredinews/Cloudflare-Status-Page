@@ -2,7 +2,7 @@
   "settings": {
     "title": "Incredinews Status",
     "url": "https://infinews-uptime.pages.dev",
-    "description": "infinwes observatiorium showing historical status and performane information.",
+    "description": "infinews observatiorium showing historical status and performane information.",
     "logo": "logo-192x192.png",
     "collectResponseTimes": true,
     "allmonitorsOperational": "OK: All Systems Operational",
@@ -32,6 +32,106 @@
       "method": "GET",
       "expectStatus": 200,
       "followRedirect": false
-    }
+    },
+    {
+      "id": "news_google_com",
+      "name": null,
+      "description": "Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News.",
+      "url": "https://news.google.com/home?hl=en-US&gl=US&ceid=US:en&ucbcb=1",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+      "id": "abcnews_go_com",
+      "name": "ABC News",
+      "description": "Your trusted source for breaking news, analysis, exclusive interviews, headlines, and videos at ABCNews.com",
+      "url": "https://abcnews.go.com",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+      "id": "cbsnews_com",
+      "name": "CBS News",
+      "description": "CBS News offers breaking news coverage of today&#039;s top headlines. Stay informed on the biggest new stories with our balanced, trustworthy reporting.",
+      "url": "https://www.cbsnews.com/",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+      "id": "euronews_com",
+      "name": "Euronews.com",
+      "description": "Latest breaking news available as free video on demand. Stay informed on European and world news about economy, politics, diplomacy… with Euronews.",
+      "url": "https://www.euronews.com:443/",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  
+  {
+      "id": "nbcnews_com",
+      "name": null,
+      "description": "Go to NBCNews.com for breaking news, videos, and the latest top stories in world news, business, politics, health and pop culture.",
+      "url": "https://www.nbcnews.com",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+      "id": "news_com_au",
+      "name": null,
+      "description": null,
+      "url": "https://news.com.au",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+      "id": "newsweek_com",
+      "name": "Newsweek",
+      "description": "Newsweek provides in-depth analysis, news and opinion about international issues, technology, business, culture and politics.",
+      "url": "https://www.newsweek.com/",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+      "id": "usnews_com",
+      "name": "US news",
+      "description": "",
+      "url": "https://usnews.com",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+      "id": "wn_com",
+      "name": "World News",
+      "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
+      "url": "https://wn.com",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  },
+  {
+    "id": "newstral.com",
+    "name": "Newstral / dnnd.de German News Aggregator",
+    "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
+    "url": "https://wn.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+  },
+  {
+      "id": "foxnews_com",
+      "name": "Fox News - Breaking News Updates | Latest News Headlines | Photos & News Videos",
+      "description": "Breaking News, Latest News and Current News from FOXNews.com. Breaking news and video. Latest Current News: U.S., World, Entertainment, Health, Business, Technology, Politics, Sports.",
+      "url": "https://www.foxnews.com/",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true
+  }
   ]
 }
