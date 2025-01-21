@@ -57,6 +57,7 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   // the first went to fetch kv
   let sentRequests=1;
   let monitorCount=config.monitors.length
+  console.log("starting")
   for (const monitor of config.monitors) {
     const localnow=Date.now()
     let displayname = monitor.name || monitor.id;
