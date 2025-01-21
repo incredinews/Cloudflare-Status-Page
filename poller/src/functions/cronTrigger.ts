@@ -93,7 +93,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
       let monitorOperational=false
     let parserFound=false
-    let requestTime = 99999
+    let requestTime = -2
     if(monitor.url.includes("http://")||monitor.url.includes("https://")) {
         parserFound=true
               // Fetch the monitors URL
