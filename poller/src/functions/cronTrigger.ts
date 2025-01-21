@@ -54,7 +54,8 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     }
   } = { t: now, l: checkLocation, ms: {} }
   let counter=0;
-  let sentRequests=0;
+  // the first went to fetch kv
+  let sentRequests=1;
   let monitorCount=config.monitors.length
   for (const monitor of config.monitors) {
     const localnow=Date.now()
@@ -86,38 +87,61 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     }
     if (do_request) {
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
-      // Fetch the monitors URL
-    const init: Parameters<typeof fetch>[1] = {
-      method: monitor.method || 'GET',
-      redirect: monitor.followRedirect ? 'follow' : 'manual',
-      headers: {
-        //@ts-expect-error
-        'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
-      },
-    }
-    // Perform a check and measure time
-    const requestStartTime = performance.now()
-    const checkResponse = await fetch(monitor.url, init)
-    const requestTime = Math.round(performance.now() - requestStartTime)
-    sentRequests=sentRequests+1
-    // Determine whether operational and status changed
-    let monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
-    // const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
-
-    // Save monitor's last check response status
-    monitorMonth.operational[monitor.id] = monitorOperational;
-    //check for full text
-    if (monitor.matchText && monitorOperational) {
-      //const results = await gatherResponse(checkResponse)
-      let mytxt=await checkResponse.text();
-      if( mytxt.includes(monitor.matchText)  ) { 
-        monitorMonth.operational[monitor.id] = true;
-        monitorOperational = true;
-      } else {
-        console.log("STR NOT FOUND "+monitor.matchText);
-        monitorMonth.operational[monitor.id] = false;
-        monitorOperational = false;
+      let monitorOperational=false
+    let parserFound=false
+    if(monitor.url.includes("http://")||monitor.url.includes("https://")) {
+        parserFound=true
+              // Fetch the monitors URL
+      const init: Parameters<typeof fetch>[1] = {
+        method: monitor.method || 'GET',
+        redirect: monitor.followRedirect ? 'follow' : 'manual',
+        headers: {
+          //@ts-expect-error
+          'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
+        },
       }
+      // Perform a check and measure time
+      const requestStartTime = performance.now()
+      const checkResponse = await fetch(monitor.url, init)
+      const requestTime = Math.round(performance.now() - requestStartTime)
+      sentRequests=sentRequests+1
+      // Determine whether operational and status changed
+      monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
+      // const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
+  
+      // Save monitor's last check response status
+      monitorMonth.operational[monitor.id] = monitorOperational;
+      //check for full text
+      if (monitor.matchText && monitorOperational) {
+        //const results = await gatherResponse(checkResponse)
+        let mytxt=await checkResponse.text();
+        if( mytxt.includes(monitor.matchText)  ) { 
+          monitorMonth.operational[monitor.id] = true;
+          monitorOperational = true;
+        } else {
+          console.log("STR NOT FOUND "+monitor.matchText);
+          monitorMonth.operational[monitor.id] = false;
+          monitorOperational = false;
+        }
+      }
+    }
+    if(monitor.url.includes("rediss://")) {
+      parserFound=true
+      //const redis = createRedis("rediss://user:the_token@host.of.redis.lan:11111");
+      const requestStartTime = performance.now()
+      try {
+        const redis = createRedis(monitor.url);
+        const value = await redis.sendRawOnce("PING","");
+        const redecoder = new TextDecoder();
+        monitorOperational=true
+        console.log("redis_ping_resp:" + decoder.decode(value)); 
+            } catch (error) {
+        console.log("redis_resp_err"+error)
+      }
+
+      const requestTime = Math.round(performance.now() - requestStartTime)
+      sentRequests=sentRequests+1
+
     }
     if (config.settings.collectResponseTimes && monitorOperational) {
       // make sure location exists in current checkDay
@@ -154,7 +178,7 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   // end timediff
    } else {
 
-    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
+    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last : ${monitorMonth.lastCheck} diff: ${timesec}`)
 
   }
   counter=counter+1
