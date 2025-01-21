@@ -35,7 +35,6 @@ jobs:
           key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
       - name: Cache yarn Poller
         id: cache-yarn-poller
-        name: Cache yarn
         uses: actions/cache@v4
         with:
           path: .yarn
