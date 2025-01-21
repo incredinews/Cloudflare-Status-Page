@@ -20,11 +20,11 @@ export async function processCronTrigger(_env , trigger, event: ScheduledEvent) 
   const checkDay = getDate(now)
   const preset_debounce = config.debounce || 345 
   // Get monitors state from KV
-  let monitorMonth: MonitorMonth = await getKVMonitors(checkDay.slice(0, 7))
+  let monitorMonth: MonitorMonth = await getKVMonitors(env,checkDay.slice(0, 7))
   // Create empty state objects if not exists in KV storage yet
   if (!monitorMonth) {
     const lastDay = getDate(now - 86400000)
-    const lastMonitorMonth: MonitorMonth = await getKVMonitors(lastDay.slice(0, 7))
+    const lastMonitorMonth: MonitorMonth = await getKVMonitors(env,lastDay.slice(0, 7))
 
     monitorMonth = {
       lastCheck: now,
@@ -190,7 +190,7 @@ export async function processCronTrigger(_env , trigger, event: ScheduledEvent) 
   monitorMonth.lastCheck = now
 
   // Save monitorMonth to KV storage
-  await setKVMonitors(checkDay.slice(0, 7), monitorMonth)
+  await setKVMonitors(env,checkDay.slice(0, 7), monitorMonth)
 
   return new Response('OK')
 }
