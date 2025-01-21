@@ -54,7 +54,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       [index: string]: number | null
     }
   } = { t: now, l: checkLocation, ms: {} }
-  let counter=0;
+  let counter=1;
   // the first went to fetch kv
   let sentRequests=1;
   let monitorCount=config.monitors.length
@@ -93,6 +93,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
       let monitorOperational=false
     let parserFound=false
+    let requestTime = 9999
     if(monitor.url.includes("http://")||monitor.url.includes("https://")) {
         parserFound=true
               // Fetch the monitors URL
@@ -107,7 +108,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       // Perform a check and measure time
       const requestStartTime = performance.now()
       const checkResponse = await fetch(monitor.url, init)
-      const requestTime = Math.round(performance.now() - requestStartTime)
+      requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
       // Determine whether operational and status changed
       monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
@@ -143,11 +144,11 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         console.log("redis_resp_err"+error)
       }
 
-      const requestTime = Math.round(performance.now() - requestStartTime)
+      requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
 
     }
-    if (config.settings.collectResponseTimes && monitorOperational) {
+    if (do_request && config.settings.collectResponseTimes && monitorOperational) {
       // make sure location exists in current checkDay
       if (!monitorMonth.checks[checkDay].summery[checkLocation])
         monitorMonth.checks[checkDay].summery[checkLocation] = {}
