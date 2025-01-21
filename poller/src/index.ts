@@ -27,7 +27,10 @@ const DEBUG = false;
 //     event.respondWith(new Response('Internal Error', { status: 500 }))
 //   }
 // })
+export default { ... 
+  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
+    event.waitUntil(processCronTrigger(event))
+  })
 
-(addEventListener as typeof AddEventListener)('scheduled', (event) => {
-  event.waitUntil(processCronTrigger(event))
-})
+}
+
