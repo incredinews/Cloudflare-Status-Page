@@ -36,7 +36,7 @@ export default {
     //  console.log("fetch_hander_prcoc")
     //  event.waitUntil(processCronTrigger(event))
     //}));
-    let myamespace=env.KV_STATUS_PAGE
+    let myamespace=await env.KV_STATUS_PAGE
     await processCronTrigger(mynamespace,"sched",event)
   },
   async fetch(request, env, ctx) {
