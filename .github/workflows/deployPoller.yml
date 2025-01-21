@@ -21,10 +21,7 @@ jobs:
           node-version: 18
 #      - run: bash -c "test -e yarn.lock && rm yarn.lock"
 #       "redis-on-workers": "*",
-      - run: bash -c "yarn add redis-on-workers || true"
-
-      - run: yarn config get enableImmutableInstalls
-      - run: /bin/bash -c "echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
+      - run: bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
       - name: Get machine cache key
         id: get-machine
         run: |
