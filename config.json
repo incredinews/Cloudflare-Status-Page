@@ -1,14 +1,14 @@
 {
   "settings": {
-    "title": "JH0project Status",
-    "url": "https://status.jh0project.com",
-    "description": "The status page of JH0project (JHOproject/JHo project), showing historical status and performane information.",
+    "title": "Incredinews Status",
+    "url": "https://infinews-uptime.pages.dev",
+    "description": "infinwes observatiorium showing historical status and performane information.",
     "logo": "logo-192x192.png",
     "collectResponseTimes": true,
-    "allmonitorsOperational": "All Systems Operational",
-    "notAllmonitorsOperational": "Not All Systems Operational",
-    "monitorLabelOperational": "Operational",
-    "monitorLabelNotOperational": "Not Operational",
+    "allmonitorsOperational": "OK: All Systems Operational",
+    "notAllmonitorsOperational": "ERR: Not All Systems Operational",
+    "monitorLabelOperational": "OK: Operational",
+    "monitorLabelNotOperational": "ERR: Not Operational",
     "monitorLabelNoData": "No data",
     "dayInHistogramNoData": "No data",
     "dayInHistogramOperational": "All good",
@@ -16,19 +16,19 @@
   },
   "monitors": [
     {
-      "id": "main",
-      "name": "Main Website",
-      "description": "",
-      "url": "https://www.jh0project.com",
+      "id": "bbc",
+      "name": "BBC News",
+      "description": "BBC.co.uk NEWS",
+      "url": "https://bbc.co.uk",
       "method": "GET",
       "expectStatus": 200,
-      "followRedirect": false
+      "followRedirect": true
     },
     {
-      "id": "dn42",
-      "name": "DN42 Website",
-      "description": "",
-      "url": "https://dn42.jh0project.com",
+      "id": "cnn",
+      "name": "CNN",
+      "description": "CNN News",
+      "url": "https://edition.cnn.com/",
       "method": "GET",
       "expectStatus": 200,
       "followRedirect": false
