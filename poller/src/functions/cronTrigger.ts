@@ -74,21 +74,19 @@ export async function processCronTrigger(_event: ScheduledEvent) {
 
     // Save monitor's last check response status
     monitorMonth.operational[monitor.id] = monitorOperational;
-    // check for full text
-    //if (monitor.matchText) {
-    //  if (monitorOperational) {
-    //    //const results = await gatherResponse(checkResponse)
-    //    let mytxt=await checkResponse.text();
-    //    if( mytxt.includes(monitor.matchText)  ) { 
-    //      monitorMonth.operational[monitor.id] = true;
-    //      monitorOperational = true;
-    //    } else {
-    //      console.log("STR NOT FOUND "+monitor.matchText);
-    //      monitorMonth.operational[monitor.id] = false;
-    //      monitorOperational = false;
-    //    }
-    //  }
-    //}
+    check for full text
+    if (monitor.matchText && monitorOperational) {
+      //const results = await gatherResponse(checkResponse)
+      let mytxt=await checkResponse.text();
+      if( mytxt.includes(monitor.matchText)  ) { 
+        monitorMonth.operational[monitor.id] = true;
+        monitorOperational = true;
+      } else {
+        console.log("STR NOT FOUND "+monitor.matchText);
+        monitorMonth.operational[monitor.id] = false;
+        monitorOperational = false;
+      }
+    }
     if (config.settings.collectResponseTimes && monitorOperational) {
       // make sure location exists in current checkDay
       if (!monitorMonth.checks[checkDay].summery[checkLocation])
