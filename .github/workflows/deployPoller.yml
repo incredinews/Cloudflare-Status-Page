@@ -30,13 +30,13 @@ jobs:
         run: |
           echo -n "machine=$(uname -m)" >> $GITHUB_OUTPUT
         shell: bash
-        - name: Get code cache key
+      - name: Get code cache key
         id: get-code-cachekey
         run: |
           sum=$((find -type f app poller site scripts ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           echo -n "codecachekey=$sum" >> $GITHUB_OUTPUT
         shell: bash
-        - name: Cache yarn
+      - name: Cache yarn
         id: cache-yarn
         uses: actions/cache@v4
         with:
