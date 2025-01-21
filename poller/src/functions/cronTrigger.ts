@@ -77,8 +77,9 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     // check for full text
     if (monitor.matchText) {
       if (monitorOperational) {
-        const results = await gatherResponse(response)
-        if( results.text().includes(monitor.checkResponse)  ) { 
+        //const results = await gatherResponse(checkResponse)
+        let mytxt=await checkResponse.text();
+        if( mytxt.includes(monitor.matchText)  ) { 
           monitorMonth.operational[monitor.id] = true;
           monitorOperational = true;
         } else {
