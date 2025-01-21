@@ -10,7 +10,7 @@ A website monitoring and status page application design to be deploy on cloudfla
 3. Choose that repo
 4. Change setting Build settings
     - Framework preset: `Next.js`
-    - Build command: `cp .yarnrc.yml site && cp yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --immutable=false --mode=update-lockfile && npx @cloudflare/next-on-pages@1`
+    - Build command: `cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1`
     - Build output directory: `/site/.vercel/output/static`
 
    Environment variables (advanced)
