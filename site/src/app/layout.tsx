@@ -1,7 +1,7 @@
 import { Roboto } from 'next/font/google'
 import RootProvider from '@/components/RootProvider'
 import config from '../../../config.json'
-import { GoogleAnalytics } from "@next/third-parties/google";
+//import { GoogleAnalytics } from "@next/third-parties/google";
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Link from '@/components/Link';
