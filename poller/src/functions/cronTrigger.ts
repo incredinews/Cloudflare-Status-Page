@@ -17,7 +17,9 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   const checkLocation = await getCheckLocation()
   const now = Date.now()
   const checkDay = getDate(now)
-  const debounce = config.debounce || 300 
+  const preset_debounce = config.debounce || 345 
+  const realdebounce=monitor.debounce||preset_debounce
+
   // Get monitors state from KV
   let monitorMonth: MonitorMonth = await getKVMonitors(checkDay.slice(0, 7))
   // Create empty state objects if not exists in KV storage yet
@@ -41,7 +43,9 @@ export async function processCronTrigger(_event: ScheduledEvent) {
       incidents: {},
     }
   }
-
+  if (!monitorMonth.lastFetched) {
+    monitorMonth.lastFetched={}
+  }
   const res: {
     t: number
     l: string
@@ -50,21 +54,39 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     }
   } = { t: now, l: checkLocation, ms: {} }
   let counter=0;
+  let sentRequests=0;
   let monitorCount=config.monitors.length
   for (const monitor of config.monitors) {
+    const localnow=Date.now()
     let displayname = monitor.name || monitor.id;
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
-    let timediff=now-monitorMonth.lastCheck
+    let timediffglobalt=now-monitorMonth.lastCheck
+    if (!monitorMonth.lastFetched[monitor.id]) {
+      monitorMonth.lastFetched[monitor.id]=localnow-999999999
+    }
+    const timediff=localnow-monitor.lastFetched[monitor.id]
     const timesec=timediff/1000
-    console.log(` [ ${counter} / ${monitorCount}  ]  Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
 
+    let do_request = false;
+    let reasons="";
 
-    if( timesec > debounce  ) {
-     
-  // end timediff
-  ]} 
-    // Fetch the monitors URL
+    if( timesec > realdebounce  ) {
+      do_request=true;
+      reasons="T"
+    } else { 
+      reasons="t"
+    }
+    //subrequest limiter
+    if(sentRequests > 42 ) {
+      reasons=reasons+"F"
+      do_request=false
+    } else {
+      reasons=reasons+" "
+    }
+    if (do_request) {
+      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
+      // Fetch the monitors URL
     const init: Parameters<typeof fetch>[1] = {
       method: monitor.method || 'GET',
       redirect: monitor.followRedirect ? 'follow' : 'manual',
@@ -73,7 +95,6 @@ export async function processCronTrigger(_event: ScheduledEvent) {
         'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
       },
     }
-
     // Perform a check and measure time
     const requestStartTime = performance.now()
     const checkResponse = await fetch(monitor.url, init)
@@ -130,6 +151,12 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     //   const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
     //   monitorMonth.monitors[monitor.id].checks[checkDay].incidents.push(incidentNumber)
     // }
+  // end timediff
+  ]} else {
+
+    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
+
+  }
   counter=counter+1
   }
 

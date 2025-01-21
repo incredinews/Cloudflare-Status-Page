@@ -45,6 +45,15 @@
     "followRedirect": true
   },
   {
+    "id": "abc_net_au",
+    "name": "ABC (Australian Broadcasting Corporation)",
+    "description": "Your home of Australian stories, conversations and events that shape our nation.",
+    "url": "https://www.abc.net.au/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
     "id": "abcnews_go_com",
     "name": "ABC News",
     "description": "Your trusted source for breaking news, analysis, exclusive interviews, headlines, and videos at ABCNews.com",
@@ -52,8 +61,55 @@
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
-  {
+    },
+    {
+    "id": "apnews_com",
+    "name": "Associated Press News: Breaking News, Latest Headlines and Videos | AP News",
+    "description": "Read the latest headlines, breaking news, and videos at APNews.com, the definitive source for independent journalism from every corner of the globe.",
+    "url": "https://apnews.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "athlonsports_com",
+    "name": null,
+    "description": null,
+    "url": "https://athlonsports.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "businessinsider_de",
+    "name": null,
+    "description": "Aktuelle News von Business Insider. Wirtschaft, Tech und Politik sowie alles, was euch besser macht! Entdecke jetzt Business Insider Deutschland.",
+    "url": "https://www.businessinsider.de/?r=US&IR=T",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "buzzfeed_com",
+    "name": "BuzzFeed",
+    "description": "BuzzFeed has breaking news, vital journalism, quizzes, videos, celeb news, Tasty food videos, recipes, DIY hacks, and all the trending buzz you’ll want to share with your friends. Copyright BuzzFeed, Inc. All rights reserved.",
+    "url": "https://www.buzzfeed.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "cbc_ca",
+    "name": "CBC.ca - watch, listen, and discover with Canada's Public Broadcaster",
+    "description": "Canada's home for News, Entertainment, Sports, Music and much more",
+    "url": "https://www.cbc.ca/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
     "id": "cbsnews_com",
     "name": "CBS News",
     "description": "CBS News offers breaking news coverage of today&#039;s top headlines. Stay informed on the biggest new stories with our balanced, trustworthy reporting.",
@@ -61,36 +117,256 @@
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
-  {
-    "id": "euronews_com",
-    "name": "Euronews.com",
-    "description": "Latest breaking news available as free video on demand. Stay informed on European and world news about economy, politics, diplomacy… with Euronews.",
-    "url": "https://www.euronews.com/",
+    },
+    {
+    "id": "cnbc_com",
+    "name": null,
+    "description": "CNBC International is the world leader for news on business, technology, China, trade, oil prices, the Middle East and markets.",
+    "url": "https://www.cnbc.com/world/?region=world",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
-  
-  {
+    },
+    {
+    "id": "edition_cnn_com",
+    "name": "CNN",
+    "description": "View the latest news and breaking news today for U.S., world, weather, entertainment, politics and health at CNN.com.",
+    "url": "https://edition.cnn.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "dailymail_co_uk",
+    "name": "Mail Online",
+    "description": "MailOnline - get the latest breaking news, showbiz & celebrity photos, sport news & rumours, viral videos and top stories from MailOnline, Daily Mail and Mail on Sunday newspapers.",
+    "url": "https://www.dailymail.co.uk/home/index.html",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "drudgereport_com",
+    "name": "DRUDGE REPORT 2025®",
+    "description": "",
+    "url": "https://drudgereport.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "euronews_com:443",
+    "name": "Euronews.com",
+    "description": "Latest breaking news available as free video on demand. Stay informed on European and world news about economy, politics, diplomacy… with Euronews.",
+    "url": "https://www.euronews.com:443/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "express_co_uk",
+    "name": null,
+    "description": "Latest news, showbiz, sport, comment, lifestyle, city, video and pictures from the Daily Express and Sunday Express newspapers and Express.co.uk",
+    "url": "https://www.express.co.uk/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "consent_yahoo_com",
+    "name": "Yahooist Teil der Yahoo Markenfamilie",
+    "description": "",
+    "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_9f7f995a-e901-4210-807d-8abdf9ca4166",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "forbes_com",
+    "name": "Forbes",
+    "description": "Forbes is a global media company, focusing on business, investing, technology, entrepreneurship, leadership, and lifestyle.",
+    "url": "https://www.forbes.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "foxnews_com",
+    "name": "Fox News - Breaking News Updates | Latest News Headlines | Photos & News Videos",
+    "description": "Breaking News, Latest News and Current News from FOXNews.com. Breaking news and video. Latest Current News: U.S., World, Entertainment, Health, Business, Technology, Politics, Sports.",
+    "url": "https://www.foxnews.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "hindustantimes_com",
+    "name": "Hindustan Times",
+    "description": "News Headlines Today: Hindustan Times offers the most reliable news in politics, sports, entertainment and business, featuring National and International news Breaking News on Hindustan Times",
+    "url": "https://www.hindustantimes.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "huffpost_com",
+    "name": null,
+    "description": "Read the latest headlines, news stories, and opinion from Politics, Entertainment, Life, Perspectives, and more.",
+    "url": "https://www.huffpost.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "independent_co_uk",
+    "name": "The Independent",
+    "description": "The latest breaking news, comment and features from The Independent.",
+    "url": "https://www.independent.co.uk/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "india_com",
+    "name": "India.com News",
+    "description": "India.com brings Breaking News, Live News Updates from across India and the world. India.Com is your gateway to India for Latest News, Explainers, Cricket, Sports, Entertainment, Business, Bollywood, Education, Top Viral, Technology, Celebs, Lifestyle, Health, Travel and more.",
+    "url": "https://www.india.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "indianexpress_com",
+    "name": null,
+    "description": null,
+    "url": "https://indianexpress.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "indiatimes_com",
+    "name": "Indiatimes",
+    "description": "Indiatimes is your destination when it comes to exploring the latest in lifestyle trends, health and wellness hacks, and fashion advice. From food fads to travel tips and relationship rules, we tell you how to live your best life. Bookmark this for all the latest lifestyle content tailored just for you.",
+    "url": "https://www.indiatimes.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "indiatoday_in",
+    "name": "Latest News, Election Results 2024, Breaking News Today, Entertainment, Politics, Cricket - IndiaToday",
+    "description": "Check out the latest news from India and around the world. Latest India news on Bollywood, Politics, Business, Cricket, Technology and Travel.",
+    "url": "https://www.indiatoday.in/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "inquisitr_com",
+    "name": null,
+    "description": "The Inquisitr offers a constantly updated mix of the latest stories to hit the web, covering a diverse spectrum of current news events….",
+    "url": "https://www.inquisitr.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "livemint_com",
+    "name": "Business News Today: Read Latest Business News, Live India Share Market News, Finance & Economy News | Mint",
+    "description": "Business News: Read latest Business News headlines, LIVE share market news and updates, financial, economic and banking news from India &amp; across the World on Mint.",
+    "url": "https://www.livemint.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "medicalnewstoday_com",
+    "name": "Medical news today",
+    "description": "Medical news and health news headlines posted throughout the day, every day",
+    "url": "https://www.medicalnewstoday.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "mercurynews_com",
+    "name": "Mercury News",
+    "description": "The Mercury News is the leading source of breaking news, local news, sports, business, entertainment, lifestyle and opinion for Silicon Valley, San Francisco Bay Area and beyond",
+    "url": "https://www.mercurynews.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "mirror_co_uk",
+    "name": "The Mirror: The Heart of Britain",
+    "description": "Get the latest news, sport, celebrity gossip, TV, politics and lifestyle from The Mirror. Big stories with a big heart, always with you in mind.",
+    "url": "https://www.mirror.co.uk/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "msn_com",
+    "name": "MSN",
+    "description": "Microsoft News",
+    "url": "https://www.msn.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
     "id": "nbcnews_com",
-    "name": "NBC News",
+    "name": null,
     "description": "Go to NBCNews.com for breaking news, videos, and the latest top stories in world news, business, politics, health and pop culture.",
     "url": "https://www.nbcnews.com",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
-  {
+    },
+    {
+    "id": "ndtv_com",
+    "name": "NDTV",
+    "description": "NDTV.com provides latest news from India and around the world. Get breaking news alerts from India and follow today’s live news updates in field of politics, business, technology, Bollywood, cricket and more.",
+    "url": "https://www.ndtv.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
     "id": "news_com_au",
-    "name": "news.com.au",
-    "description": "news.com.au — Australias leading news site",
+    "name": null,
+    "description": null,
     "url": "https://news.com.au",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
-  {
+    },
+    {
+    "id": "news_google_com",
+    "name": null,
+    "description": "Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News.",
+    "url": "https://news.google.com/home?hl=en-US&gl=US&ceid=US:en&ucbcb=1",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "news_sky_com",
+    "name": "Sky News",
+    "description": "Sky News delivers breaking news, headlines and top stories from business, politics, entertainment and more in the UK and worldwide.",
+    "url": "https://news.sky.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
     "id": "newsweek_com",
     "name": "Newsweek",
     "description": "Newsweek provides in-depth analysis, news and opinion about international issues, technology, business, culture and politics.",
@@ -98,25 +374,172 @@
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
-  {
-    "id": "usnews_com",
-    "name": "US news",
+    },
+    
+    {
+    "id": "consent_yahoo_com",
+    "name": "Yahooist Teil der Yahoo Markenfamilie",
     "description": "",
-    "url": "https://usnews.com",
+    "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_f26f6122-fea5-41f6-a6dd-d41bca4cbf33",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
-  {
-    "id": "wn_com",
-    "name": "World News",
-    "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
-    "url": "https://wn.com",
+    },
+    {
+    "id": "nj_com:443",
+    "name": null,
+    "description": "Get the latest New Jersey news, sports, and breaking updates. View daily NJ weather and top stories from Jersey City, Atlantic City, and beyond on NJ.com.",
+    "url": "https://www.nj.com:443/",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
-  },
+    },
+    {
+    "id": "nydailynews_com",
+    "name": null,
+    "description": null,
+    "url": "https://nydailynews.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "nypost_com",
+    "name": null,
+    "description": "Your source for breaking news, photos, and videos about New York, sports, business, entertainment, opinion, real estate, culture, fashion, and more.",
+    "url": "https://nypost.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "nytimes_com",
+    "name": "The New York Times",
+    "description": "Live news, investigations, opinion, photos and video by the journalists of The New York Times from more than 150 countries around the world. Subscribe for coverage of U.S. and international news, politics, business, technology, science, health, arts, sports and more.",
+    "url": "https://www.nytimes.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "oneindia_com",
+    "name": "Oneindia",
+    "description": "Read all latest news headlines from India and around the world, get today's breaking news and live updates on politics, elections, business, sports, economy, current affairs, results and more on Oneindia.",
+    "url": "https://www.oneindia.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "people_com",
+    "name": null,
+    "description": "Get breaking news and trending scoops on your favorite celebs, royals, true crime sagas, and more.",
+    "url": "https://people.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "prnewswire_com",
+    "name": "Cision PR Newswire",
+    "description": "PR Newswire’s news distribution, targeting, monitoring and marketing solutions help you connect and engage with target audiences across the globe.",
+    "url": "https://www.prnewswire.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "rediff_com",
+    "name": "Rediff.com",
+    "description": "✔Read Latest India News ✔Get Realtime Stock Quotes ✔See Live Cricket Scores ✔Log in to Rediffmail ✔Expert advice on career, personal finance and relationships",
+    "url": "https://www.rediff.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "reuters_com",
+    "name": "reuters.com",
+    "description": "",
+    "url": "https://www.reuters.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "rt_com",
+    "name": "Russia Today",
+    "description": null,
+    "url": "https://rt.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    "debounce": 3600
+    },
+    {
+    "id": "sputnikglobe_com",
+    "name": "Sputnik News - World News, Breaking News & Top Stories",
+    "description": "Sputnik International is a global news media keeping you updated on all the latest world news 24/7. Browse Sputnik for breaking news and top stories on politics, economy, social media and the most viral trends.",
+    "url": "https://sputnikglobe.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    
+    {
+    "id": "substack_com",
+    "name": "Substack - A new economic engine for culture",
+    "description": "Substack is a media platform for video, writing, podcasts, and creator-centered communities, all powered by subscriptions.",
+    "url": "https://substack.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "telegraph_co_uk",
+    "name": null,
+    "description": null,
+    "url": "https://telegraph.co.uk",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "theguardian_com",
+    "name": null,
+    "description": null,
+    "url": "https://theguardian.com",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "thehindu_com",
+    "name": "Breaking News Today, Top Headlines, Live Updates | The Hindu",
+    "description": "Today’s News Headlines, Breaking News &amp; Latest News from India and World, News from Politics, Sports, Business, Arts and Entertainment",
+    "url": "https://www.thehindu.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "thesun_co_uk",
+    "name": "The Sun",
+    "description": "The Best for News, Sport, Showbiz, Celebrities",
+    "url": "https://www.thesun.co.uk/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
+    {
+    "id": "eu_usatoday_com",
+    "name": null,
+    "description": "USA TODAY delivers current national and local news, sports, entertainment, finance, technology, and more through award-winning journalism, photos, and videos.",
+    "url": "https://eu.usatoday.com/",
+    "method": "GET",
+    "expectStatus": 200,
+    "followRedirect": true
+    },
   {
     "id": "newstral.com",
     "name": "Newstral / dnnd.de German News Aggregator",
@@ -125,26 +548,7 @@
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true,
-    "matchText": "newstral"
-  },
-  {
-    "id": "foxnews_com",
-    "name": "Fox News - Breaking News Updates | Latest News Headlines | Photos & News Videos",
-    "description": "Breaking News, Latest News and Current News from FOXNews.com. Breaking news and video. Latest Current News: U.S., World, Entertainment, Health, Business, Technology, Politics, Sports.",
-    "url": "https://www.foxnews.com/",
-    "method": "GET",
-    "expectStatus": 200,
-    "followRedirect": true,
-    "matchText": "Fox News"
-  },
-  {
-    "id": "mercurynews_com",
-    "name": null,
-    "description": "The Mercury News is the leading source of breaking news, local news, sports, business, entertainment, lifestyle and opinion for Silicon Valley, San Francisco Bay Area and beyond",
-    "url": "https://www.mercurynews.com/",
-    "method": "GET",
-    "expectStatus": 200,
-    "followRedirect": true
+    "matchText": "Newstral"
   }
   ]
 }
