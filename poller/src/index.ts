@@ -27,14 +27,15 @@ const DEBUG = false;
 //     event.respondWith(new Response('Internal Error', { status: 500 }))
 //   }
 // })
-async scheduled(event, env, ctx) {
 
-  ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
-    event.waitUntil(processCronTrigger(event))
-  }));
-},
 
 export default {  
+  async scheduled(event, env, ctx) {
+
+    ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
+      event.waitUntil(processCronTrigger(event))
+    }));
+  },
   (addEventListener as typeof AddEventListener)('scheduled', (event) => {
     event.waitUntil(processCronTrigger(event))
   })
