@@ -52,7 +52,10 @@ export async function processCronTrigger(_event: ScheduledEvent) {
 
   for (const monitor of config.monitors) {
     let displayname = monitor.name || monitor.id;
-    console.log(`Checking ${displayname} ...`)
+    //let laststr=monitorMonth.lastCheck
+    //let nowstr=
+    let timediff=monitorMonth.lastCheck-now
+    console.log(`Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
     // Fetch the monitors URL
     const init: Parameters<typeof fetch>[1] = {
       method: monitor.method || 'GET',
@@ -74,7 +77,7 @@ export async function processCronTrigger(_event: ScheduledEvent) {
 
     // Save monitor's last check response status
     monitorMonth.operational[monitor.id] = monitorOperational;
-    check for full text
+    //check for full text
     if (monitor.matchText && monitorOperational) {
       //const results = await gatherResponse(checkResponse)
       let mytxt=await checkResponse.text();

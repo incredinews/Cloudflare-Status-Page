@@ -33,7 +33,7 @@ Status/Performance website
 until external config loading is implemented, you may try e.g. :
 ```
 
-(cat /tmp/nnn |grep -v "is up"|grep -v Serv|cut -d" " -f1 ;curl -s https://raw.githubusercontent.com/Kikobeats/top-sites/refs/heads/master/top-sites.json|grep news|cut -d'"' -f4)|sort -u|while read a;do ( jsonres=$(curl -s "https://${MY_META_URL}/?url=$a" );echo "$jsonres" |jq '{ "id": .url, "name": .jsonld.name , "description": .description , url: .url , "method": "GET", "expectStatus": 200, "followRedirect": true  } ' 2>/dev/null|| (echo;echo "$jsonres"|jq '{ "id": .url, "name": .title , "description": .description , url: .url , "method": "GET", "expectStatus": 200, "followRedirect": true } ' ) ;echo "," ) |sed 's~"id": "https://~"id": "~g'|sed 's~"id": "\(.\+\)\(/\|:\)\(\|.\+\)",~"id": "\1",~g'|while read line;do echo "$line"|grep -v '"id":'|| ( echo "$line"|sed 's/\./_/g;s~\(:[0-9]\|/.\+\)\+",~",~g' |sed 's/"id": "www_/"id": "/g' ) ;done ;done |tee /tmp/newsjson
+
 ```
 
 and paste the resulting file 
