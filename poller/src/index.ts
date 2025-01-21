@@ -36,9 +36,6 @@ export default {
       event.waitUntil(processCronTrigger(event))
     }));
   },
-  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
-    event.waitUntil(processCronTrigger(event))
-  })
 
 }
 
