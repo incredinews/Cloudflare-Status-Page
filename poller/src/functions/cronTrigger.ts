@@ -18,8 +18,6 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   const now = Date.now()
   const checkDay = getDate(now)
   const preset_debounce = config.debounce || 345 
-  const realdebounce=monitor.debounce||preset_debounce
-
   // Get monitors state from KV
   let monitorMonth: MonitorMonth = await getKVMonitors(checkDay.slice(0, 7))
   // Create empty state objects if not exists in KV storage yet
@@ -57,9 +55,9 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   // the first went to fetch kv
   let sentRequests=1;
   let monitorCount=config.monitors.length
-  console.log("starting")
   for (const monitor of config.monitors) {
     const localnow=Date.now()
+    const realdebounce=monitor.debounce||preset_debounce
     let displayname = monitor.name || monitor.id;
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
