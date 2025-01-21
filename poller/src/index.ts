@@ -41,7 +41,8 @@ export default {
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")
-    await processCronTrigger(env,"fetch",request)
+    let mynamespace=await env.KV_STATUS_PAGE
+    await processCronTrigger(mynamespace,"fetch",request)
     //ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (request) => {
     //  console.log("fetch_hander_prcoc")
     //  event.waitUntil(processCronTrigger(request))
