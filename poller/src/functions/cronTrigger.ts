@@ -51,9 +51,8 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   } = { t: now, l: checkLocation, ms: {} }
 
   for (const monitor of config.monitors) {
-
-    console.log(`Checking ${monitor.name} ...`)
-
+    let displayname = monitor.name || monitor.url;
+    console.log(`Checking ${displayname} ...`)
     // Fetch the monitors URL
     const init: Parameters<typeof fetch>[1] = {
       method: monitor.method || 'GET',
