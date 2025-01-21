@@ -40,7 +40,6 @@ export default function RootLayout({
           </Container >
         </RootProvider>
       </body>
-      <GoogleAnalytics gaId="G-21C3KNWYDN" />
     </html>
   )
 }
