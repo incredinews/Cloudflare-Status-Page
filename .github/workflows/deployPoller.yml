@@ -28,7 +28,7 @@ jobs:
       - name: Get machine
         id: get-machine
         run: |
-          echo "machine=$(uname -m)" >> $GITHUB_OUTPUT
+          echo -n "machine=$(uname -m)" >> $GITHUB_OUTPUT
         shell: bash
       - name: Cache yarn
         id: cache-yarn
