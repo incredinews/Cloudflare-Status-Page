@@ -90,10 +90,10 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       reasons=reasons+" "
     }
     if (do_request) {
-      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
+      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
       let monitorOperational=false
     let parserFound=false
-    let requestTime = 9999
+    let requestTime = 99999
     if(monitor.url.includes("http://")||monitor.url.includes("https://")) {
         parserFound=true
               // Fetch the monitors URL
@@ -183,7 +183,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   // end timediff
    } else {
 
-    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last : ${monitorMonth.lastCheck} diff: ${timesec}`)
+    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} ... last : ${monitorMonth.lastCheck} diff: ${timesec}`)
 
   }
   counter=counter+1
