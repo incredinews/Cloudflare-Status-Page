@@ -26,7 +26,7 @@ export async function processCronTrigger(env , trigger, event: ScheduledEvent) {
   if (!monitorMonth) {
     const lastDay = getDate(now - 86400000)
     console.log("KV_read_2")
-    const lastMonitorMonth: MonitorMonth = await getKVMonitors(env,lastDay.slice(0, 7))
+    const lastMonitorMonth: MonitorMonth = await getKVMonitors(lastDay.slice(0, 7))
 
     monitorMonth = {
       lastCheck: now,
