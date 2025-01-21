@@ -540,15 +540,15 @@
     "expectStatus": 200,
     "followRedirect": true
     },
-  {
-    "id": "newstral.com",
-    "name": "Newstral / dnnd.de German News Aggregator",
-    "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
-    "url": "https://wn.com",
-    "method": "GET",
-    "expectStatus": 200,
-    "followRedirect": true,
-    "matchText": "Newstral"
-  }
+    {
+      "id": "newstral.com",
+      "name": "Newstral / dnnd.de German News Aggregator",
+      "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
+      "url": "https://wn.com",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true,
+      "matchText": "Newstral"
+    }
   ]
 }

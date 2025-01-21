@@ -152,7 +152,7 @@ export async function processCronTrigger(_event: ScheduledEvent) {
     //   monitorMonth.monitors[monitor.id].checks[checkDay].incidents.push(incidentNumber)
     // }
   // end timediff
-  ]} else {
+   } else {
 
     console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |   Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timediff}`)
 
