@@ -19,13 +19,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: yarn install
+
+      - name: Cache yarn
+        id: cache-yarn
+        uses: actions/cache@v4
+        with:
+          path: poller/.yarn
+          key: ${{ runner.os }}-yarn_poller-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
       - name: Cache yarn
         id: cache-yarn
         uses: actions/cache@v4
         with:
           path: .yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
+          key: ${{ runner.os }}-yarn_poller-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
+      - run: bash -c "test -e yarn.lock && rm yarn.lock"
+      - run: yarn install
       - run: yarn build
         working-directory: poller
       - name: Publish
