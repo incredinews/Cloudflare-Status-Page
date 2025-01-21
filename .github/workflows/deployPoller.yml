@@ -21,7 +21,7 @@ jobs:
           node-version: 18
 #      - run: bash -c "test -e yarn.lock && rm yarn.lock"
       - run: yarn config get enableImmutableInstalls
-      - run: /bin/bash -c "echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --frozen-lockfile"
+      - run: /bin/bash -c "echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile
 #      id: cache-yarn
 #      uses: actions/cache@v4
 #      with:
