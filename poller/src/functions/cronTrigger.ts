@@ -56,16 +56,18 @@ export async function processCronTrigger(_event: ScheduledEvent) {
   let sentRequests=1;
   let monitorCount=config.monitors.length
   for (const monitor of config.monitors) {
+    console.error("start_mon")
+    console.log(JSON.stringify(monitor))
     const localnow=Date.now()
     const realdebounce=monitor.debounce||preset_debounce
     let displayname = monitor.name || monitor.id;
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
-    let timediffglobalt=now-monitorMonth.lastCheck
+    let timediffglobal=now-monitorMonth.lastCheck
     if (!monitorMonth.lastFetched[monitor.id]) {
       monitorMonth.lastFetched[monitor.id]=localnow-999999999
     }
-    const timediff=localnow-monitor.lastFetched[monitor.id]
+    const timediff=localnow-monitorMonth.lastFetched[monitor.id]
     const timesec=timediff/1000
 
     let do_request = false;
