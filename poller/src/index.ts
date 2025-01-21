@@ -31,13 +31,16 @@ const DEBUG = false;
 
 export default {  
   async scheduled(event, env, ctx) {
-
+    console.log("sched_handler_init")
     ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
+      console.log("fetch_hander_prcoc")
       event.waitUntil(processCronTrigger(event))
     }));
   },
   async fetch(request, env, ctx) {
+    console.log("fetch_handler_init")
     ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (request) => {
+      console.log("fetch_hander_prcoc")
       event.waitUntil(processCronTrigger(request))
     }));
     return new Response('DONE');
