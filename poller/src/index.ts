@@ -37,8 +37,8 @@ export default {
     }));
   },
   async fetch(request, env, ctx) {
-    ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
-      event.waitUntil(processCronTrigger(event))
+    ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (request) => {
+      event.waitUntil(processCronTrigger(request))
     }));
     return new Response('DONE');
   },
