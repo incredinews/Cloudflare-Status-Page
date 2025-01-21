@@ -39,10 +39,11 @@ export default {
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")
-    ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (request) => {
-      console.log("fetch_hander_prcoc")
-      event.waitUntil(processCronTrigger(request))
-    }));
+    event.waitUntil(processCronTrigger(request))
+    //ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (request) => {
+    //  console.log("fetch_hander_prcoc")
+    //  event.waitUntil(processCronTrigger(request))
+    //}));
     return new Response('DONE');
   },
 }
