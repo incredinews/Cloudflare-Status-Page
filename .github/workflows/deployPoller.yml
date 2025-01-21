@@ -15,11 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 18
       - run: yarn install
+      - name: Cache yarn
+        id: cache-yarn
+        uses: actions/cache@v4
+        with:
+          path: .yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
       - run: yarn build
         working-directory: poller
       - name: Publish
