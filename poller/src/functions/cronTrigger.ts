@@ -13,6 +13,7 @@ function getDate(time: number) {
 }
 
 export async function processCronTrigger(_event: ScheduledEvent) {
+  console.log("cron_function_init")
   // Get Worker PoP and save it to monitorMonthMetadata
   const checkLocation = await getCheckLocation()
   const now = Date.now()
