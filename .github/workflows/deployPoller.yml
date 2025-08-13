@@ -50,7 +50,7 @@ jobs:
       - run: yarn build
         working-directory: poller
       - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
+        uses: cloudflare/wrangler-action@v3
         with:
           workingDirectory: poller
           apiToken: ${{ secrets.CF_API_TOKEN }}
