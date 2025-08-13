@@ -24,7 +24,7 @@
     "expectStatus": 200,
     "followRedirect": true,
     "matchText": "BBC",
-    "private": true
+    "hidden": true
     },
     {
     "id": "cnn",
