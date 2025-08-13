@@ -47,6 +47,7 @@ export default function Home() {
     getKvMonitors(getYearMonth(new Date())).then((res) => {
       setData(oldData => ({
         checks: { ...oldData.checks, ...res.checks },
+        countText: "  ",
         lastCheck: res.lastCheck > oldData.lastCheck ? res.lastCheck : oldData.lastCheck,
         operational: res.lastCheck > oldData.lastCheck ? res.operational : oldData.operational,
       }))
