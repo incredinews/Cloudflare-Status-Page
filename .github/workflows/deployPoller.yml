@@ -51,7 +51,6 @@ jobs:
         working-directory: poller
       - name: Publish
         uses: cloudflare/wrangler-action@v3
-        shell: bash
         with:
           workingDirectory: poller
           apiToken: ${{ secrets.CF_API_TOKEN }}
@@ -75,11 +74,11 @@ jobs:
             grep KV_STATUS_PAGE namespaces.json || (npx wrangler kv:namespace list > namespaces.json  ||   npx wrangler kv namespace list  > namespaces.json )
             echo "___4"
             cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id"  > kvnamespace
-            #cat kvnamespace
+            cat kvnamespace
             cat kvnamespace |wc -c
+            cat kvnamespace |wc -c|grep ^1$ && echo "empty KV namespace..failing..."
+            cat kvnamespace |wc -c|grep ^1$ && exit 1
             KV_NAMESPACE_ID=$(cat kvnamespace)
-            [[ -z "$KV_NAMESPACE_ID" ]] && echo "empty KV namespace..failing..."
-            [[ -z "$KV_NAMESPACE_ID" ]] && exit 1
             echo "[env.production]" >> wrangler.toml
             echo "kv_namespaces = [{binding=\"KV_STATUS_PAGE\", id=\"${KV_NAMESPACE_ID}\"}]" >> wrangler.toml
           postCommands: |
