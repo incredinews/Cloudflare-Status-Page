@@ -71,8 +71,8 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   interface TSDictop {
    [key: string]: boolean;
   }
-  let iterator:TSDictop = {};
-  iterator=operational
+  //let iterator:TSDictop = {};
+  let iterator:TSDictop = operational
   iterator.forEach((key, value) => {
     //console.log(`Index: ${key}, Value: ${value}`)
     if(value) { 
