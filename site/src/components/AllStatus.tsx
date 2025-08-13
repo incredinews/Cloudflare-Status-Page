@@ -44,12 +44,12 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(Date.now())
-    }, 6666)
+    }, 5234)
     return () => clearInterval(interval)
   }, [])
   const allOperational = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === true)
   const allOutage = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === false)
-  console.log("countelem")
+  //console.log("countelem")
   let monCountDown=0;
   let monCountOkay=0;
   //console.log(JSON.stringify(operational))
