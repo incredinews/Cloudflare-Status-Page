@@ -59,10 +59,10 @@ jobs:
             #wrangler --help|grep kv
             #wrangler kv namespace list
             #wrangler kv:namespace list
+            which jq || ( sudo apt-get update && sudo apt-get install -y jq)
             export KV_NAMESPACE_ID=$( ( npx wrangler kv:namespace list || npx wrangler kv namespace list ) | jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id" || true  ) || true 
             echo -n "$KV_NAMESPACE_ID"|wc -c |grep ^0$ && echo empty KV .. generating
             echo -n "$KV_NAMESPACE_ID"|wc -c |grep ^0$ &&  (npx wrangler kv:namespace create KV_STATUS_PAGE || npx wrangler kv namespace create KV_STATUS_PAGE ) || true
-            sudo apt-get update && sudo apt-get install -y jq
             export KV_NAMESPACE_ID=$( ( npx wrangler kv:namespace list || npx wrangler kv namespace list ) | jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id" || true  ) || true
             echo -n "$KV_NAMESPACE_ID"|wc -c |grep ^0$ && echo empty KV namespace..failing
             echo -n "$KV_NAMESPACE_ID"|wc -c |grep ^0$ && exit 1
