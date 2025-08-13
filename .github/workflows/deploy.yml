@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "poller/**"
-      - ".github/workflows/deploy.yml"
-      - "config.json"
-      - "types/src/**"
-      - "poller/wrangler.toml"
+#    paths:
+#      - "poller/**"
+#      - ".github/workflows/deploy.yml"
+#      - "config.json"
+#      - "types/src/**"
+#      - "poller/wrangler.toml"
   repository_dispatch:
 
 jobs:
