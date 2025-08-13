@@ -45,7 +45,7 @@ export interface Checks {
       end?: number
     }[]
   },
-  summery: {
+  summary: {
     [index: string]: {
       [index: string]: {
         n: number

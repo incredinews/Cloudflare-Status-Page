@@ -42,7 +42,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   if (!monitorMonth.checks[checkDay]) {
     monitorMonth.checks[checkDay] = {
-      summery: {},
+      summary: {},
       res: [],
       incidents: {},
     }
@@ -208,21 +208,21 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
     if (do_request && config.settings.collectResponseTimes && monitorOperational) {
       // make sure location exists in current checkDay
-      if (!monitorMonth.checks[checkDay].summery[checkLocation])
-        monitorMonth.checks[checkDay].summery[checkLocation] = {}
-      if (!monitorMonth.checks[checkDay].summery[checkLocation][monitor.id])
-        monitorMonth.checks[checkDay].summery[checkLocation][monitor.id] = {
+      if (!monitorMonth.checks[checkDay].summary[checkLocation])
+        monitorMonth.checks[checkDay].summary[checkLocation] = {}
+      if (!monitorMonth.checks[checkDay].summary[checkLocation][monitor.id])
+        monitorMonth.checks[checkDay].summary[checkLocation][monitor.id] = {
           n: 0,
           ms: 0,
           a: 0,
         }
 
       // increment number of checks and sum of ms
-      const no = ++monitorMonth.checks[checkDay].summery[checkLocation][monitor.id].n
-      const ms = monitorMonth.checks[checkDay].summery[checkLocation][monitor.id].ms += requestTime
+      const no = ++monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].n
+      const ms = monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].ms += requestTime
 
       // save new average ms
-      monitorMonth.checks[checkDay].summery[checkLocation][monitor.id].a = Math.round(ms / no)
+      monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].a = Math.round(ms / no)
       // back online
        if (monitorStatusChanged) {
          monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;

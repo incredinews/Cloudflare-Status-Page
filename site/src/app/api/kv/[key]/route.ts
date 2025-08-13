@@ -7,6 +7,16 @@ import { NextResponse } from 'next/server'
 import { NextApiRequest } from 'next';
 
 export const runtime = 'edge'
+export async function OPTIONS(req: NextRequest, { params }: { params: { key: string } }) {
+    return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
+}
 
 export async function GET(req: NextRequest, { params }: { params: { key: string } }) {
   const { KV_STATUS_PAGE } = (process.env as unknown as { KV_STATUS_PAGE: KVNamespace });
