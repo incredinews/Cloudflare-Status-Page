@@ -23,7 +23,6 @@ jobs:
           node-version: "20.x"
 #      - run: bash -c "test -e yarn.lock && rm yarn.lock"
 #       "redis-on-workers": "*",
-      - run: bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
       - name: Get machine cache key
         id: get-machine
         run: |
@@ -58,6 +57,15 @@ jobs:
           path: .yarn
          #key: ${{ steps.get-machine.outputs.machine }}-yarn_poller-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
           key: ${{ steps.get-machine.outputs.machine }}-yarn_poller-${{ steps.get-code-cachekey.outputs.codecachekey }}
+      - run: bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
+      - name: Cache yarn
+        id: cache-yarn-save
+        uses: actions/cache@v4
+        with:
+          path: .yarn
+         #key: ${{ steps.get-machine.outputs.machine }}-yarn_poller-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
+          key: ${{ steps.get-machine.outputs.machine }}-yarn_poller-${{ steps.get-code-cachekey.outputs.codecachekey }}
+
       - run: yarn build
         working-directory: poller
       - name: Publish
