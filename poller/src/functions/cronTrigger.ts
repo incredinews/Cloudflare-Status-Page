@@ -56,6 +56,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
   } = { t: now, l: checkLocation, ms: {} }
   let counter=1;
+  let monCountDown = 0 ;
+  let monCountOkay = 0 ;
   // the first went to fetch kv
   let sentRequests=1;
   let monitorCount=config.monitors.length
@@ -90,7 +92,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     } else {
       const timediffcron=localnow-cronStarted
       const cronSeconds=timediff/1000
-      if ( cronseconds > 9 ) { 
+      if ( cronSeconds > 9 ) { 
       reasons=reasons+" LimT"
       } else { 
       reasons=reasons+" "
@@ -144,7 +146,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }  
       // Save monitor's last check response status
       monitorMonth.operational[monitor.id] = monitorOperational;
-
     }
     if(monitor.url.includes("rediss://")) {
       parserFound=true
@@ -188,6 +189,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
 
     res.ms[monitor.id] = monitorOperational ? requestTime : null
+    if(monitorOperational) { monCountOkay=monCountOkay+1 } else { monCountDown=monCountDown+1 }
 
     // go dark
     // if (!monitorOperational && monitorStatusChanged) {
@@ -205,6 +207,17 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   }
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
+  if(monCountDown==monitorCount) { 
+      monitorMonth.countText=' ( Down: '+monCountDown.toString()+' )'
+  } else {
+    if(monCountOkay==monitorCount) {
+      monitorMonth.countText="   "
+    } else { 
+      monitorMonth.countText='( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )'
+    }
+
+  }
+  
 
   // Save monitorMonth to KV storage
   console.log("KV_write_1")
@@ -212,3 +225,13 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   return new Response('OK')
 }
+
+
+  //console.log(JSON.stringify(operational))
+  //for ((const key, const value) in operational) {
+  //  if(value) { 
+  //      let monCountOkay:number = monCountOkay+1
+  //  } else {
+  //      let monCountDown:number = monCountDown+1 
+  //  }
+  //}  

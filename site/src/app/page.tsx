@@ -79,7 +79,7 @@ export default function Home() {
     <>
       {data.lastCheck === 0 ?
         <AllStatus /> :
-        <AllStatusWithData operational={data.operational} lastCheck={data.lastCheck} defaultNow={Date.now()} />}
+        <AllStatusWithData operational={data.operational} counterText={data.countText}  lastCheck={data.lastCheck} defaultNow={Date.now()} />}
       <Paper elevation={5} style={{ padding: '5vh 0', margin: '5vh 0' }}>
         <Container>
           {config.monitors.map(({ id: monitorName, name, url, hidden }, i) =>

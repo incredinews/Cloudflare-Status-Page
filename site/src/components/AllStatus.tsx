@@ -45,7 +45,7 @@ export function AllStatus({ statusText, countText = '  ', statusColorCode = '#2e
   )
 }
 
-export default function AllStatusWithData({ operational, lastCheck, defaultNow }: { operational: MonitorMonth["operational"], lastCheck: number, defaultNow: number }) {
+export default function AllStatusWithData({ operational, counterText, lastCheck, defaultNow }: { operational: MonitorMonth["operational"], counterText: string, lastCheck: number, defaultNow: number }) {
   const [now, setNow] = useState(defaultNow)
 
   useEffect(() => {
@@ -68,22 +68,23 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   //      let monCountDown:number = monCountDown+1 
   //  }
   //}  
-  interface TSDictop {
-   [key: string]: boolean;
-  }
+  //interface TSDictop {
+  // [key: string]: boolean;
+  //}
   //let iterator:TSDictop = {};
-  let iterator:TSDictop = operational
-  iterator.forEach((key, value) => {
-    //console.log(`Index: ${key}, Value: ${value}`)
-    if(value) { 
-        let monCountOkay:number = monCountOkay+1
-    } else {
-        let monCountDown:number = monCountDown+1 
-    }
-  })
+  //let iterator:TSDictop = operational
+  //iterator.forEach((key, value) => {
+  //  //console.log(`Index: ${key}, Value: ${value}`)
+  //  if(value) { 
+  //      let monCountOkay:number = monCountOkay+1
+  //  } else {
+  //      let monCountDown:number = monCountDown+1 
+  //  }
+  //})
 
 
   return (
-    <AllStatus countText={allOperational ? ' ' : allOutage ? ' ( Down: '+monCountDown.toString()+' )' : '( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )' } statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage' : 'Partial System Outage'} statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
+    //<AllStatus countText={allOperational ? ' ' : allOutage ? ' ( Down: '+monCountDown.toString()+' )' : '( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )' } statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage' : 'Partial System Outage'} statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
+    <AllStatus countText={counterText} statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage' : 'Partial System Outage'} statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
   )
 }
