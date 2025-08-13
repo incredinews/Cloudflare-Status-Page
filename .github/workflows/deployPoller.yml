@@ -9,6 +9,7 @@ on:
       - ".github/workflows/deployPoller.yml"
       - "config.json"
       - "types/src/**"
+      - "poller/wrangler.toml"
   repository_dispatch:
 
 jobs:
