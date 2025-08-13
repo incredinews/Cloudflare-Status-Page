@@ -14,6 +14,7 @@ export function AllStatus({ statusText, statusColorCode = '#2ecc71', lastCheck }
         {statusText ? <Typography variant='h3' component='h1' style={{ color: '#fff', textAlign: 'left' }}>
           {statusText}
           {countText ? <Typography variant='h5' component='h5' style={{ color: '#fef', textAlign: 'bottom' }}>
+            </Typography > :
           {countText}
         </Typography > :
           <Skeleton variant='rectangular'>
