@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import type { MonitorMonth } from 'cf-status-page-types';
 import { Paper, Skeleton, Stack, Typography } from '@mui/material';
 
-export function AllStatus({ statusText, countText, statusColorCode = '#2ecc71', lastCheck }: { statusText?: string, countText?: string, statusColorCode?: string, lastCheck?: number }) {
+export function AllStatus({ statusText, countText = "...", statusColorCode = '#2ecc71', lastCheck }: { statusText?: string, countText?: string, statusColorCode?: string, lastCheck?: number }) {
   return (
     <Paper elevation={5} style={{ padding: '2.5vh 2vw', margin: '0 0 5vh 0', backgroundColor: statusColorCode }}>
       <Stack direction="row" sx={{
