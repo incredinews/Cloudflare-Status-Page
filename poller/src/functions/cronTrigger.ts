@@ -17,6 +17,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   // Get Worker PoP and save it to monitorMonthMetadata
   const checkLocation = await getCheckLocation()
   const now = Date.now()
+  const cronStarted = Date.now()
   const checkDay = getDate(now)
   const preset_debounce = config.debounce || 345 
   // Get monitors state from KV
@@ -84,10 +85,16 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
     //subrequest limiter
     if(sentRequests > 42 ) {
-      reasons=reasons+"F"
+      reasons=reasons+" LimR"
       do_request=false
     } else {
+      const timediffcron=localnow-cronStarted
+      const cronSeconds=timediff/1000
+      if ( cronseconds > 9 ) { 
+      reasons=reasons+" LimT"
+      } else { 
       reasons=reasons+" "
+      }
     }
     if (do_request) {
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timesec}`)
