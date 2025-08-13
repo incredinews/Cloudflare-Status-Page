@@ -12,10 +12,8 @@ export function AllStatus({ statusText, statusColorCode = '#2ecc71', lastCheck }
         justifyContent: 'space-between',
       }}>
         {statusText ? <Typography variant='h3' component='h1' style={{ color: '#fff', textAlign: 'left' }}>
-          <br>
           {statusText}
-          {countText ? <Typography variant='h5' component='h5' style={{ color: '#fef', textAlign: 'bottom' }}>
-            </Typography > 
+        {countText ? <Typography variant='h5' component='h5' style={{ color: '#fef', textAlign: 'bottom' }}>
           {countText}
         </Typography > :
           <Skeleton variant='rectangular'>
@@ -61,7 +59,7 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
     } else {
         monCountDown=monCountDown+1 
     }
-    }
+  }
 }  
   //for (const countelm of operational){
   //  console.log(JSON.stringify(countelm))
