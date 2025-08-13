@@ -112,7 +112,12 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId:  ${{ secrets.CF_ACCOUNT_ID }}
-          command:  cd  site/.vercel/output/static && ls -lh1 &&  pages deploy YOUR_DIST_FOLDER --project-name=uptime
+          command:  cd  site/.vercel/output/static && ls -lh1 &&  pages deploy YOUR_DIST_FOLDER --project-name=$PROJECT_NAME
           # Optional: Enable this if you want to have GitHub Deployments triggered
           # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          PROJECT_NAME: ${{  vars.PROJECT_NAME || 'upcloudflare' }}
+          #PROJECT_NAME: ${{ secrets.PROJECT_NAME || 'upcloudflare' }}
+          #PROJECT_NAME: ${{ github.event.inputs.PROJECT_NAME || 'upcloudflare' }}
+          
           
