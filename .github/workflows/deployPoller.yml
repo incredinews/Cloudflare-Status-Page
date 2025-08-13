@@ -51,6 +51,7 @@ jobs:
         working-directory: poller
       - name: Publish
         uses: cloudflare/wrangler-action@v3
+        shell: bash
         with:
           workingDirectory: poller
           apiToken: ${{ secrets.CF_API_TOKEN }}
