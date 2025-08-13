@@ -60,6 +60,6 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   }
   let monCountAlive=0;
   return (
-    <AllStatus statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage ( Down: '+monCountDown.toString()+' )' : 'Partial System Outage ( D: '+monCountDown.toString()+' | U : '+monCountOkay.toString()+' )' } statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
+    <AllStatus statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage <br> ( Down: '+monCountDown.toString()+' )' : 'Partial System Outage <br> ( D: '+monCountDown.toString()+' | U : '+monCountOkay.toString()+' )' } statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
   )
 }
