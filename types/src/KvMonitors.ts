@@ -64,6 +64,7 @@ export interface Checks {
 }
 
 export interface MonitorMonth {
+  countText: string,
   lastCheck: number,
   operational: {
     [index: string]: boolean
