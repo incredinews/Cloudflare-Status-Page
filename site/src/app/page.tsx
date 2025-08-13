@@ -87,7 +87,7 @@ export default function Home() {
               {i !== 0 && <Divider style={{ margin: '2.5vh 0' }} />}
               <Typography variant='h6' component='h2' style={{ color: data.operational[monitorName] ? '#2ecc71' : '' }}>
               
-                <Link style={{ color: 'inherit' }} underline='hover' href={{ private ? url : config.settings.url }}>
+              <Link style={{ color: 'inherit' }} underline='hover' href={url}>
                   {name}
                 </Link>
                 <span style={{ float: 'right', color: data.operational[monitorName] ? '#3BA55C' : '' }}>{data.operational[monitorName] ? 'Operational' : 'Outage'}</span>
