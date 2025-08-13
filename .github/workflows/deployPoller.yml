@@ -30,7 +30,7 @@ jobs:
       - name: Get code cache key
         id: get-code-cachekey
         run: |
-          sum=$((find -type f app  site scripts ;echo .yarnrc.yml poller/package.json poller/tsconfig.json ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
+          sum=$((find -type f poller types ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           echo -n "codecachekey=$sum" >> $GITHUB_OUTPUT
         shell: bash
       - name: Cache yarn
