@@ -61,13 +61,22 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   //let monCountDown:number = 0 ;
   //let monCountOkay:number = 0 ;
   //console.log(JSON.stringify(operational))
-  for ((const key, const value) in operational) {
+  //for ((const key, const value) in operational) {
+  //  if(value) { 
+  //      let monCountOkay:number = monCountOkay+1
+  //  } else {
+  //      let monCountDown:number = monCountDown+1 
+  //  }
+  //}  
+  operational.forEach((key, value) => {
+    //console.log(`Index: ${key}, Value: ${value}`)
     if(value) { 
         let monCountOkay:number = monCountOkay+1
     } else {
         let monCountDown:number = monCountDown+1 
     }
-  }  
+  })
+
 
   return (
     <AllStatus countText={allOperational ? ' ' : allOutage ? ' ( Down: '+monCountDown.toString()+' )' : '( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )' } statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage' : 'Partial System Outage'} statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
