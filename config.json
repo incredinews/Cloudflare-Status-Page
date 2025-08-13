@@ -73,7 +73,7 @@
     },
     {
     "id": "athlonsports_com",
-    "name": null,
+    "name": "athlonsports.com",
     "description": null,
     "url": "https://athlonsports.com",
     "method": "GET",
@@ -82,7 +82,7 @@
     },
     {
     "id": "businessinsider_de",
-    "name": null,
+    "name": "businessinsider.de",
     "description": "Aktuelle News von Business Insider. Wirtschaft, Tech und Politik sowie alles, was euch besser macht! Entdecke jetzt Business Insider Deutschland.",
     "url": "https://www.businessinsider.de/?r=US&IR=T",
     "method": "GET",
@@ -120,7 +120,7 @@
     },
     {
     "id": "cnbc_com",
-    "name": null,
+    "name": "cnbc.com",
     "description": "CNBC International is the world leader for news on business, technology, China, trade, oil prices, the Middle East and markets.",
     "url": "https://www.cnbc.com/world/?region=world",
     "method": "GET",
@@ -377,13 +377,15 @@
     },
     
     {
-    "id": "consent_yahoo_com",
-    "name": "Yahooist Teil der Yahoo Markenfamilie",
+    "id": "news_yahoo.com",
+    "name": "news.yahoo.com",
     "description": "",
-    "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_f26f6122-fea5-41f6-a6dd-d41bca4cbf33",
+    "url": "https://news.yahoo.com/?guccounter=1",
     "method": "GET",
     "expectStatus": 200,
-    "followRedirect": true
+    "followRedirect": true,
+    "matchText": "Yahoo News"
+    "userAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0"
     },
     {
     "id": "nj_com:443",
@@ -543,17 +545,17 @@
     {
       "id": "newstral.com",
       "name": "Newstral / dnnd.de German News Aggregator",
-      "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
+      "description": "News aggregator , successor of dnnd.de",
       "url": "https://newstral.com",
       "method": "GET",
       "expectStatus": 200,
       "followRedirect": true,
-      "matchText": "Newstral"
+      "matchText": "newstral.com"
     },
     {
       "id": "wn.com",
       "name": "wn.com headlines from WorldNews Network",
-      "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
+      "description": "Latest headlines from WN Network including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
       "url": "https://wn.com",
       "method": "GET",
       "expectStatus": 200,
