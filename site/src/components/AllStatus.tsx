@@ -54,7 +54,7 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   console.log("countelem")
   let monCountDown=0;
   let monCountOkay=0;
-  console.log(JSON.stringify(operational))
+  //console.log(JSON.stringify(operational))
   for ((key, value) in operational) {
     if(value) { 
         monCountOkay=monCountOkay+1
