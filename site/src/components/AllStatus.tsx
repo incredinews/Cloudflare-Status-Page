@@ -42,7 +42,7 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(Date.now())
-    }, 1000)
+    }, 3456)
     return () => clearInterval(interval)
   }, [])
   const allOperational = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === true)
@@ -50,9 +50,9 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   console.log("countelem")
   let monCountDown=0;
   let monCountOkay=0;
-  console.log(JSON.stringify(operational))
+  //console.log(JSON.stringify(operational))
   for (const countelm in Object.keys(operational)) {
-    console.log(JSON.stringify(countelm))
+    //console.log(JSON.stringify(countelm))
       if(operational[countelm]) { 
         monCountOkay=monCountOkay+1
       } else  { 
