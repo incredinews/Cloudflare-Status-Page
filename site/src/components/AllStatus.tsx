@@ -20,7 +20,7 @@ export function AllStatus({ statusText, statusColorCode = '#2ecc71', lastCheck }
             </Typography >
           </Skeleton>
         }
-        {countText ? <Typography variant='h3' component='h1' style={{ color: '#fef', textAlign: 'left' }}>
+        {countText ? <Typography variant='h5' component='h1' style={{ color: '#fef', textAlign: 'left' }}>
           {countText}
         </Typography > :
           <Skeleton variant='rectangular'>
