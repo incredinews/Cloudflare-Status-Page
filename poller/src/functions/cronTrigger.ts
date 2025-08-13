@@ -13,6 +13,8 @@ function getDate(time: number) {
 }
 
 export async function processCronTrigger(namespace: KVNamespace, trigger, event: ScheduledEvent) {
+  log_verbose=false
+  log_errors=false
   console.log("cron_function_init "+trigger)
   // Get Worker PoP and save it to monitorMonthMetadata
   const checkLocation = await getCheckLocation()
@@ -95,7 +97,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
 
-  mymonitors.sort((a, b) => b.age - a.age)
+  mymonitors.sort((a, b) => b.lastFetched - a.lastFetched)
 
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
@@ -133,22 +135,23 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }
     }
     if (do_request) {
+      let returnstatus=000
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
       let monitorOperational=false
-    let parserFound=false
-    let requestTime = -2
-    if(monitor.url.includes("http://")||monitor.url.includes("https://")) {
-        parserFound=true
-              // Fetch the monitors URL
-      const init: Parameters<typeof fetch>[1] = {
-        method: monitor.method || 'GET',
-        redirect: monitor.followRedirect ? 'follow' : 'manual',
-        headers: {
-          //@ts-expect-error
-          //'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
-          'User-Agent': monitor.user_agent || 'cf-workers-status-poller',
-        },
-      }
+      let parserFound=false
+      let requestTime = -2
+      if(monitor.url.includes("http://")||monitor.url.includes("https://")) {
+            parserFound=true
+                  // Fetch the monitors URL
+          const init: Parameters<typeof fetch>[1] = {
+            method: monitor.method || 'GET',
+            redirect: monitor.followRedirect ? 'follow' : 'manual',
+            headers: {
+              //@ts-expect-error
+              //'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
+              'User-Agent': monitor.user_agent || 'cf-workers-status-poller',
+            },
+          }
       // Perform a check and measure time
       const requestStartTime = performance.now()
       const checkResponse = await fetch(monitor.url, init)
@@ -163,6 +166,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         // be more precise, 200 can also be raised by default placeholders etc
         monitorOperational = checkResponse.status === monitor.expectStatus
       }
+      returnstatus=checkResponse.status
       const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
       //check for full text
       if (monitor.matchText && monitorOperational) {
@@ -180,7 +184,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }  
       // Save monitor's last check response status
       monitorMonth.operational[monitor.id] = monitorOperational;
-    }
+    } // end http monitors
     if(monitor.url.includes("rediss://")) {
       parserFound=true
       //const redis = createRedis("rediss://user:the_token@host.of.redis.lan:11111");
@@ -191,8 +195,10 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         const redecoder = new TextDecoder();
         monitorOperational=true
         console.log("redis_ping_resp:" + decoder.decode(value)); 
+        returnstatus=200
             } catch (error) {
         console.log("redis_resp_err"+error)
+        returnstatus=503
       }
       requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
@@ -215,26 +221,30 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
       // save new average ms
       monitorMonth.checks[checkDay].summery[checkLocation][monitor.id].a = Math.round(ms / no)
-
       // back online
-      // if (monitorStatusChanged) {
-      //   monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
-      // }
+       if (monitorStatusChanged) {
+         monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
+       }
     }
 
     res.ms[monitor.id] = monitorOperational ? requestTime : null
     if(monitorOperational) { monCountOkay=monCountOkay+1 } else { monCountDown=monCountDown+1 }
-
     // go dark
-    // if (!monitorOperational && monitorStatusChanged) {
-    //   monitorMonth.monitors[monitor.id].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
-    //   const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
-    //   monitorMonth.monitors[monitor.id].checks[checkDay].incidents.push(incidentNumber)
-    // }
+    if(!monitorOperational ) {
+      if (monitorStatusChanged || log_errors ) {
+                 console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     FAILING ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
+      }
+    }
+     if (!monitorOperational && monitorStatusChanged) {
+       monitorMonth.monitors[monitor.id].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
+       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
+       monitorMonth.monitors[monitor.id].checks[checkDay].incidents.push(incidentNumber)
+     }
+
   // end timediff
    } else {
 
-    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} ... last : ${monitorMonth.lastCheck} diff: ${timesec}`)
+    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck} `)
 
   }
   counter=counter+1

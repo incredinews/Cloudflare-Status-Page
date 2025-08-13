@@ -77,7 +77,8 @@
     "description": null,
     "url": "https://athlonsports.com",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": [200,403],
+    "matchText": "Please enable JS and disable any ad blocker",
     "followRedirect": true
     },
     {
@@ -171,17 +172,8 @@
     "url": "https://www.express.co.uk/",
     "method": "GET",
     "expectStatus": 200,
-    "followRedirect": true
-    },
-    
-    {
-    "id": "consent_yahoo_com",
-    "name": "Yahooist Teil der Yahoo Markenfamilie",
-    "description": "",
-    "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_9f7f995a-e901-4210-807d-8abdf9ca4166",
-    "method": "GET",
-    "expectStatus": 200,
-    "followRedirect": true
+    "followRedirect": true,
+    "matchText": "images.express.co.uk"
     },
     {
     "id": "forbes_com",
