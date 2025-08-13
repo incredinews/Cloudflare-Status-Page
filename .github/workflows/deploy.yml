@@ -117,12 +117,15 @@ jobs:
       - name: patch functions
         run: cp -rv functions  site/.vercel/output/static
         working-directory: .
+      - name: show files
+        run: cd  site/.vercel/output/static && ls -lh1 
+        working-directory: .
       - name: Deploy page
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId:  ${{ secrets.CF_ACCOUNT_ID }}
-          command:  cd  site/.vercel/output/static && ls -lh1 &&  pages deploy YOUR_DIST_FOLDER --project-name=$PROJECT_NAME
+          command:  pages deploy site/.vercel/output/static --project-name=$PROJECT_NAME
           # Optional: Enable this if you want to have GitHub Deployments triggered
           # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
         env:
