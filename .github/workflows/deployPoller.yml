@@ -63,14 +63,16 @@ jobs:
             which jq || ( sudo apt-get update && sudo apt-get install -y jq)
             (  npx wrangler kv:namespace list > namespaces.json ) || (  npx wrangler kv namespace list  > namespaces.json )
             cat namespaces.json
-            echo "___"
+            echo "___1"
             cat namespaces.json|jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' 
-            echo ...
+            echo "___2"
             ( cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id" )
             ( cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id" ) > kvnamespace
+            echo "___3"
             cat kvnamespace |wc -c |grep ^1$ &&  echo empty KV .. generating ; 
-            cat kvnamespace |wc -c |grep ^1$ && (npx wrangler kv:namespace create KV_STATUS_PAGE    ||    npx wrangler kv namespace create KV_STATUS_PAGE )        
-            cat kvnamespace |wc -c |grep ^1$ && (npx wrangler kv:namespace list > namespaces.json  ||   npx wrangler kv namespace list  > namespaces.json ) 
+            cat kvnamespace |wc -c |grep ^1$ && (npx wrangler kv:namespace create KV_STATUS_PAGE    ||    npx wrangler kv namespace create KV_STATUS_PAGE )
+            cat kvnamespace |wc -c |grep ^1$ && (npx wrangler kv:namespace list > namespaces.json  ||   npx wrangler kv namespace list  > namespaces.json )
+            echo "___4"
             ( cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id" ) > kvnamespace
             cat kvnamespace |wc -c |grep ^1$ && echo empty KV namespace..failing...
             cat kvnamespace |wc -c |wc -c |grep ^1$ && exit 1
