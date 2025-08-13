@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "poller/**"
-      - ".github/workflows/deployPoller.yml"
+      - ".github/workflows/deploy.yml"
       - "config.json"
       - "types/src/**"
       - "poller/wrangler.toml"
