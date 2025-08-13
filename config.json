@@ -23,8 +23,8 @@
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true,
-    "matchText": "BBC"
-
+    "matchText": "BBC",
+    "private": true
     },
     {
     "id": "cnn",
@@ -166,7 +166,7 @@
     },
     {
     "id": "express_co_uk",
-    "name": null,
+    "name": "express.co.uk",
     "description": "Latest news, showbiz, sport, comment, lifestyle, city, video and pictures from the Daily Express and Sunday Express newspapers and Express.co.uk",
     "url": "https://www.express.co.uk/",
     "method": "GET",
@@ -213,7 +213,7 @@
     },
     {
     "id": "huffpost_com",
-    "name": null,
+    "name": "huffpost.com",
     "description": "Read the latest headlines, news stories, and opinion from Politics, Entertainment, Life, Perspectives, and more.",
     "url": "https://www.huffpost.com/",
     "method": "GET",
@@ -240,7 +240,7 @@
     },
     {
     "id": "indianexpress_com",
-    "name": null,
+    "name": "indianexpress.com",
     "description": null,
     "url": "https://indianexpress.com",
     "method": "GET",
@@ -267,7 +267,7 @@
     },
     {
     "id": "inquisitr_com",
-    "name": null,
+    "name": "inquisitr.com",
     "description": "The Inquisitr offers a constantly updated mix of the latest stories to hit the web, covering a diverse spectrum of current news events….",
     "url": "https://www.inquisitr.com/",
     "method": "GET",
@@ -276,7 +276,7 @@
     },
     {
     "id": "livemint_com",
-    "name": "Business News Today: Read Latest Business News, Live India Share Market News, Finance & Economy News | Mint",
+    "name": "livemint.com Business News Today",
     "description": "Business News: Read latest Business News headlines, LIVE share market news and updates, financial, economic and banking news from India &amp; across the World on Mint.",
     "url": "https://www.livemint.com/",
     "method": "GET",
@@ -323,7 +323,7 @@
     },
     {
     "id": "nbcnews_com",
-    "name": null,
+    "name": "nbcnews.com",
     "description": "Go to NBCNews.com for breaking news, videos, and the latest top stories in world news, business, politics, health and pop culture.",
     "url": "https://www.nbcnews.com",
     "method": "GET",
@@ -341,7 +341,7 @@
     },
     {
     "id": "news_com_au",
-    "name": null,
+    "name": "news.com.au",
     "description": null,
     "url": "https://news.com.au",
     "method": "GET",
@@ -350,7 +350,7 @@
     },
     {
     "id": "news_google_com",
-    "name": null,
+    "name": "news.google.com",
     "description": "Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News.",
     "url": "https://news.google.com/home?hl=en-US&gl=US&ceid=US:en&ucbcb=1",
     "method": "GET",
@@ -387,7 +387,7 @@
     },
     {
     "id": "nj_com:443",
-    "name": null,
+    "name": "nj.com latest New Jersey news, sports, and breaking updates",
     "description": "Get the latest New Jersey news, sports, and breaking updates. View daily NJ weather and top stories from Jersey City, Atlantic City, and beyond on NJ.com.",
     "url": "https://www.nj.com:443/",
     "method": "GET",
@@ -396,7 +396,7 @@
     },
     {
     "id": "nydailynews_com",
-    "name": null,
+    "name": "nydailynews.com",
     "description": null,
     "url": "https://nydailynews.com",
     "method": "GET",
@@ -405,7 +405,7 @@
     },
     {
     "id": "nypost_com",
-    "name": null,
+    "name": "nypost.com",
     "description": "Your source for breaking news, photos, and videos about New York, sports, business, entertainment, opinion, real estate, culture, fashion, and more.",
     "url": "https://nypost.com",
     "method": "GET",
@@ -432,7 +432,7 @@
     },
     {
     "id": "people_com",
-    "name": null,
+    "name": "people.com",
     "description": "Get breaking news and trending scoops on your favorite celebs, royals, true crime sagas, and more.",
     "url": "https://people.com",
     "method": "GET",
@@ -497,7 +497,7 @@
     },
     {
     "id": "telegraph_co_uk",
-    "name": null,
+    "name": "telegraph.co.u",
     "description": null,
     "url": "https://telegraph.co.uk",
     "method": "GET",
@@ -506,7 +506,7 @@
     },
     {
     "id": "theguardian_com",
-    "name": null,
+    "name": "theguardian.com",
     "description": null,
     "url": "https://theguardian.com",
     "method": "GET",
@@ -533,7 +533,7 @@
     },
     {
     "id": "eu_usatoday_com",
-    "name": null,
+    "name": "eu.usatoday.com",
     "description": "USA TODAY delivers current national and local news, sports, entertainment, finance, technology, and more through award-winning journalism, photos, and videos.",
     "url": "https://eu.usatoday.com/",
     "method": "GET",
@@ -544,11 +544,21 @@
       "id": "newstral.com",
       "name": "Newstral / dnnd.de German News Aggregator",
       "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
-      "url": "https://wn.com",
+      "url": "https://newstral.com",
       "method": "GET",
       "expectStatus": 200,
       "followRedirect": true,
       "matchText": "Newstral"
+    },
+    {
+      "id": "wn.com",
+      "name": "wn.com headlines from WorldNews Network",
+      "description": "Latest headlines from WN Network. WorldNews delivers latest Breaking news including World News, U.S., politics, business, entertainment, video, science, weather and sports news. Search News and archives in 80 languages.",
+      "url": "https://wn.com",
+      "method": "GET",
+      "expectStatus": 200,
+      "followRedirect": true,
+      "matchText": "WorldNews"
     }
   ]
 }
