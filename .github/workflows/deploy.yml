@@ -35,8 +35,8 @@ jobs:
           sum=$((find -type f poller types ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           echo -n "codecachekey=$sum" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Cache yarn
-        id: cache-yarn
+      - name: Cache yarn Poller
+        id: cache-yarn Poller
         uses: actions/cache@v4
         with:
           path: poller/.yarn
@@ -45,6 +45,13 @@ jobs:
       - run: yarn install
         working-directory: poller
       - name: Cache yarn Poller
+        id: cache-yarn Poller
+        uses: actions/cache@v4
+        with:
+          path: poller/.yarn
+          #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
+          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
+      - name: Cache yarn
         id: cache-yarn-poller
         uses: actions/cache@v4
         with:
