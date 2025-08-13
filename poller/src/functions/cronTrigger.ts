@@ -102,7 +102,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         redirect: monitor.followRedirect ? 'follow' : 'manual',
         headers: {
           //@ts-expect-error
-          'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
+          //'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
+          'User-Agent': monitor.user_agent || 'cf-workers-status-poller',
         },
       }
       // Perform a check and measure time
@@ -144,7 +145,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
             } catch (error) {
         console.log("redis_resp_err"+error)
       }
-
       requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
       monitorMonth.lastFetched[monitor.id]=localnow
