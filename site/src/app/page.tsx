@@ -82,7 +82,7 @@ export default function Home() {
         <AllStatusWithData operational={data.operational} lastCheck={data.lastCheck} defaultNow={Date.now()} />}
       <Paper elevation={5} style={{ padding: '5vh 0', margin: '5vh 0' }}>
         <Container>
-          {config.monitors.map(({ id: monitorName, name, url }, i) =>
+          {config.monitors.map(({ id: monitorName, name, url, hidden }, i) =>
             <Box key={i}>
               {i !== 0 && <Divider style={{ margin: '2.5vh 0' }} />}
               <Typography variant='h6' component='h2' style={{ color: data.operational[monitorName] ? '#2ecc71' : '' }}>
