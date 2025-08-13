@@ -98,7 +98,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   mymonitors.sort((a, b) => b.age - a.age)
 
   for (const monitor of mymonitors) {
-    console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
+    //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
     const localnow=Date.now()
     const realdebounce=monitor.debounce||preset_debounce
@@ -132,7 +132,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }
     }
     if (do_request) {
-      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} ... last time: ${monitorMonth.lastCheck} diff: ${timesec}`)
+      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
       let monitorOperational=false
     let parserFound=false
     let requestTime = -2
