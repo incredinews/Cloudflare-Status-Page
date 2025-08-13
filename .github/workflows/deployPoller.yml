@@ -69,8 +69,6 @@ jobs:
             ( cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id" )
             ( cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id" ) > kvnamespace
             echo "___3"
-            (cat kvnamespace |wc -c )
-            (cat kvnamespace |wc -c )|grep ^1$ 
             grep KV_STATUS_PAGE namespaces.json || echo "empty KV .. generating"; 
             grep KV_STATUS_PAGE namespaces.json || (npx wrangler kv:namespace create KV_STATUS_PAGE   ||   npx wrangler kv namespace create KV_STATUS_PAGE )
             grep KV_STATUS_PAGE namespaces.json || (npx wrangler kv:namespace list > namespaces.json  ||   npx wrangler kv namespace list  > namespaces.json )
