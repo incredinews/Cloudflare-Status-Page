@@ -75,7 +75,6 @@ export default function Home() {
       setDataLoaded(oldData => [oldData[0], oldData[1], true])
     }).catch(() => { });
   }, [])
-
   return (
     <>
       {data.lastCheck === 0 ?
