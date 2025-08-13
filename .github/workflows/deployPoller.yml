@@ -40,6 +40,8 @@ jobs:
           path: poller/.yarn
           #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
           key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
+      - run: yarn install
+        working-directory: poller
       - name: Cache yarn Poller
         id: cache-yarn-poller
         uses: actions/cache@v4
