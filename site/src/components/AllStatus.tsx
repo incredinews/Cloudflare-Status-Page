@@ -68,7 +68,12 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   //      let monCountDown:number = monCountDown+1 
   //  }
   //}  
-  operational.forEach((key, value) => {
+  interface TSDictop {
+   [key: string]: boolean;
+  }
+  let iterator:TSDictop = {};
+  iterator=operational
+  iterator.forEach((key, value) => {
     //console.log(`Index: ${key}, Value: ${value}`)
     if(value) { 
         let monCountOkay:number = monCountOkay+1
