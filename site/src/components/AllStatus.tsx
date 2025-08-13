@@ -13,6 +13,8 @@ export function AllStatus({ statusText, statusColorCode = '#2ecc71', lastCheck }
       }}>
         {statusText ? <Typography variant='h3' component='h1' style={{ color: '#fff', textAlign: 'left' }}>
           {statusText}
+          {countText ? <Typography variant='h5' component='h5' style={{ color: '#fef', textAlign: 'bottom' }}>
+          {countText}
         </Typography > :
           <Skeleton variant='rectangular'>
             <Typography variant='h3' component='h1' style={{ color: '#fff', textAlign: 'left' }}>
@@ -51,20 +53,28 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   let monCountDown=0;
   let monCountOkay=0;
   console.log(JSON.stringify(operational))
-  for (const countelm of operational){
-    console.log(JSON.stringify(countelm))
-  }
+  for ((key, value) in operational) {
+    if(value) { 
+        monCountOkay=monCountOkay+1
+    } else {
+        monCountDown=monCountDown+1 
+    }
+
+    }
+}  
+  //for (const countelm of operational){
+  //  console.log(JSON.stringify(countelm))
+  //}
   //for (const countelm in Object.keys(operational)) {
   //  //console.log(JSON.stringify(countelm))
   //  //console.log(JSON.stringify(operational[countelm]))
   //    
   //    if(operational[countelm]) { 
-  //      monCountOkay=monCountOkay+1
   //    } else  { 
-  //      monCountDown=monCountDown+1 }
   //}
   let monCountAlive=0;
   return (
-    <AllStatus statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage <br> ( Down: '+monCountDown.toString()+' )' : 'Partial System Outage <br> ( D: '+monCountDown.toString()+' | U : '+monCountOkay.toString()+' )' } statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
+    <AllStatus countText={allOperational ? ' ' : allOutage ? ' ( Down: '+monCountDown.toString()+' )' : '( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )' } statusText={allOperational ? 'All Systems Operational' : allOutage ? '! Major System Outage ! ' : 'Partial System Outage' } statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
+    
   )
 }

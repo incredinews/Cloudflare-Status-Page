@@ -41,6 +41,7 @@ export interface Checks {
       start: number
       status: number
       statusText: string
+      countText: string
       end?: number
     }[]
   },
