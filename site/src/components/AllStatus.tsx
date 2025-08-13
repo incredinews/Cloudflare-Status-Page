@@ -35,6 +35,7 @@ export function AllStatus({ statusText, statusColorCode = '#2ecc71', lastCheck }
   )
 }
 
+
 export default function AllStatusWithData({ operational, lastCheck, defaultNow }: { operational: MonitorMonth["operational"], lastCheck: number, defaultNow: number }) {
   const [now, setNow] = useState(defaultNow)
 

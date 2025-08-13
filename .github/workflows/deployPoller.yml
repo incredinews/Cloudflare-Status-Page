@@ -8,6 +8,7 @@ on:
       - "poller/**"
       - ".github/workflows/deployPoller.yml"
       - "config.json"
+      - "site/src/**"
   repository_dispatch:
 
 jobs:
