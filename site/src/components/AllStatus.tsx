@@ -51,12 +51,12 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   let monCountDown=0;
   let monCountOkay=0;
   console.log(JSON.stringify(operational))
-  for (const countelm in operational) {
+  for (const countelm in Object.keys(operational)) {
     console.log(JSON.stringify(countelm))
-    //  if(countelm.operational) { 
-    //    monCountOkay=monCountOkay+1
-    //  } else  { 
-    //    monCountDown=monCountDown+1 }
+      if(operational[countelm]) { 
+        monCountOkay=monCountOkay+1
+      } else  { 
+        monCountDown=monCountDown+1 }
   }
   let monCountAlive=0;
   return (
