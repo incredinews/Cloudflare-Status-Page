@@ -61,18 +61,51 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   // the first went to fetch kv
   let sentRequests=1;
   let monitorCount=config.monitors.length
+  
+  // we know our fetchlimit of 42, so we do not have to re-sort the whole array
+  //let oldestmonitors = []
+  //let oldestmonitor=0
+  //let newestmonitor=0
+  let mymonitors= []
   for (const monitor of config.monitors) {
-    //console.error("start_mon")
-    //console.log(JSON.stringify(monitor))
-    const localnow=Date.now()
-    const realdebounce=monitor.debounce||preset_debounce
-    let displayname = monitor.name || monitor.id;
-    //let laststr=monitorMonth.lastCheck
-    //let nowstr=
-    let timediffglobal=now-monitorMonth.lastCheck
+      let timediffglobal=now-monitorMonth.lastCheck
     if (!monitorMonth.lastFetched[monitor.id]) {
       monitorMonth.lastFetched[monitor.id]=localnow-999999999
     }
+  let mymonitor=monitor
+  mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
+  mymonitors.push(mymonitor)
+  //  let lastping=monitorMonth.lastFetched[monitor.id]
+  //  if ( newestmonitor == 0 )  {
+  //    newestmonitor=monitor.id
+  //  }
+  //  if ( oldestmonitor == 0 )  {
+  //    oldestmonitor=monitor.id
+  //  }
+  //  if (lastping>oldestmonitor ) {
+  //    oldestmonitor=monitor.id
+  //    oldestmonitors.push(monitor.id)
+  //  }
+  //  if (lastping<newestmonitor ) {
+  //    newestmonitor=monitor.id
+  //    youngestmonitors.unshift(monitor.id)
+  //  }
+
+  }
+  
+  //const allpings = youngestmonitors.concat(oldestmonitors);
+
+  mymonitors.sort((a, b) => b.age - a.age)
+
+  for (const monitor of mymonitors) {
+    console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
+    //console.log(JSON.stringify(monitor))
+    const localnow=Date.now()
+    const realdebounce=monitor.debounce||preset_debounce
+    let displayname = monitor.name || monitor.id.toString();
+    //let laststr=monitorMonth.lastCheck
+    //let nowstr=
+
     const timediff=localnow-monitorMonth.lastFetched[monitor.id]
     const timesec=timediff/1000
 
@@ -81,19 +114,19 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
     if( timesec > realdebounce  ) {
       do_request=true;
-      reasons="T"
+      reasons="+T"
     } else { 
-      reasons="t"
+      reasons="+t"
     }
     //subrequest limiter
     if(sentRequests > 42 ) {
-      reasons=reasons+" LimR"
+      reasons=reasons+"+LimR"
       do_request=false
     } else {
       const timediffcron=localnow-cronStarted
       const cronSeconds=timediff/1000
       if ( cronSeconds > 9 ) { 
-      reasons=reasons+" LimT"
+      reasons=reasons+"+LimT"
       } else { 
       reasons=reasons+" "
       }
