@@ -125,8 +125,9 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     } else {
       const timediffcron=localnow-cronStarted
       const cronSeconds=timediff/1000
-      if ( cronSeconds > 9 ) { 
+      if ( cronSeconds > 10  ) { 
       reasons=reasons+"+LimT"
+      do_request=false
       } else { 
       reasons=reasons+" "
       }
