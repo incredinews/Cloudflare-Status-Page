@@ -44,13 +44,11 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
     }, 1000)
     return () => clearInterval(interval)
   }, [])
-
   //const allOperational = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === true)
 
   ///const allOutage = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === false)
   let monCountDown=0;
   let monCountOkay=0;
-
   for (const countelm of monitor) {
     console.log(JSON.stringify(countelm))
       if(countelm.operational) { 
