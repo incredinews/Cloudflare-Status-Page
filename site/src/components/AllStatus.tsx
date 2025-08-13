@@ -13,12 +13,19 @@ export function AllStatus({ statusText, statusColorCode = '#2ecc71', lastCheck }
       }}>
         {statusText ? <Typography variant='h3' component='h1' style={{ color: '#fff', textAlign: 'left' }}>
           {statusText}
-        {countText ? <Typography variant='h5' component='h5' style={{ color: '#fef', textAlign: 'bottom' }}>
-          {countText}
         </Typography > :
           <Skeleton variant='rectangular'>
             <Typography variant='h3' component='h1' style={{ color: '#fff', textAlign: 'left' }}>
               All Systems Operational
+            </Typography >
+          </Skeleton>
+        }
+        {countText ? <Typography variant='h3' component='h1' style={{ color: '#fef', textAlign: 'left' }}>
+          {countText}
+        </Typography > :
+          <Skeleton variant='rectangular'>
+            <Typography variant='h5' component='h1' style={{ color: '#fef', textAlign: 'left' }}>
+              ...
             </Typography >
           </Skeleton>
         }
