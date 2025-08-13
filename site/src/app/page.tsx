@@ -37,7 +37,7 @@ const getYearMonth = (date: Date) => {
 export default function Home() {
   const [data, setData] = useState<MonitorMonth>({
     checks: {},
-    countText: "   "
+    countText: "   ",
     lastCheck: 0,
     operational: {},
   })
