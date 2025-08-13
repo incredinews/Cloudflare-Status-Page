@@ -62,7 +62,7 @@ jobs:
             npx wrangler kv namespace list
             which jq || ( sudo apt-get update && sudo apt-get install -y jq)
             export KV_NAMESPACE_JSON=$(  npx wrangler kv:namespace list ) || export KV_NAMESPACE_JSON=$(  npx wrangler kv namespace list )
-            echo "$KV_NAMESPACE_JSON" |jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' 
+            echo "$KV_NAMESPACE_JSON"
             echo "___"
             echo "$KV_NAMESPACE_JSON" |jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' 
             echo ...
