@@ -1,4 +1,4 @@
-name: Deploy Poller
+name: Deploy Poller and Page
 
 on:
   push:
