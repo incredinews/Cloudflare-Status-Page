@@ -20,7 +20,7 @@ export default function ResponseGraph({ monitorName, checks, day = 90 }: {
       continue
     }
 
-    Object.keys(item.summery).forEach((location) => {
+    Object.keys(item.summary).forEach((location) => {
       if (!locations.includes(location)) locations.push(location)
     });
     processedData.push(item)
