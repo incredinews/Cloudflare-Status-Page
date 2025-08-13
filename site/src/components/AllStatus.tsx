@@ -49,12 +49,17 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
 
   ///const allOutage = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === false)
   let monCountDown=0;
-  for (const countelm of operational) {
+  let monCountOkay=0;
+
+  for (const countelm of monitor) {
     console.log(JSON.stringify(countelm))
-      monCountDown=monCountDown+1;
+      if(countelm.operational) { 
+        monCountOkay=monCountOkay+1
+      } else  { 
+        monCountDown=monCountDown+1 }
   }
   let monCountAlive=0;
   return (
-    <AllStatus statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage ( Down: '+monCountDown.toString()+' )' : 'Partial System Outage ( Down: '+monCountDown.toString()+' )' } statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
+    <AllStatus statusText={allOperational ? 'All Systems Operational' : allOutage ? 'Major System Outage ( Down: '+monCountDown.toString()+' )' : 'Partial System Outage ( D: '+monCountDown.toString()+' | U : '+monCountOkay.toString()+' )' } statusColorCode={allOperational ? '#2ecc71' : allOutage ? '#e74c3c' : '#e67e22'} lastCheck={Math.round((now - lastCheck) / 1000)} />
   )
 }
