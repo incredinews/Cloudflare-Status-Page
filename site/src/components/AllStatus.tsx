@@ -58,10 +58,10 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   const allOperational = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === true)
   const allOutage = Object.keys(operational).map((monitor) => operational[monitor]).every(v => v === false)
   //console.log("countelem")
-  let monCountDown:number = 0 ;
-  let monCountOkay:number = 0 ;
+  //let monCountDown:number = 0 ;
+  //let monCountOkay:number = 0 ;
   //console.log(JSON.stringify(operational))
-  for ((key, value) in operational) {
+  for ((const key, const value) in operational) {
     if(value) { 
         let monCountOkay:number = monCountOkay+1
     } else {
