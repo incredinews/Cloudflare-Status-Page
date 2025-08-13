@@ -74,7 +74,7 @@ jobs:
             grep KV_STATUS_PAGE namespaces.json || (npx wrangler kv:namespace list > namespaces.json  ||   npx wrangler kv namespace list  > namespaces.json )
             echo "___4"
             cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id"  > kvnamespace
-            cat kvnamespace
+            #cat kvnamespace
             cat kvnamespace |wc -c
             KV_NAMESPACE_ID=$(cat kvnamespace)
             [[ -z "$KV_NAMESPACE_ID" ]] && echo "empty KV namespace..failing..."
