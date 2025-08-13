@@ -244,7 +244,9 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   // end timediff
    } else {
 
-    console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck} `)
+    //if(log_verbose) { 
+      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck} | crontime: ${cronSeconds} `) 
+    //}
 
   }
   counter=counter+1
