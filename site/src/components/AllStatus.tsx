@@ -51,7 +51,7 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(Date.now())
-    }, 1000)
+    }, 3333)
     return () => clearInterval(interval)
   }, [])
 
