@@ -76,8 +76,8 @@ jobs:
             cat namespaces.json| jq -c 'map(select(.title | contains("KV_STATUS_PAGE")))' | jq -r ".[0].id"  > kvnamespace
             cat kvnamespace
             wc -c kvnamespace
-            wc -c kvnamespace | grep ^33$  || echo "empty KV namespace..failing..."
-            wc -c kvnamespace | grep ^33$  || exit 1
+            wc -c kvnamespace | grep "^33 kvnamespace$"  || echo "empty KV namespace..failing..."
+            wc -c kvnamespace | grep "^33 kvnamespace$"  || exit 1
             echo "___5"
             KV_NAMESPACE_ID=$(cat kvnamespace)
             echo "[env.production]" >> wrangler.toml
