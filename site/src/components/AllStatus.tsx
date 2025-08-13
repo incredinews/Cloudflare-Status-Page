@@ -61,7 +61,6 @@ export default function AllStatusWithData({ operational, lastCheck, defaultNow }
     } else {
         monCountDown=monCountDown+1 
     }
-
     }
 }  
   //for (const countelm of operational){
