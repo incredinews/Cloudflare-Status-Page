@@ -113,15 +113,19 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       sentRequests=sentRequests+1
       monitorMonth.lastFetched[monitor.id]=localnow
       // Determine whether operational and status changed
-      monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
-      // const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
-  
-      // Save monitor's last check response status
-      monitorMonth.operational[monitor.id] = monitorOperational;
+      if(Object.prototype.toString.call(monitor.expectStatus) === '[object Array]') { 
+        if (monitor.expectStatus.includes(checkResponse.status)) { monitorOperational= true }
+      } else {
+        //monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
+        // be more precise, 200 can also be raised by default placeholders etc
+        monitorOperational = checkResponse.status === monitor.expectStatus
+      }
+      const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
       //check for full text
       if (monitor.matchText && monitorOperational) {
         //const results = await gatherResponse(checkResponse)
         let mytxt=await checkResponse.text();
+        // next level:       if(Object.prototype.toString.call(monitor.matchText) === '[object Array]') { 
         if( mytxt.includes(monitor.matchText)  ) { 
           monitorMonth.operational[monitor.id] = true;
           monitorOperational = true;
@@ -130,7 +134,10 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
           monitorMonth.operational[monitor.id] = false;
           monitorOperational = false;
         }
-      }
+      }  
+      // Save monitor's last check response status
+      monitorMonth.operational[monitor.id] = monitorOperational;
+
     }
     if(monitor.url.includes("rediss://")) {
       parserFound=true

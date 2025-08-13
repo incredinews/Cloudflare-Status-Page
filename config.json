@@ -336,7 +336,7 @@
     "description": "NDTV.com provides latest news from India and around the world. Get breaking news alerts from India and follow today’s live news updates in field of politics, business, technology, Bollywood, cricket and more.",
     "url": "https://www.ndtv.com/",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": [401,200],
     "followRedirect": true
     },
     {
@@ -465,18 +465,19 @@
     "description": "",
     "url": "https://www.reuters.com/",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": 401,
     "followRedirect": true
     },
     {
     "id": "rt_com",
     "name": "Russia Today",
     "description": null,
-    "url": "https://rt.com",
+    "url": "https://www.rt.com",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true,
-    "debounce": 3600
+    "debounce": 3600,
+    "matchText": "www.rt.com"
     },
     {
     "id": "sputnikglobe_com",
