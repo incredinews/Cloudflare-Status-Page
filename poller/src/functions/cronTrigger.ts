@@ -63,7 +63,9 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   // the first went to fetch kv
   let sentRequests=1;
   let monitorCount=config.monitors.length
-  
+  let cronSeconds=0
+  let timediffcron=0
+
   // we know our fetchlimit of 42, so we do not have to re-sort the whole array
   //let oldestmonitors = []
   //let oldestmonitor=0
@@ -125,13 +127,13 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       reasons=reasons+"+LimR"
       do_request=false
     } else {
-      const timediffcron=localnow-cronStarted
-      const cronSeconds=timediff/1000
+      timediffcron=localnow-cronStarted
+      cronSeconds=timediff/1000
       if ( cronSeconds > 10  ) { 
-      reasons=reasons+"+LimT"
-      do_request=false
+        reasons=reasons+"+LimT"
+        do_request=false
       } else { 
-      reasons=reasons+" "
+        reasons=reasons+" "
       }
     }
     if (do_request) {
@@ -242,15 +244,16 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
      }
 
   // end timediff
-   } else {
+   } else { // dorequest
 
     //if(log_verbose) { 
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck} | crontime: ${cronSeconds} `) 
     //}
 
-  }
+  } // end dorequest
   counter=counter+1
   }
+
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
   if(monCountDown==monitorCount) { 
@@ -263,10 +266,10 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
 
   }
-  
-
   // Save monitorMonth to KV storage
-  console.log("KV_write_1")
+  timediffcron=localnow-cronStarted
+  cronSeconds=timediff/1000
+  console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
   await setKVMonitors(namespace,checkDay.slice(0, 7), monitorMonth)
 
   return new Response('OK')
