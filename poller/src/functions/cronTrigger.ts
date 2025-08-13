@@ -137,7 +137,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }
     }
     if (do_request) {
-      let returnstatus=000
+      let returnstatus=0
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
       let monitorOperational=false
       let parserFound=false
