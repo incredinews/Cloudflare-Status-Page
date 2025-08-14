@@ -12,13 +12,14 @@ import Link from '@/components/Link';
 import AllStatusWithData, { AllStatus } from '@/components/AllStatus';
 import OverallResponseGraph from '@/components/OverallResponseGraph';
 import UptimeGraph from '@/components/UptimeGraph';
+
+"use client"
+
 import { useEffect, useState } from 'react';
 
 
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
-import React from "react";
-
 
 //export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
