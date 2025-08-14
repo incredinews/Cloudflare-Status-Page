@@ -14,11 +14,7 @@ import OverallResponseGraph from '@/components/OverallResponseGraph';
 import UptimeGraph from '@/components/UptimeGraph';
 import { useEffect, useState } from 'react';
 
-
-import type { AppProps } from "next/app";
-import dynamic from "next/dynamic";
-
-//export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
 export const runtime = 'edge'
 
@@ -48,7 +44,6 @@ export default function Home() {
   const [_dataLoaded, setDataLoaded] = useState([false, false, false])
 
   useEffect(() => {
-    
     getKvMonitors(getYearMonth(new Date())).then((res) => {
       setData(oldData => ({
         checks: { ...oldData.checks, ...res.checks },
