@@ -32,6 +32,7 @@ jobs:
         id: get-code-cachekey
         run: |
           sum=$((find poller types -type f  ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
+          sum=$((find poller types -type f  ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           echo -n "codecachekey=$sum" >> $GITHUB_OUTPUT
         shell: bash
       - name: Cache yarn Poller
@@ -40,7 +41,7 @@ jobs:
         with:
           path: poller/.yarn
           #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('poller/src/**') }}-${{ hashFiles('poller/.yarn**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('.yarnrc.yml') }}
-          key: ${{ steps.get-machine.outputs.machine }}-yarn-poller-${{ hashFiles('poller/.yarn**') }}-${{ hashFiles('.yarnrc.yml') }}
+          key: ${{ steps.get-machine.outputs.machine }}-yarn-poller-${{ hashFiles('poller/src/**') }}-${{ hashFiles('.yarnrc.yml') }}
           #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
 
       - run: yarn install
@@ -51,13 +52,13 @@ jobs:
         with:
           path: poller/.yarn
           #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('app/**') }}-${{ hashFiles('poller/**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('scripts/**') }}-${{ hashFiles('.yarnrc.yml') }}
-          key: ${{ steps.get-machine.outputs.machine }}-yarn-poller-${{ hashFiles('poller/.yarn**') }}-${{ hashFiles('.yarnrc.yml') }}
+          key: ${{ steps.get-machine.outputs.machine }}-yarn-poller-${{ hashFiles('poller/src/**') }}-${{ hashFiles('.yarnrc.yml') }}
       - name: Cache yarn
         id: cache-yarn
         uses: actions/cache@v4
         with:
           path: .yarn
-          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('poller/.yarn**') }}-${{ hashFiles('.yarnrc.yml') }}
+          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('.yarnrc.yml') }}
           #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
       - run: bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
       - name: Cache yarn
@@ -65,7 +66,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .yarn
-          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('poller/.yarn**') }}-${{ hashFiles('.yarnrc.yml') }}
+          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('.yarnrc.yml') }}
           #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
 
       - run: yarn build
