@@ -12,9 +12,6 @@ import Link from '@/components/Link';
 import AllStatusWithData, { AllStatus } from '@/components/AllStatus';
 import OverallResponseGraph from '@/components/OverallResponseGraph';
 import UptimeGraph from '@/components/UptimeGraph';
-
-"use client"
-
 import { useEffect, useState } from 'react';
 
 
