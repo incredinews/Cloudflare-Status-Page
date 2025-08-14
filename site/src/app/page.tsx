@@ -39,5 +39,32 @@ const getYearMonth = (date: Date) => {
 export default function Home() {
 
   return <div>About</div>
+//  return (
+//    <>
+//      {data.lastCheck === 0 ?
+//        <AllStatus /> :
+//        <AllStatusWithData operational={data.operational} counterText={data.countText}  lastCheck={data.lastCheck} defaultNow={Date.now()} />}
+//      <Paper elevation={5} style={{ padding: '5vh 0', margin: '5vh 0' }}>
+//        <Container>
+//          {config.monitors.map(({ id: monitorName, name, url, hidden }, i) =>
+//            <Box key={i}>
+//              {i !== 0 && <Divider style={{ margin: '2.5vh 0' }} />}
+//              <Typography variant='h6' component='h2' style={{ color: data.operational[monitorName] ? '#2ecc71' : '' }}>
+//                <Link style={{ color: 'inherit' }} underline='hover' href={ hidden ? config.settings.url : url }>
+//                  {name}
+//                </Link>
+//                <span style={{ float: 'right', color: data.operational[monitorName] ? '#3BA55C' : '' }}>{data.operational[monitorName] ? 'Operational' : 'Outage'}</span>
+//              </Typography >
+//              <UptimeGraph checks={data.checks} monitorName={monitorName} key={monitorName} />
+//              <div style={{ height: '20vh', width: '100%' }}>
+//                <OverallResponseGraph checks={data.checks} monitorName={monitorName} />
+//              </div>
+//            </Box>
+//          )}
+//        </Container>
+//      </Paper >
+//    </>
+//  )
+}
  
 }
