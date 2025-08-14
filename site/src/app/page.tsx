@@ -14,7 +14,20 @@ import OverallResponseGraph from '@/components/OverallResponseGraph';
 import UptimeGraph from '@/components/UptimeGraph';
 import { useEffect, useState } from 'react';
 
-export const dynamic = "force-dynamic"
+
+import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
+import React from "react";
+
+const App = ({ Component, pageProps }: AppProps) => {
+  return <Component {...pageProps} />;
+};
+
+export default dynamic(() => Promise.resolve(App), {
+  ssr: false,
+});
+
+//export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
 export const runtime = 'edge'
 
