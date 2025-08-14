@@ -11,7 +11,7 @@ export function AllStatus({ statusText, countText = '  ', statusColorCode = '#2e
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-        {statusText ? <Typography variant='h3' component='h1' style={{ color: '#fff', textAlign: 'left' }}>
+        {statusText ? <Typography variant='h3' component='h1' id='statusText' style={{ color: '#fff', textAlign: 'left' }}>
           {statusText}
         </Typography > :
           <Skeleton variant='rectangular'>
@@ -20,7 +20,7 @@ export function AllStatus({ statusText, countText = '  ', statusColorCode = '#2e
             </Typography >
           </Skeleton>
         }
-        {lastCheck ? <Typography variant='body1' component='p' style={{ color: '#fff', textAlign: 'right' }}>
+        {lastCheck ? <Typography variant='body1' component='p'id='lastCheck' style={{ color: '#fff', textAlign: 'right' }}>
           {lastCheck} Seconds ago
         </Typography > : <Stack direction="row" spacing={0.5}>
           <Typography variant='body1' component='p' style={{ color: '#fff', textAlign: 'right' }}>
@@ -30,7 +30,7 @@ export function AllStatus({ statusText, countText = '  ', statusColorCode = '#2e
             {lastCheck} Seconds ago
           </Typography >
         </Stack>}
-        {countText ? <Typography variant='body1' component='p' style={{ color: '#fef', textAlign: 'left' }}>
+        {countText ? <Typography variant='body1' id='countText' component='p' style={{ color: '#fef', textAlign: 'left' }}>
           {countText}
         </Typography > : <Stack direction="row" spacing={0.5}>
           <Typography variant='body1' component='p' style={{ color: '#fef', textAlign: 'left' }}>
