@@ -267,6 +267,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   }
   // Save monitorMonth to KV storage
+  const localnow=Date.now()
   timediffcron=localnow-cronStarted
   cronSeconds=timediff/1000
   console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
