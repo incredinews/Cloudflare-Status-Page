@@ -44,8 +44,8 @@ export default function Home() {
     operational: {},
   })
   const [_dataLoaded, setDataLoaded] = useState([false, false, false])
-  
-  return <div>About</div>
+
+  return <div>About</div><script>console.log("loaded")</script>
 //  return (
 //    <>
 //      {data.lastCheck === 0 ?

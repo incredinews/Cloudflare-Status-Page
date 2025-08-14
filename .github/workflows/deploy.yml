@@ -104,7 +104,7 @@ jobs:
         working-directory: .
       - name: patch functions
         #run: cp -rv functions  site/.vercel/output/static
-        run: cp -rv functions  site/dist
+        run: cp -rv functions _routes.json site/dist
         working-directory: .
       - name: show files
         run: cd site/dist && ls -lh1 
