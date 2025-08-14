@@ -126,12 +126,12 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId:  ${{ secrets.CF_ACCOUNT_ID }}
-          command:  pages deploy site/.vercel/output/static --project-name=$PROJECT_NAME
+          command:  pages deploy site/.vercel/output/static --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
           # Optional: Enable this if you want to have GitHub Deployments triggered
           # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          PROJECT_NAME: ${{  vars.PROJECT_NAME || 'upcloudflare' }}
-          #PROJECT_NAME: ${{ secrets.PROJECT_NAME || 'upcloudflare' }}
-          #PROJECT_NAME: ${{ github.event.inputs.PROJECT_NAME || 'upcloudflare' }}
+        #env:
+        #  PROJECT_NAME: ${{  vars.PROJECT_NAME || 'upcloudflare' }}
+        #  #PROJECT_NAME: ${{ secrets.PROJECT_NAME || 'upcloudflare' }}
+        #  #PROJECT_NAME: ${{ github.event.inputs.PROJECT_NAME || 'upcloudflare' }}
           
           

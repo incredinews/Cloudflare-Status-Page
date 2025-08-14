@@ -19,6 +19,21 @@ export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
 //export const runtime = 'edge'
 
+const getKvMonitors = async (key: string): Promise<MonitorMonth> => {
+  //if (!process.env.KV_STATUS_PAGE)
+  return fetch(`${config.settings.url}/api/kv/${key}`).then((res) => {
+    if (res.ok) {
+      return res.json()
+    }
+    throw new Error('Failed to fetch')
+  });
+  //const { KV_STATUS_PAGE } = (process.env as unknown as { KV_STATUS_PAGE: KVNamespace });
+  //return KV_STATUS_PAGE.get("monitors_data_v1_1", { type: 'json' });
+}
+
+const getYearMonth = (date: Date) => {
+  return date.toISOString().split('T')[0].slice(0, 7)
+}
 
 const getYearMonth = (date: Date) => {
   return date.toISOString().split('T')[0].slice(0, 7)

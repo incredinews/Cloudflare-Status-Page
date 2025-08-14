@@ -13,8 +13,8 @@ function getDate(time: number) {
 }
 
 export async function processCronTrigger(namespace: KVNamespace, trigger, event: ScheduledEvent) {
-  log_verbose=false
-  log_errors=false
+  let log_verbose=false
+  let log_errors=false
   console.log("cron_function_init "+trigger)
   // Get Worker PoP and save it to monitorMonthMetadata
   const checkLocation = await getCheckLocation()
