@@ -35,9 +35,6 @@ const getYearMonth = (date: Date) => {
   return date.toISOString().split('T')[0].slice(0, 7)
 }
 
-const getYearMonth = (date: Date) => {
-  return date.toISOString().split('T')[0].slice(0, 7)
-}
 
 export default function Home() {
 
