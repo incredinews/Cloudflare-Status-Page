@@ -112,7 +112,8 @@ jobs:
           YARN_IGNORE_NODE: 1
          #cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1        
       - name: build page
-        run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx next build && echo npx @cloudflare/next-on-pages@1
+        run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1
+        #run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx next build && echo npx @cloudflare/next-on-pages@1
         working-directory: .
       - name: patch functions
         run: cp -rv functions  site/.vercel/output/static
