@@ -44,7 +44,7 @@ export default function Home() {
     operational: {},
   })
   const [_dataLoaded, setDataLoaded] = useState([false, false, false])
-
+  
   return <div>About</div>
 //  return (
 //    <>
