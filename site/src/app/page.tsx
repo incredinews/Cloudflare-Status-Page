@@ -15,17 +15,10 @@ import UptimeGraph from '@/components/UptimeGraph';
 import { useEffect, useState } from 'react';
 
 
-//import type { AppProps } from "next/app";
-//import dynamic from "next/dynamic";
-//import React from "react";
-//
-//const App = ({ Component, pageProps }: AppProps) => {
-//  return <Component {...pageProps} />;
-//};
-//
-//export default dynamic(() => Promise.resolve(App), {
-//  ssr: false,
-//});
+import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
+import React from "react";
+
 
 //export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
