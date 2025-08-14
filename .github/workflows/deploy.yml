@@ -104,10 +104,10 @@ jobs:
         working-directory: .
       - name: patch functions
         #run: cp -rv functions  site/.vercel/output/static
-        run: cp -rv functions  site/out
+        run: cp -rv functions  site/dist
         working-directory: .
       - name: show files
-        run: cd site/out && ls -lh1 
+        run: cd site/dist && ls -lh1 
         #run: cd  site/.vercel/output/static && ls -lh1 
         working-directory: .
       - name: Deploy page
@@ -116,7 +116,7 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId:  ${{ secrets.CF_ACCOUNT_ID }}
           #command:  pages deploy site/.vercel/output/static --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
-          command:  pages deploy site/out --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
+          command:  pages deploy site/dist --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
           # Optional: Enable this if you want to have GitHub Deployments triggered
           # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
         #env:
