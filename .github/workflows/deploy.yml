@@ -100,21 +100,24 @@ jobs:
           YARN_IGNORE_NODE: 1
          #cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1        
       - name: build page
-        run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1
-        #run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx next build && echo npx @cloudflare/next-on-pages@1
+        #run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1
+        run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx next build 
         working-directory: .
       - name: patch functions
-        run: cp -rv functions  site/.vercel/output/static
+        #run: cp -rv functions  site/.vercel/output/static
+        run: cp -rv functions  site/out
         working-directory: .
       - name: show files
-        run: cd  site/.vercel/output/static && ls -lh1 
+        run: cd site/out && ls -lh1 
+        #run: cd  site/.vercel/output/static && ls -lh1 
         working-directory: .
       - name: Deploy page
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId:  ${{ secrets.CF_ACCOUNT_ID }}
-          command:  pages deploy site/.vercel/output/static --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
+          #command:  pages deploy site/.vercel/output/static --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
+          command:  pages deploy site/out --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
           # Optional: Enable this if you want to have GitHub Deployments triggered
           # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
         #env:
