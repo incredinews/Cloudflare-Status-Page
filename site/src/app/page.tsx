@@ -87,7 +87,8 @@ export default function Home() {
      <p class="recharts-tooltip-label" style="margin: 0px; color: rgb(0, 0, 0);">2025-06-19</p></div></div></div></div></div></div>    \n \
     </div>  \n \
   '
-  return {myhtml}
+  //return {myhtml}
+  return <div className="maincont" dangerouslySetInnerHTML={{ __html: myhtml }}></div>
   //const response = new NextResponse(myhtml)
   //response.headers.set('Content-Type', 'text/html; charset=utf-8');
   //return response;
