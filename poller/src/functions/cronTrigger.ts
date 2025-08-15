@@ -1,4 +1,9 @@
-
+async function getCheckLocation() {
+  const res = await fetch('https://cloudflare-dns.com/dns-query', {
+    method: 'OPTIONS',
+  })
+  return res.headers.get('cf-ray')!.split('-')[1]
+} 
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
