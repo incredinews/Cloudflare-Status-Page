@@ -242,8 +242,11 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }
     }
      if (!monitorOperational && monitorStatusChanged) {
+      console.log("changed status")
        monitorMonth.monitors[monitor.id].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
+       console.log("get incident count")
        const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
+       console.log("save incident "+incidentNumber.toString())
        monitorMonth.monitors[monitor.id].checks[checkDay].incidents.push(incidentNumber)
      }
 
