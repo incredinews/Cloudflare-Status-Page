@@ -87,8 +87,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   let mymonitors= []
   for (const monitor of config.monitors) {
     //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-      let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
-      monitorMonth.info[monitor.id]= { "name": monitor.name , "url": monurl }
     // }
       let timediffglobal=now-monitorMonth.lastCheck
     if (!monitorMonth.lastFetched[monitor.id]) {
@@ -120,11 +118,14 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   mymonitors.sort((a, b) => b.lastFetched - a.lastFetched)
 
   for (const monitor of mymonitors) {
+
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
     const localnow=Date.now()
     const realdebounce=monitor.debounce||preset_debounce
     let displayname = monitor.name || monitor.id.toString();
+    let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
+    monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
 
