@@ -43,7 +43,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       //incidents: {},
     }
   }
-  console.log("setup done")
+  console.log("init_1_getObj")
   if (!monitorMonth.checks[checkDay]) {
     monitorMonth.checks[checkDay] = {
       summary: {},
@@ -54,6 +54,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   if (!monitorMonth.lastFetched) {
     monitorMonth.lastFetched={}
   }
+  console.log("init_1_lastFetched")
   //console.log(JSON.stringify(monitorMonth))
   const res: {
     t: number
@@ -62,13 +63,14 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       [index: string]: number | null
     }
   } = { t: now, l: checkLocation, ms: {} }
+  console.log("init_1_data_prepared")
   let counter=1;
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
   let monitorCount=config.monitors.length
   let cronSeconds=0
   let timediffcron=0
-
+  console.log("init_1_vars_set")
     if (!Object.hasOwn(monitorMonth, 'info')) {
                           monitorMonth.info=[]
        }
@@ -100,6 +102,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   //  }
 
   }
+  console.log("init_2_monitors_filtered")
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
 
