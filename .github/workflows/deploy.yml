@@ -142,8 +142,8 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Deploy page
         uses: cloudflare/wrangler-action@v3
-        workingDirectory: site
         with:
+          workingDirectory: site
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId:  ${{ secrets.CF_ACCOUNT_ID }}
           #command:  pages deploy site/.vercel/output/static --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
