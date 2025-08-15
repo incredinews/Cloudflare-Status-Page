@@ -80,7 +80,7 @@ export default function Home() {
 //
   //// set response headers, cookies, etc, if desired
   //return response;
-  let myhtml:string = '<link href="assets/upcloudflare.css" type="text/css" rel="stylesheet"><script>window.apihost='+`${config.settings.url}`+'</script> \n \
+  let myhtml:string = '<link href="assets/upcloudflare.css" type="text/css" rel="stylesheet"><script>window.apihost="'+`${config.settings.url}`+'"</script> \n \
     <div id="actiondiv" >About</div><script src="https://cdn.jsdelivr.net/npm/d3@7"></script><script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script><script src="/assets/loadUptimeData.js"></script><script>console.log("loaded d3")</script> \n \
     <div id=statusheader class="MuiStack-root mui-1ialerq"><h1 id="mainstatustxt" class="MuiTypography-root MuiTypography-h3 mui-il834h" style="color: rgb(255, 255, 255); text-align: left;">Loading</h1><p id="mainstatusago" class="MuiTypography-root MuiTypography-body1 mui-gjwoc1" style="color: rgb(255, 255, 255); text-align: right;">0 Seconds ago</p><p class="MuiTypography-root MuiTypography-body1 mui-gjwoc1" style="color: rgb(255, 238, 255); text-align: left;">  </p></div>  \n \
     <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation5 mui-xnuxc9" style="--Paper-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12);padding:5vh 0;margin:5vh 0"><div class="MuiContainer-root MuiContainer-maxWidthLg" id="contwrap">   </div></div>  \n \
