@@ -242,7 +242,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }
     }
      if (!monitorOperational && monitorStatusChanged) {
-      console.log("changed status")
+      console.log("changed status");
 //      //console.log(JSON.stringify(monitorMonth))
 //       if (!Object.hasOwn(monitorMonth, 'incidents')) {
 //                          monitorMonth.incidents=[]
@@ -256,7 +256,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 //       monitorMonth.incidents[monitor.id].push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
 //       console.log("get incident count")
 //       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
-       console.log("save incident ")
+       console.log("save incident ");
        monitorMonth.checks[checkDay].incidents.push(.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText }))
      }
 
