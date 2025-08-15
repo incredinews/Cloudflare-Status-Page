@@ -9,7 +9,7 @@ if (!Object.hasOwn(window,"apihost")  ) {
 if ( !apihost.includes("http://") && !apihost.includes("https://")  ) {
     apihost="https://"+apihost
 }
-myurl=apihost+"/api/kv"+yourDate.toISOString().split('T')[0].slice(0, 7)
+myurl=apihost+"/api/kv/"+yourDate.toISOString().split('T')[0].slice(0, 7)
 
 //fetch('https://status.jh0project.com/api/kv/2025-08').then(function(response) {
 fetch(myurl).then(function(response) {
