@@ -81,7 +81,7 @@ export default function Home() {
   //// set response headers, cookies, etc, if desired
   //return response;
   let myhtml:string = ' \n \
-    <div>About</div><script>console.log("loaded")</script> \n \
+    <div>About</div><script src="https://cdn.jsdelivr.net/npm/d3@7"></script><script>console.log("loaded")</script> \n \
     <div class="MuiStack-root mui-1ialerq"><h1 id="mainstatustxt" class="MuiTypography-root MuiTypography-h3 mui-il834h" style="color: rgb(255, 255, 255); text-align: left;">Loading</h1><p id="mainstatusago" class="MuiTypography-root MuiTypography-body1 mui-gjwoc1" style="color: rgb(255, 255, 255); text-align: right;">0 Seconds ago</p><p class="MuiTypography-root MuiTypography-body1 mui-gjwoc1" style="color: rgb(255, 238, 255); text-align: left;">  </p></div>  \n \
     <div class="MuiContainer-root MuiContainer-maxWidthLg mui-9wvnva" id="contwrap">   </div>  \n \
   '
