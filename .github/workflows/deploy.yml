@@ -56,6 +56,8 @@ jobs:
       - run: bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
       - run: yarn install
         working-directory: poller
+      - run: yarn build
+        working-directory: poller
       - name: Always Save yarn-cache
         id: cache-yarn-save
         if: always() && steps.cache-prime-numbers-restore.outputs.cache-hit != 'true'
@@ -64,8 +66,6 @@ jobs:
           key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('.yarnrc.yml') }}
           path: |
             .yarn
-      - run: yarn build
-        working-directory: poller
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
@@ -119,6 +119,14 @@ jobs:
         run: cd site/dist && ls -lh1 
         #run: cd  site/.vercel/output/static && ls -lh1 
         working-directory: .
+      - name: Cache yarn
+        id: cache-yarn-page
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: .yarn
+          key: ${{ steps.get-machine.outputs.machine }}-yarnpage-${{ hashFiles('.yarnrc.yml') }}
+          #key: ${{ steps.get-machine.outputs.machine }}-yarnpage-${{ steps.get-code-cachekey.outputs.codecachekey }}
       - name: Deploy page
         uses: cloudflare/wrangler-action@v3
         with:
