@@ -35,8 +35,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       lastCheck: now,
       operational: lastMonitorMonth ? lastMonitorMonth.operational : {},
       checks: {
-        // incidents: {},
       }
+      //incidents: {},
     }
   }
 
@@ -243,6 +243,13 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
      if (!monitorOperational && monitorStatusChanged) {
       console.log("changed status")
+      if (!monitorMonth.monitors.includes(monitor.id)) {
+        monitorMonth.monitors.[monitor.id]={}
+      }
+       if (!Object.hasOwn(monitorMonth.monitors.[monitor.id], 'incidents')) {
+        Object.hasOwn(monitorMonth.monitors.[monitor.id]=[]
+       }
+
        monitorMonth.monitors[monitor.id].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
        console.log("get incident count")
        const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
