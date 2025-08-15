@@ -175,10 +175,13 @@ fetch(myurl).then(function(response) {
            if(d.ping_value > 20 )  {   return "red" ; }
            if(d.ping_value < 0 )  {   return "red" ; }
            if(d.ping_value < 0.5 && d.ping_value > 0  )  {   
-            return 'rgba('+(127+d.ping_value*254)+', '+(127+d.ping_value*254)+', 255, 1)'
+            return 'rgba('+(64+d.ping_value*254)+', '+(64+d.ping_value*254)+', 255, 1)'
           //  return "blue" ; 
           }
-           if(d.ping_value < 1 && d.ping_value > 0.5  )  {   return "green" ; }
+           if(d.ping_value < 1 && d.ping_value > 0.5  )  {   
+          //  return "green" ; 
+            return 'rgba('+(64+d.ping_value*254)+', 255, '+(64+d.ping_value*254)+', 1)'
+          }
            if(d.ping_value < 5 && d.ping_value > 1  )  {   return "yellow" ; }
            return colour(d.ping_value)
            //if(d.ping_value > 5 )  {   return "yellow" ; }
