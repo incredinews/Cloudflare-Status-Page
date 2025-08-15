@@ -115,7 +115,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
     let do_request = false;
     let reasons="";
-
+    let checkResponse={};
+    checkResponse
     if( timesec > realdebounce  ) {
       do_request=true;
       reasons="+T"
@@ -159,7 +160,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
           }
       // Perform a check and measure time
       const requestStartTime = performance.now()
-      const checkResponse = await fetch(monitor.url, init)
+      checkResponse = await fetch(monitor.url, init)
       requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
       monitorMonth.lastFetched[monitor.id]=localnow
@@ -201,10 +202,14 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         monitorOperational=true
         console.log("redis_ping_resp:" + decoder.decode(value)); 
         returnstatus=200
+        checkResponse.status=200
+        checkResponse.statusText=decoder.decode(value)
         monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
             } catch (error) {
         console.log("redis_resp_err"+error)
         returnstatus=503
+        checkResponse.status=503
+        checkResponse.statusText=error.toString()
       }
       requestTime = Math.round(performance.now() - requestStartTime)
       sentRequests=sentRequests+1
