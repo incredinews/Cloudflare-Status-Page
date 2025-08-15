@@ -257,7 +257,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 //       console.log("get incident count")
 //       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
        console.log("save incident ");
-       monitorMonth.checks[checkDay].incidents.push(.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText }))
+       monitorMonth.checks[checkDay].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText }))
      }
 
   // end timediff
