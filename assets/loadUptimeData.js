@@ -184,7 +184,7 @@ fetch(myurl).then(function(response) {
           }
            if(d.ping_value < 5 && d.ping_value > 1  )  {   
           //  return "yellow" ;
-            return 'rgba('+(8+d.ping_value*64)+', 255, '+(8+d.ping_value*64)+', 1)'
+            return 'rgba('+(123+d.ping_value*10)+', 255, '+(63+d.ping_value*3)+', 1)'
           }
            return colour(d.ping_value)
            //if(d.ping_value > 5 )  {   return "yellow" ; }
@@ -200,7 +200,7 @@ fetch(myurl).then(function(response) {
       	.attr("y", function(d) { return y(d.monitorid )})
       	.attr("dx", function(d) {
         	//let myval=d.ping_value < 0 ? -cfg.labelMargin : cfg.labelMargin
-            let myval=d.ping_value < 0 ? 0 : cfg.labelMargin
+            let myval=d.ping_value < 0 ? 5 : cfg.labelMargin
             if(d.ping_value>0.5 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
             if(d.ping_value>1 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
             if(d.ping_value>2 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin  }

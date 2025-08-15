@@ -171,8 +171,9 @@
     "description": "Latest news, showbiz, sport, comment, lifestyle, city, video and pictures from the Daily Express and Sunday Express newspapers and Express.co.uk",
     "url": "https://www.express.co.uk/",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": [200,403],
     "followRedirect": true,
+    "user_agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0",
     "matchText": "images.express.co.uk"
     },
     {
@@ -392,10 +393,11 @@
     "id": "nydailynews_com",
     "name": "nydailynews.com",
     "description": null,
-    "url": "https://nydailynews.com",
+    "url": "https://www.nydailynews.com",
     "method": "GET",
     "expectStatus": 200,
-    "followRedirect": true
+    "followRedirect": true,
+    "user_agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0"
     },
     {
     "id": "nypost_com",
