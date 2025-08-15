@@ -247,7 +247,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         monitorMonth.monitors[monitor.id]={}
       }
        if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
-        Object.hasOwn(monitorMonth.monitors[monitor.id].incidents=[]
+                          monitorMonth.monitors[monitor.id].incidents=[]
        }
 
        monitorMonth.monitors[monitor.id].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
