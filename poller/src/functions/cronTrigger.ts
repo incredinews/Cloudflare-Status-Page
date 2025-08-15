@@ -139,6 +139,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }
     }
     if (do_request) {
+    let monitorStatusChanged=false
       let returnstatus=0
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
       let monitorOperational=false
@@ -171,7 +172,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         monitorOperational = checkResponse.status === monitor.expectStatus
       }
       returnstatus=checkResponse.status
-      const monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
+      monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
       //check for full text
       if (monitor.matchText && monitorOperational) {
         //const results = await gatherResponse(checkResponse)
@@ -200,6 +201,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         monitorOperational=true
         console.log("redis_ping_resp:" + decoder.decode(value)); 
         returnstatus=200
+        monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
             } catch (error) {
         console.log("redis_resp_err"+error)
         returnstatus=503
