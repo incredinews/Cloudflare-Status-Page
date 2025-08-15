@@ -1,3 +1,13 @@
+import config from '../../../config.json'
+import type { ScheduledEvent } from '@cloudflare/workers-types'
+import { MonitorMonth } from 'cf-status-page-types'
+import { createRedis } from "redis-on-workers";
+import {
+  getCheckLocation,
+  getKVMonitors,
+  setKVMonitors,
+} from './helpers'
+
 //async function getCheckLocation() {
 //  const res = await fetch('https://cloudflare-dns.com/dns-query', {
 //    method: 'OPTIONS',
