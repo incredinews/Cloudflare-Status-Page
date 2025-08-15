@@ -115,7 +115,6 @@ fetch(myurl).then(function(response) {
     var y = d3.scaleBand()
     	.range([height, 0])
     	.padding(0.1);
-    
     function parse(d) {
       d.rank = +d.rank;
       d.ping_value = +d.ping_value;
