@@ -14,6 +14,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   console.log("cron_function_init "+trigger)
   // Get Worker PoP and save it to monitorMonthMetadata
   const checkLocation = await getCheckLocation()
+  // the first went to fetch location
+  let sentRequests=1;
   const now = Date.now()
   const cronStarted = Date.now()
   const checkDay = getDate(now)
@@ -22,10 +24,14 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   console.log("KV_read_1")
   let monitorMonth: MonitorMonth = await getKVMonitors(namespace,checkDay.slice(0, 7))
   // Create empty state objects if not exists in KV storage yet
+  // the second went to fetch kv once
+  sentRequests=2;
   if (!monitorMonth) {
     const lastDay = getDate(now - 86400000)
     console.log("KV_read_2_generate_monitor_month")
     const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastDay.slice(0, 7))
+  // the third went to fetch kv again
+  sentRequests=3;
     monitorMonth = {
       lastCheck: now,
       operational: lastMonitorMonth ? lastMonitorMonth.operational : {},
@@ -56,8 +62,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   let counter=1;
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
-  // the first went to fetch kv
-  let sentRequests=1;
   let monitorCount=config.monitors.length
   let cronSeconds=0
   let timediffcron=0
