@@ -328,7 +328,7 @@
     "description": "NDTV.com provides latest news from India and around the world. Get breaking news alerts from India and follow today’s live news updates in field of politics, business, technology, Bollywood, cricket and more.",
     "url": "https://www.ndtv.com/",
     "method": "GET",
-    "expectStatus": [401,200],
+    "expectStatus": [401,403,200],
     "followRedirect": true
     },
     {
@@ -337,7 +337,7 @@
     "description": null,
     "url": "https://news.com.au",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": [200,403],
     "followRedirect": true
     },
     {
@@ -494,7 +494,7 @@
     "id": "telegraph_co_uk",
     "name": "telegraph.co.u",
     "description": null,
-    "url": "https://telegraph.co.uk",
+    "url": "https://www.telegraph.co.uk",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
