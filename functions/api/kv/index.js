@@ -8,7 +8,7 @@ export default {
 
     // The URL for the remote third party API you want to fetch from
     // but does not implement CORS
-    const API_URL = "https://status.jh0project.com/api/kv/2025-05";
+    const API_URL = "https://status.jh0project.com/api/kv/2025-08";
 
     // The endpoint you want the CORS reverse proxy to be on
     const PROXY_ENDPOINT = "/api/";
