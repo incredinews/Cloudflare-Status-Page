@@ -3,8 +3,8 @@ if (!Object.hasOwn(window,"lastPull") || (window.lastPull < ( Date.now() - (20*1
 console.log("getting data")
 let yourDate = new Date()
 apihost="status.jh0project.com"
-if (Object.hasOwn(window,"apihost")  ) {
-    apihost=window.apihost
+if (Object.hasOwn(window,"realapihost")  ) {
+    apihost=window.realapihost
 }
 if ( !apihost.includes("http://") && !apihost.includes("https://")  ) {
     apihost="https://"+apihost
