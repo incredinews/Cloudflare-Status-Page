@@ -130,6 +130,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       
       timediffcron=localnow-cronStarted
       cronSeconds=timediffcron/1000
+      console.log("cronseconds:"+ cronSeconds.toString())
       if ( cronSeconds > 15  ) { 
         reasons=reasons+"+LimT"
         do_request=false
