@@ -243,6 +243,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
      if (!monitorOperational && monitorStatusChanged) {
       console.log("changed status")
+      console.log(JSON.stringify(monitorMonth))
       if (!monitorMonth.monitors.includes(monitor.id)) {
         monitorMonth.monitors[monitor.id]={}
       }
