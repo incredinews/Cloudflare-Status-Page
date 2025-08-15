@@ -8,13 +8,6 @@ import {
   setKVMonitors,
 } from './helpers'
 
-//async function getCheckLocation() {
-//  const res = await fetch('https://cloudflare-dns.com/dns-query', {
-//    method: 'OPTIONS',
-//  })
-//  return res.headers.get('cf-ray')!.split('-')[1]
-//} 
-
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
@@ -46,8 +39,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     monitorMonth = {
       lastCheck: now,
       operational: lastMonitorMonth ? lastMonitorMonth.operational : {},
-      checks: {
-      }
+      checks: {}
       //incidents: {},
     }
   }
@@ -112,7 +104,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   //const allpings = youngestmonitors.concat(oldestmonitors);
 
   mymonitors.sort((a, b) => b.lastFetched - a.lastFetched)
-
+  console.log("sorted_and_ready")
   for (const monitor of mymonitors) {
 
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
