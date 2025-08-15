@@ -77,10 +77,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   let cronSeconds=0
   let timediffcron=0
 
-  // we know our fetchlimit of 42, so we do not have to re-sort the whole array
-  //let oldestmonitors = []
-  //let oldestmonitor=0
-  //let newestmonitor=0
     if (!Object.hasOwn(monitorMonth, 'info')) {
                           monitorMonth.info=[]
        }
