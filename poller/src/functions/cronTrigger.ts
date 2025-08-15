@@ -100,7 +100,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   //    newestmonitor=monitor.id
   //    youngestmonitors.unshift(monitor.id)
   //  }
-
   }
   console.log("init_2_monitors_filtered")
   
@@ -109,7 +108,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   mymonitors.sort((a, b) => b.lastFetched - a.lastFetched)
   console.log("sorted_and_ready")
   for (const monitor of mymonitors) {
-
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
     const localnow=Date.now()
