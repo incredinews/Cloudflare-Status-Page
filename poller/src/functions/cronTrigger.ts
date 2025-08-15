@@ -72,7 +72,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   let timediffcron=0
   console.log("init_1_vars_set")
     if (!Object.hasOwn(monitorMonth, 'info')) {
-                          monitorMonth["info"]=[]
+                          monitorMonth["info"]={}
        }
   let mymonitors= []
   for (const monitor of config.monitors) {
