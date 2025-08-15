@@ -23,7 +23,7 @@ fetch(myurl).then(function(response) {
     window.lastPull=Date.now()
     console.log("main_graph")
     // mydata.checks[yourDate.toISOString().split('T')[0]].summary
-    var margin = {top: 40, right: 50, bottom: 60, left: 50};
+    var margin = {top: 12, right: 50, bottom: 10, left: 50};
     data=[]
     let moniDown=0
     let moniUp=0
@@ -94,7 +94,7 @@ fetch(myurl).then(function(response) {
     //		height = 500 - margin.top - margin.bottom;
     var width = document.getElementById("contwrap").offsetWidth - margin.left - margin.right,
     		height = document.getElementById("d3-graph-main").offsetHeight - margin.top - margin.bottom;
-    var svg = d3.select("#d3-graph-main").append("svg")
+    var svg = d3.select("#d3-graph-main").insert("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -192,12 +192,12 @@ fetch(myurl).then(function(response) {
       	.attr("dx", function(d) {
         	//let myval=d.ping_value < 0 ? -cfg.labelMargin : cfg.labelMargin
             let myval=d.ping_value < 0 ? 0 : cfg.labelMargin
-            if(d.ping_value>0.5 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
-            if(d.ping_value>1 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
-            if(d.ping_value>2 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin  }
-            if(d.ping_value>3 ) { myval=myval+ cfg.labelMargin  }
-            if(d.ping_value>5 ) { myval=myval+ cfg.labelMargin  }
-            if(d.ping_value>10 ) { myval=myval+ cfg.labelMargin  }
+            //if(d.ping_value>0.5 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
+            //if(d.ping_value>1 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
+            //if(d.ping_value>2 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin  }
+            //if(d.ping_value>3 ) { myval=myval+ cfg.labelMargin  }
+            //if(d.ping_value>5 ) { myval=myval+ cfg.labelMargin  }
+            //if(d.ping_value>10 ) { myval=myval+ cfg.labelMargin  }
             return myval;
             
       	})
