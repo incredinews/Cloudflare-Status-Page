@@ -51,7 +51,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       //incidents: {},
     }
   }
-
+  console.log("setup done")
   if (!monitorMonth.checks[checkDay]) {
     monitorMonth.checks[checkDay] = {
       summary: {},
