@@ -1,6 +1,4 @@
 
-<<<<<<< HEAD
-=======
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
@@ -308,4 +306,3 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   //      let monCountDown:number = monCountDown+1 
   //  }
   //}  
->>>>>>> e54f1afcbe3f3da24749eba7a5e994298183eb58
