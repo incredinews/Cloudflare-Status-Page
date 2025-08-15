@@ -1,13 +1,6 @@
-import config from '../../../config.json'
-import type { ScheduledEvent } from '@cloudflare/workers-types'
-import { MonitorMonth } from 'cf-status-page-types'
-import { createRedis } from "redis-on-workers";
-import {
-  getCheckLocation,
-  getKVMonitors,
-  setKVMonitors,
-} from './helpers'
 
+<<<<<<< HEAD
+=======
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
@@ -75,9 +68,10 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
        }
   let mymonitors= []
   for (const monitor of config.monitors) {
-    if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-                         let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; monitorMonth.info[monitor.id]= { "name": monitor.name , "url": monurl }
-       }
+    //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+      let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
+      monitorMonth.info[monitor.id]= { "name": monitor.name , "url": monurl }
+    // }
       let timediffglobal=now-monitorMonth.lastCheck
     if (!monitorMonth.lastFetched[monitor.id]) {
       monitorMonth.lastFetched[monitor.id]=localnow-999999999
@@ -314,3 +308,4 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   //      let monCountDown:number = monCountDown+1 
   //  }
   //}  
+>>>>>>> e54f1afcbe3f3da24749eba7a5e994298183eb58
