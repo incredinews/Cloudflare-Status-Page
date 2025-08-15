@@ -127,8 +127,9 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       reasons=reasons+"+LimR"
       do_request=false
     } else {
+      
       timediffcron=localnow-cronStarted
-      cronSeconds=timediff/1000
+      cronSeconds=timediffcron/1000
       if ( cronSeconds > 15  ) { 
         reasons=reasons+"+LimT"
         do_request=false
@@ -234,7 +235,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     // go dark
     if(!monitorOperational ) {
       if (monitorStatusChanged || log_errors ) {
-                 console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     FAILING ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
+                 console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     FAILING ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck/1000}`)
       }
     }
      if (!monitorOperational && monitorStatusChanged) {
@@ -245,9 +246,11 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   // end timediff
    } else { // dorequest
-
+    const dontchecknow=Date.now()
+    timediffcron=dontchecknow-cronStarted
+    cronSeconds=timediffcron/1000
     //if(log_verbose) { 
-      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck} | crontime: ${cronSeconds} `) 
+      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
     //}
 
   } // end dorequest
