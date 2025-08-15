@@ -171,10 +171,13 @@ fetch(myurl).then(function(response) {
             //return Math.log10(Math.abs(x(d.ping_value) - x(0)))
       	})
       	.style("fill", function(d) {
-
+           //bar colour
            if(d.ping_value > 20 )  {   return "red" ; }
            if(d.ping_value < 0 )  {   return "red" ; }
-           if(d.ping_value < 0.5 && d.ping_value > 0  )  {   return "blue" ; }
+           if(d.ping_value < 0.5 && d.ping_value > 0  )  {   
+            return 'rgba('+(127+d.ping_value*254)+', '+(127+d.ping_value*254)+', 255, 1)'
+          //  return "blue" ; 
+          }
            if(d.ping_value < 1 && d.ping_value > 0.5  )  {   return "green" ; }
            if(d.ping_value < 5 && d.ping_value > 1  )  {   return "yellow" ; }
            return colour(d.ping_value)
@@ -192,12 +195,12 @@ fetch(myurl).then(function(response) {
       	.attr("dx", function(d) {
         	//let myval=d.ping_value < 0 ? -cfg.labelMargin : cfg.labelMargin
             let myval=d.ping_value < 0 ? 0 : cfg.labelMargin
-            //if(d.ping_value>0.5 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
-            //if(d.ping_value>1 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
-            //if(d.ping_value>2 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin  }
-            //if(d.ping_value>3 ) { myval=myval+ cfg.labelMargin  }
-            //if(d.ping_value>5 ) { myval=myval+ cfg.labelMargin  }
-            //if(d.ping_value>10 ) { myval=myval+ cfg.labelMargin  }
+            if(d.ping_value>0.5 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
+            if(d.ping_value>1 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
+            if(d.ping_value>2 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin  }
+            if(d.ping_value>3 ) { myval=myval+ cfg.labelMargin  }
+            if(d.ping_value>5 ) { myval=myval+ cfg.labelMargin  }
+            if(d.ping_value>10 ) { myval=myval+ cfg.labelMargin  }
             return myval;
             
       	})
@@ -213,10 +216,9 @@ fetch(myurl).then(function(response) {
         	 if (d.monitorid == "European Union") {
              return "blue";
            }
-           if(d.ping_value < 0 )  {   return "red" ; }
-
-           if(d.ping_value > 9.9999 )  {  return "black" ; }
-           if(d.ping_value > 5 )  {   return "blue" ; }
+           if(d.ping_value < 0 )        {   return "red" ; }
+           if(d.ping_value > 9.9999 )   {  return "black" ; }
+           if(d.ping_value > 5 )        {   return "blue" ; }
            if(d.ping_value < 9.9999 && d.ping_value > 3  )  {   return "yellow" ; }
            return "black";
       	});
