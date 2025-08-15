@@ -49,7 +49,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   if (!monitorMonth.lastFetched) {
     monitorMonth.lastFetched={}
   }
-  console.log(JSON.stringify(monitorMonth))
+  //console.log(JSON.stringify(monitorMonth))
   const res: {
     t: number
     l: string
@@ -243,18 +243,21 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     }
      if (!monitorOperational && monitorStatusChanged) {
       console.log("changed status")
-      console.log(JSON.stringify(monitorMonth))
-      if (!monitorMonth.monitors.includes(monitor.id)) {
-        monitorMonth.monitors[monitor.id]={}
-      }
-       if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
-                          monitorMonth.monitors[monitor.id].incidents=[]
-       }
-       monitorMonth.monitors[monitor.id].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
-       console.log("get incident count")
-       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
-       console.log("save incident "+incidentNumber.toString())
-       monitorMonth.monitors[monitor.id].checks[checkDay].incidents.push(incidentNumber)
+//      //console.log(JSON.stringify(monitorMonth))
+//       if (!Object.hasOwn(monitorMonth, 'incidents')) {
+//                          monitorMonth.incidents=[]
+//       }
+//      if (!monitorMonth.incidents.includes(monitor.id)) {
+//        monitorMonth.incidents[monitor.id]=[]
+//      }
+////       if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
+////                          monitorMonth.monitors[monitor.id].incidents=[]
+////       }
+//       monitorMonth.incidents[monitor.id].push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
+//       console.log("get incident count")
+//       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
+       console.log("save incident ")
+       monitorMonth.checks[checkDay].incidents.push(.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText }))
      }
 
   // end timediff
