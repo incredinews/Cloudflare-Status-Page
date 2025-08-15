@@ -70,8 +70,14 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   //let oldestmonitors = []
   //let oldestmonitor=0
   //let newestmonitor=0
+    if (!Object.hasOwn(monitorMonth, 'info')) {
+                          monitorMonth.info=[]
+       }
   let mymonitors= []
   for (const monitor of config.monitors) {
+    if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+                         let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; monitorMonth.info[monitor.id]= { "name": monitor.name , "url": monurl }
+       }
       let timediffglobal=now-monitorMonth.lastCheck
     if (!monitorMonth.lastFetched[monitor.id]) {
       monitorMonth.lastFetched[monitor.id]=localnow-999999999
