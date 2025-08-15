@@ -63,6 +63,21 @@ fetch(myurl).then(function(response) {
        }
     if(!monitorFound) { console.log("no ping data for "+k) ;         data.push({"monitorid": k , "ping_value" : -9.99 }) }
     }
+    if(moniDown==0) {
+      document.getElementById("statusheader").style.backgroundColor="rgb(46, 204, 113)"
+      document.getElementById("mainstatustxt").textContent="All Systems Operational"
+    } else {
+       if(moniUp==0) {
+         document.getElementById("statusheader").style.backgroundColor="rgba(214, 99, 4, 1)"
+         document.getElementById("mainstatustxt").textContent="ERROR: All Systems FAILING"
+       } else {
+         document.getElementById("statusheader").style.backgroundColor="rgba(26, 187, 61, 1)"
+         document.getElementById("mainstatustxt").textContent="Partially Degraded"
+
+       }
+    }
+
+
     data.sort((a, b) => b.ping_value - a.ping_value)
     console.log(JSON.stringify(data))
      if(!document.getElementById("d3-graph-main")) { 
@@ -73,7 +88,7 @@ fetch(myurl).then(function(response) {
         overviewcont.setAttribute("id", "d3-graph-main" );
         document.getElementById("contwrap").appendChild(overviewcont);
         //document.getElementById("d3-graph-main").style.minHeight="800px"
-        document.getElementById("d3-graph-main").style.minHeight=(data.length*30).toString()+"px"
+        document.getElementById("d3-graph-main").style.minHeight=(66+data.length*30).toString()+"px"
      }
     //var width = 960 - margin.left - margin.right,
     //		height = 500 - margin.top - margin.bottom;
@@ -113,7 +128,7 @@ fetch(myurl).then(function(response) {
     legend.append("text")
     	.attr("x", width - cfg.legendRightMargin)
     	.attr("text-anchor", "end")
-    	.text("Foor bar by");
+    	.text("Monitors and Pings");
     
     legend.append("text")
       .attr("x", width - cfg.legendRightMargin)
