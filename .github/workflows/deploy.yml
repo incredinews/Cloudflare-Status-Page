@@ -142,11 +142,12 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Deploy page
         uses: cloudflare/wrangler-action@v3
+        workingDirectory: site
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId:  ${{ secrets.CF_ACCOUNT_ID }}
           #command:  pages deploy site/.vercel/output/static --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
-          command:  cd site &&  pages deploy dist --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
+          command:  pages deploy ./dist --project-name=${{  vars.PROJECT_NAME || 'upcloudflare' }}
           # Optional: Enable this if you want to have GitHub Deployments triggered
           # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
         #env:
