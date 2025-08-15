@@ -185,6 +185,9 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         // be more precise, 200 can also be raised by default placeholders etc
         monitorOperational = checkResponse.status === monitor.expectStatus
       }
+      if(!monitorOperational) { 
+        console.log(monnitor.id+" STATUS_CODES : GOT "+ checkResponse.status + " NEED "+ JSON.stringify(monitor.expectStatus) )
+      }
       returnstatus=checkResponse.status
       monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
       //check for full text
