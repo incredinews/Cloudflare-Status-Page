@@ -43,7 +43,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     monitorMonth.checks[checkDay] = {
       summary: {},
       res: [],
-      incidents: {},
+      incidents: [],
     }
   }
   if (!monitorMonth.lastFetched) {
@@ -173,6 +173,9 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         monitorOperational = checkResponse.status === monitor.expectStatus
       }
       returnstatus=checkResponse.status
+      if (monitorMonth.incidents=={}) {
+        monitorMonth.incidents=[]
+      }
       monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
       //check for full text
       if (monitor.matchText && monitorOperational) {
