@@ -157,10 +157,10 @@
     "followRedirect": true
     },
     {
-    "id": "euronews_com:443",
+    "id": "euronews_com",
     "name": "Euronews.com",
     "description": "Latest breaking news available as free video on demand. Stay informed on European and world news about economy, politics, diplomacy… with Euronews.",
-    "url": "https://www.euronews.com:443/",
+    "url": "https://www.euronews.com/",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
@@ -236,7 +236,7 @@
     "description": null,
     "url": "https://indianexpress.com",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": [200,403],
     "followRedirect": true
     },
     {
@@ -261,7 +261,7 @@
     "id": "inquisitr_com",
     "name": "inquisitr.com",
     "description": "The Inquisitr offers a constantly updated mix of the latest stories to hit the web, covering a diverse spectrum of current news events….",
-    "url": "https://www.inquisitr.com/",
+    "url": "https://www.inquisitr.com/feed",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true
@@ -380,7 +380,7 @@
     "user_agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0"
     },
     {
-    "id": "nj_com:443",
+    "id": "nj_com",
     "name": "nj.com latest New Jersey news, sports, and breaking updates",
     "description": "Get the latest New Jersey news, sports, and breaking updates. View daily NJ weather and top stories from Jersey City, Atlantic City, and beyond on NJ.com.",
     "url": "https://www.nj.com:443/",
@@ -469,7 +469,7 @@
     "expectStatus": 200,
     "followRedirect": true,
     "debounce": 3600,
-    "matchText": "www.rt.com"
+    "matchText": "russiatoday"
     },
     {
     "id": "sputnikglobe_com",
