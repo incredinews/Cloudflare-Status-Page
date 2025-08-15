@@ -28,9 +28,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   // Create empty state objects if not exists in KV storage yet
   if (!monitorMonth) {
     const lastDay = getDate(now - 86400000)
-    console.log("KV_read_2")
+    console.log("KV_read_2_generate_monitor_month")
     const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastDay.slice(0, 7))
-
     monitorMonth = {
       lastCheck: now,
       operational: lastMonitorMonth ? lastMonitorMonth.operational : {},
@@ -50,6 +49,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   if (!monitorMonth.lastFetched) {
     monitorMonth.lastFetched={}
   }
+  console.log(JSON.stringify(monitorMonth))
   const res: {
     t: number
     l: string
@@ -250,7 +250,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
        if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
                           monitorMonth.monitors[monitor.id].incidents=[]
        }
-
        monitorMonth.monitors[monitor.id].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
        console.log("get incident count")
        const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
