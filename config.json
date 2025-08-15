@@ -446,7 +446,7 @@
     "id": "rediff_com",
     "name": "Rediff.com",
     "description": "✔Read Latest India News ✔Get Realtime Stock Quotes ✔See Live Cricket Scores ✔Log in to Rediffmail ✔Expert advice on career, personal finance and relationships",
-    "url": "https://www.rediff.com/",
+    "url": "https://www.rediff.com/terms.html",
     "method": "GET",
     "expectStatus": 200,
     "followRedirect": true

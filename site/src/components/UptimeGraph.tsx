@@ -10,11 +10,9 @@ const getGradient = (UpPresentage: number) => {
     const hex = color.toString(16);
     return (hex.length == 1) ? '0' + hex : hex;
   };
-
   const r = Math.ceil(59 * UpPresentage + 231 * (1 - UpPresentage));
   const g = Math.ceil(165 * UpPresentage + 76 * (1 - UpPresentage));
   const b = Math.ceil(92 * UpPresentage + 60 * (1 - UpPresentage));
-
   return '#' + toHex(r) + toHex(g) + toHex(b);
 }
 

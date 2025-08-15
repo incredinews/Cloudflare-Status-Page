@@ -229,7 +229,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       // increment number of checks and sum of ms
       const no = ++monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].n
       const ms = monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].ms += requestTime
-
       // save new average ms
       monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].a = Math.round(ms / no)
       // back online
@@ -267,7 +266,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
        }
        monitorMonth.checks[checkDay].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
      }
-
   // end timediff
    } else { // dorequest
     const dontchecknow=Date.now()
@@ -276,7 +274,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     //if(log_verbose) { 
       console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
     //}
-
   } // end dorequest
   counter=counter+1
   }
@@ -302,7 +299,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   return new Response('OK')
 }
-
 
   //console.log(JSON.stringify(operational))
   //for ((const key, const value) in operational) {
