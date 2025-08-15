@@ -71,10 +71,11 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   let cronSeconds=0
   let timediffcron=0
   console.log("init_1_vars_set")
-    if (!Object.hasOwn(monitorMonth, 'info')) {
-                          monitorMonth["info"]={}
-       }
+  if (!Object.hasOwn(monitorMonth, 'info')) {
+                        monitorMonth["info"]={}
+     }
   let mymonitors= []
+  console.log("init_1_monitors loaded")
   for (const monitor of config.monitors) {
     //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
     // }
