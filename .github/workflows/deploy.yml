@@ -113,7 +113,7 @@ jobs:
         working-directory: .
       - name: patch functions
         #run: cp -rv functions  site/.vercel/output/static
-        run: cp -rv _routes.json functions site && cp -rv functions _routes.json assets site/dist && cp site/src/app/favicon.ico site/dist && wget -c https://d3js.org/d3.v7.min.js -O site/dist/d3.js
+        run: cp -rv _routes.json functions site && cp -rv functions _routes.json assets site/dist && cp site/src/app/favicon.ico site/dist && wget -c https://d3js.org/d3.v7.min.js -O site/dist/assets/d3.v7.min.js && wget -c https://d3js.org/d3-array.v2.min.js -O site/dist/assets/d3-array.v2.min.js  && wget -c https://d3js.org/d3-scale-chromatic.v1.min.js -O site/dist/assets/d3-scale-chromatic.v1.min.js
         working-directory: .
       - name: show files
         run: cd site/dist && ls -lh1 
