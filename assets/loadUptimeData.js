@@ -20,7 +20,7 @@ fetch(myurl).then(function(response) {
     //console.log(JSON.stringify(mydata))
     let today=yourDate.toISOString().split('T')[0]
     console.log("today is  "+today)
-    let yesterdayms = yourDate - 1000 * 60 * 60 * 24 * 2;   // current date's milliseconds - 1,000 ms * 60 s * 60 mins * 24 hrs * (# of days beyond one to go back)
+    let yesterdayms = yourDate - 1000 * 60 * 60 * 24 ;   // current date's milliseconds - 1,000 ms * 60 s * 60 mins * 24 hrs * (# of days beyond one to go back)
     let yesterdaydate=new Date(yesterdayms)
     let yesterday=yesterdaydate.toISOString().split('T')[0]
     console.log("yesterday was "+yesterday)
@@ -46,11 +46,11 @@ fetch(myurl).then(function(response) {
 
         for (const findday of [today,yesterday]) {
           if(!monitorFound) {
-            for (var dcloc in mydata.checks[today].summary ) { 
-              if(Object.hasOwn(mydata.checks[today].summary[dcloc],curmonid)) { 
+            for (var dcloc in mydata.checks[findday].summary ) { 
+              if(Object.hasOwn(mydata.checks[findday].summary[dcloc],curmonid)) { 
                 //console.log("Found "+curmonid+" in "+dcloc)
                 monitorFound=true
-                curmonpingsum=curmonpingsum+mydata.checks[yourDate.toISOString().split('T')[0]].summary[dcloc][curmonid]["a"]
+                curmonpingsum=curmonpingsum+mydata.checks[findday].summary[dcloc][curmonid]["a"]
                 curmonvalues=curmonvalues+1
               }
             }
