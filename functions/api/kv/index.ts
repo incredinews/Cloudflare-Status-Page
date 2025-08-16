@@ -38,9 +38,9 @@ if (
       // Rewrite request to point to API URL. This also makes the request mutable
       // so you can add the correct Origin header to make the API server think
       // that this request is not cross-site.
-      request = new Request(apiUrl, request);
-      request.headers.set("Origin", new URL(apiUrl).origin);
-      let response = await fetch(request);
+      newrequest = new Request(apiUrl, request);
+      newrequest.headers.set("Origin", new URL(apiUrl).origin);
+      let response = await fetch(requesnewrequestt);
       // Recreate the response so you can modify the headers
 
       response = new Response(response.body, response);
