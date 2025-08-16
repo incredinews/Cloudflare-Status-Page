@@ -22,7 +22,7 @@ export default {
       // The endpoint you want the CORS reverse proxy to be on
       const PROXY_ENDPOINT = "/api/";
       let apiHost=null
-      let apiHost = url.searchParams.get("apiHost");
+      apiHost = url.searchParams.get("apiHost");
       if (apihost == null) {
         let apiUrl = API_URL; 
       } else {
