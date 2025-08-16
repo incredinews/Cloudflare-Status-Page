@@ -18,7 +18,7 @@ export const onRequest: PagesFunction = async (context) => {
   const PROXY_ENDPOINT = "/api/";
   const request = context.request;
 if (
-        request.method === "GET" ||
+        request.method === "GET" || 
         request.method === "HEAD" ||
         request.method === "POST"
       ) {
@@ -28,7 +28,7 @@ if (
   const url = new URL(request.url);
 
       let apiHost=null
-      let apiHost = url.searchParams.get("apiHost");
+      apiHost = url.searchParams.get("apiHost");
       if (apihost == null) {
         let apiUrl = API_URL; 
       } else {
