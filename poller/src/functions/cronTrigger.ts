@@ -23,7 +23,9 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   const now = Date.now()
   const cronStarted = Date.now()
   const checkDay = getDate(now)
-  const preset_debounce = config.debounce || 345 
+  //const preset_debounce = config.debounce || 345 
+  const checksPerRound=20
+  const preset_debounce = config.debounce || (config.monitors.length )
   // Get monitors state from KV
   console.log("KV_read_1")
   let monitorMonth: MonitorMonth = await getKVMonitors(namespace,checkDay.slice(0, 7))
@@ -76,7 +78,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
      }
   let mymonitors= []
   console.log("init_1_monitors loaded")
-    if (!Object.hasOwn(monitorMonth.info, "lastFetched")) {
+    if (!Object.hasOwn(monitorMonth, "lastFetched")) {
       monitorMonth.lastFetched={}
     }
   for (const monitor of config.monitors) {
@@ -144,7 +146,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       
       timediffcron=localnow-cronStarted
       cronSeconds=timediffcron/1000
-      console.log("cronseconds:"+ cronSeconds.toString())
+      //console.log("cronseconds:"+ cronSeconds.toString())
       if ( cronSeconds > 15  ) { 
         reasons=reasons+"+LimT"
         do_request=false

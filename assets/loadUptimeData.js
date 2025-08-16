@@ -18,7 +18,13 @@ fetch(myurl).then(function(response) {
     // users is now our actual variable parsed from the json, so we can use it
    //users.forEach(function(mydata){      console.log(user.name)    });
     //console.log(JSON.stringify(mydata))
-    if (Object.hasOwn(mydata.checks[yourDate.toISOString().split('T')[0]],"summery")  ) {  mydata.checks[yourDate.toISOString().split('T')[0]].summary=mydata.checks[yourDate.toISOString().split('T')[0]].summery  }
+    let today=yourDate.toISOString().split('T')[0]
+    console.log("today is  "+today)
+    let yesterdayms = yourDate - 1000 * 60 * 60 * 24 * 2;   // current date's milliseconds - 1,000 ms * 60 s * 60 mins * 24 hrs * (# of days beyond one to go back)
+    let yesterdaydate=new Date(yesterdayms)
+    let yesterday=yesterdaydate.toISOString().split('T')[0]
+    console.log("yesterday was "+yesterday)
+    if (Object.hasOwn(mydata.checks[today],"summery")  ) {  mydata.checks[today].summary=mydata.checks[today].summery  }
     window.curData=mydata
     window.lastPull=Date.now()
     console.log("main_graph")
@@ -36,13 +42,19 @@ fetch(myurl).then(function(response) {
         let curmonpingsum=0
         let curmonvalues=0
         let curmonping=0
-        for (var dcloc in mydata.checks[yourDate.toISOString().split('T')[0]].summary ) { 
-            if(Object.hasOwn(mydata.checks[yourDate.toISOString().split('T')[0]].summary[dcloc],curmonid)) { 
-            //console.log("Found "+curmonid+" in "+dcloc)
-            monitorFound=true
-            curmonpingsum=curmonpingsum+mydata.checks[yourDate.toISOString().split('T')[0]].summary[dcloc][curmonid]["a"]
-            curmonvalues=curmonvalues+1
+
+
+        for (const findday of [today,yesterday]) {
+          if(!monitorFound) {
+            for (var dcloc in mydata.checks[today].summary ) { 
+              if(Object.hasOwn(mydata.checks[today].summary[dcloc],curmonid)) { 
+                //console.log("Found "+curmonid+" in "+dcloc)
+                monitorFound=true
+                curmonpingsum=curmonpingsum+mydata.checks[yourDate.toISOString().split('T')[0]].summary[dcloc][curmonid]["a"]
+                curmonvalues=curmonvalues+1
+              }
             }
+          }
         }
         if(curmonvalues==0) { 
         if( curData.operational[k]  ) { 
