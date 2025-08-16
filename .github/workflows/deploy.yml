@@ -140,6 +140,11 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+      - name: replace ts config
+        id: replace-ts-config
+        run: |
+          cd site && pwd && ls && rm tsconfig.json
+        shell: bash
       - name: Deploy page
         uses: cloudflare/wrangler-action@v3
         with:
