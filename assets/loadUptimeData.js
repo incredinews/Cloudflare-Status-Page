@@ -174,7 +174,12 @@ fetch(myurl).then(function(response) {
       .enter().append("rect")
       	.attr("class", "ping-value")
       	.attr("x", function(d) {
-       		return x(Math.min(0, d.ping_value));
+          if (d.ping_value==-99.99) {
+       	  	return x(Math.min(0, -6,66));
+          } else {
+       	  	return x(Math.min(0, d.ping_value));
+
+          }
       	})
       	.attr("y", function(d) { return y(d.monitorid); })
       	.attr("height", y.bandwidth())
