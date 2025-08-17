@@ -174,28 +174,28 @@ fetch(myurl).then(function(response) {
       .enter().append("rect")
       	.attr("class", "ping-value")
       	.attr("x", function(d) {
-          if (d.ping_value==-99.99) {
+         // if (d.ping_value==-99.99) {
        	  	return x(Math.min(0, -6,66));
-          } else {
+          //} else {
        	  	return x(Math.min(0, d.ping_value));
 
-          }
+          //}
       	})
       	.attr("y", function(d) { return y(d.monitorid); })
       	.attr("height", y.bandwidth())
       	.attr("width", function(d) { 
-          if (d.ping_value==-99.99) {
-        	   return Math.abs(x(-6.66) - x(0))
-          } else {
+          //if (d.ping_value==-99.99) {
+        	//   return Math.abs(x(-6.66) - x(0))
+          //} else {
             return Math.abs(x(d.ping_value) - x(0))
             //return Math.log10(Math.abs(x(d.ping_value) - x(0)))
-          }
+          //}
 
       	})
       	.style("fill", function(d) {
            //bar colour
            if(d.ping_value > 20 )  {   return "red" ; }
-           if(d.ping_value < 0 )  {   return "red" ; }
+           if(d.ping_value < 0 )  {    return "rgba(212, 54, 54, 1)" ; }
            if(d.ping_value < 0.5 && d.ping_value > 0  )  {   
             return 'rgba('+(64+d.ping_value*254)+', '+(64+d.ping_value*254)+', 255, 1)'
           //  return "blue" ; 
