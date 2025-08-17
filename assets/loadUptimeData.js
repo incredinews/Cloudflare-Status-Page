@@ -213,12 +213,12 @@ fetch(myurl).then(function(response) {
       	.attr("dx", function(d) {
         	//let myval=d.ping_value < 0 ? -cfg.labelMargin : cfg.labelMargin
             let myval=d.ping_value < 0 ? 5 : cfg.labelMargin
-            if(d.ping_value>0.5 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
-            if(d.ping_value>1 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin   }
-            if(d.ping_value>2 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin  }
-            if(d.ping_value>3 ) { myval=myval+ cfg.labelMargin  }
-            if(d.ping_value>5 ) { myval=myval+ cfg.labelMargin  }
-            if(d.ping_value>10 ) { myval=myval+ cfg.labelMargin  }
+            if(d.ping_value>0.5 ) { myval=myval+ cfg.labelMargin + cfg.labelMargin     }
+            if(d.ping_value>1 )   { myval=myval+ cfg.labelMargin + cfg.labelMargin     }
+            if(d.ping_value>2 )   { myval=myval+ cfg.labelMargin + cfg.labelMargin     }
+            if(d.ping_value>3 )   { myval=myval+ cfg.labelMargin                       }
+            if(d.ping_value>5 )   { myval=myval+ cfg.labelMargin                       }
+            if(d.ping_value>10 )  { myval=myval+ cfg.labelMargin                       }
             return myval;
             
       	})
@@ -251,110 +251,6 @@ while (document.getElementById("d3-graph-main").childNodes.length > 1) { documen
 
 }
 // -----------
-if(!document.getElementById("main_dataviz")) {
-        const overviewcont = document.createElement('div');
-        overviewcont.style['background']  = 'grey';
-        //overviewcont.style['background']  = 'rgb(230, 126, 34)';
-        
-        overviewcont.setAttribute("id", "main_dataviz" );
-        document.getElementById("statusheader").appendChild(overviewcont);
-}
-// Create 2 datasets
-const dummydata = [
-   { ts: 1755302817027, ping: 100, "monitorid": "none","loc": "nowhere"},
-   { ts: 1755302800027, ping: 111, "monitorid": "none","loc": "nowhere"},
-   { ts: 1755302717027, ping: 123, "monitorid": "none","loc": "nowhere"},
-   { ts: 1755302847027, ping: 444, "monitorid": "no1","loc": "nowhere"},
-   { ts: 1755302801027, ping: 555, "monitorid": "no1","loc": "nowhere"},
-   { ts: 1755302727027, ping: 666, "monitorid": "no1","loc": "nowhere"}
-];
-// Create 2 datasets
-const dummydatb = [
-   { ts: 1755302817027, ping: 666, "monitorid": "none","loc": "nowhere"},
-   { ts: 1755302800027, ping: 777, "monitorid": "none","loc": "nowhere"},
-   { ts: 1755302717027, ping: 999, "monitorid": "none","loc": "nowhere"},
-   { ts: 1755302847027, ping: 333, "monitorid": "no1","loc": "nowhere"},
-   { ts: 1755302801027, ping: 444, "monitorid": "no1","loc": "nowhere"},
-   { ts: 1755302727027, ping: 555, "monitorid": "no1","loc": "nowhere"}
-];
-
-
-// set the dimensions and margins of the graph
-const margin2 = {top: 10, right: 30, bottom: 30, left: 60},
-    var width2 = document.getElementById("contwrap").offsetWidth - margin2.left - margin2.right,
-    		height2 = 234 - margin2.top - margin2.bottom;
-// append the svg object to the body of the page
-const svg = d3.select("#main_dataviz")
-  .append("svg")
-    .attr("width", width + margin2.left + margin2.right)
-    .attr("height", height + margin2.top + margin2.bottom)
-  .append("g")
-    .attr("transform", `translate(${margin2.left},${margin2.top})`);
-
-
-
-  // color palette
-  const color = d3.scaleOrdinal()
-    .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
-
-    function update(updata) {
-     // group the updata: I want to draw one line per group
-  const sumstat = d3.group(updata, d => d.name); // nest function allows to group the calculation per level of a factor
-
-  // Add X axis --> it is a date format
-  const x = d3.scaleLinear()
-    .domain(d3.extent(updata, function(d) { return d.year; }))
-    .range([ 0, width ]);
-  svg.append("g")
-    .attr("transform", `translate(0, ${height})`)
-    .call(d3.axisBottom(x).ticks(5));
-
-  // Add Y axis
-  const y = d3.scaleLinear()
-    .domain([0, d3.max(updata, function(d) { return +d.n; })])
-    .range([ height, 0 ]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-//  // Create the X axis:
-//  x.domain([0, d3.max(updata, function(d) { return d.ser1 }) ]);
-//  svg.selectAll(".myXaxis").transition()
-//    .duration(3000)
-//    .call(xAxis);
-//
-//  // create the Y axis
-//  y.domain([0, d3.max(updata, function(d) { return d.ser2  }) ]);
-//  svg.selectAll(".myYaxis")
-//    .transition()
-//    .duration(3000)
-//    .call(yAxis);
-
-
-  // Draw the line
-  svg.selectAll(".line")
-      .updata(updata)
-      .join("path")
-
-        
-  // Create a update selection: bind to the new updata
-  const u = svg.selectAll(".line")
-    .updata([updata], function(d){ return d.ts });
-
-  // Updata the line
-  u
-    .join("path")
-    .attr("class",line")
-    .transition()
-    .duration(2222)
-      .attr("fill", "none")
-      .attr("stroke", function(d){ return color(d[0]) })
-        .attr("stroke-width", 1.5)
-        .attr("d", function(d){
-          return d3.line()
-            .x(function(d) { return x(d.ts); })
-            .y(function(d) { return y(+d.ping); })
-            (d[1])
-        })
-}
 
 
 /// -----------------
