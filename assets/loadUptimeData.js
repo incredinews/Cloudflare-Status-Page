@@ -61,6 +61,7 @@ fetch(myurl).then(function(response) {
            curmonping = 0 
         } else { 
            curmonping=-9999999
+            curmonping=0
          }
         } else {
         
@@ -73,7 +74,7 @@ fetch(myurl).then(function(response) {
         }
         
        }
-    if(!monitorFound) { console.log("no ping data for "+k) ;         data.push({"monitorid": k , "ping_value" : -99.99 }) }
+    if(!monitorFound) { console.log("no ping data for "+k) ;         data.push({"monitorid": k , "ping_value" : 0 }) }
     }
     if(moniDown==0) {
       document.getElementById("statusheader").style.backgroundColor="rgb(46, 204, 113)"
