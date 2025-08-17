@@ -60,7 +60,7 @@ fetch(myurl).then(function(response) {
         if( curData.operational[k]  ) { 
            curmonping = 0 
         } else { 
-           curmonping=-999999
+           curmonping=-9999999
          }
         } else {
         
@@ -73,7 +73,7 @@ fetch(myurl).then(function(response) {
         }
         
        }
-    if(!monitorFound) { console.log("no ping data for "+k) ;         data.push({"monitorid": k , "ping_value" : -9.99 }) }
+    if(!monitorFound) { console.log("no ping data for "+k) ;         data.push({"monitorid": k , "ping_value" : -99.99 }) }
     }
     if(moniDown==0) {
       document.getElementById("statusheader").style.backgroundColor="rgb(46, 204, 113)"
@@ -179,8 +179,12 @@ fetch(myurl).then(function(response) {
       	.attr("y", function(d) { return y(d.monitorid); })
       	.attr("height", y.bandwidth())
       	.attr("width", function(d) { 
+          if (d.ping_value==-99.99) {
+            return -6.66
+          } else {
         	return Math.abs(x(d.ping_value) - x(0))
             //return Math.log10(Math.abs(x(d.ping_value) - x(0)))
+          }
       	})
       	.style("fill", function(d) {
            //bar colour
