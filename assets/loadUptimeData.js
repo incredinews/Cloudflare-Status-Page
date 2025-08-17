@@ -175,7 +175,7 @@ fetch(myurl).then(function(response) {
       	.attr("class", "ping-value")
       	.attr("x", function(d) {
          // if (d.ping_value==-99.99) {
-       	  	return x(Math.min(0, -6,66));
+       	 // 	return x(Math.min(0, -6,66));
           //} else {
        	  	return x(Math.min(0, d.ping_value));
 
