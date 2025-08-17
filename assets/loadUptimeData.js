@@ -179,13 +179,8 @@ fetch(myurl).then(function(response) {
       	.attr("y", function(d) { return y(d.monitorid); })
       	.attr("height", y.bandwidth())
       	.attr("width", function(d) { 
-          if (d.ping_value==-99.99) {
-            return -6.66
-          } else {
         	return Math.abs(x(d.ping_value) - x(0))
             //return Math.log10(Math.abs(x(d.ping_value) - x(0)))
-          }
-
       	})
       	.style("fill", function(d) {
            //bar colour
