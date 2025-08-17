@@ -185,11 +185,12 @@ fetch(myurl).then(function(response) {
         	return Math.abs(x(d.ping_value) - x(0))
             //return Math.log10(Math.abs(x(d.ping_value) - x(0)))
           }
+
       	})
       	.style("fill", function(d) {
            //bar colour
            if(d.ping_value > 20 )  {   return "red" ; }
-           if(d.ping_value < 0 )  {   return "black" ; }
+           if(d.ping_value < 0 )  {   return "red" ; }
            if(d.ping_value < 0.5 && d.ping_value > 0  )  {   
             return 'rgba('+(64+d.ping_value*254)+', '+(64+d.ping_value*254)+', 255, 1)'
           //  return "blue" ; 
