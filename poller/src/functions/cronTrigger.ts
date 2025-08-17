@@ -112,7 +112,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
 
-  mymonitors.sort((a, b) => b.lastFetched - a.lastFetched)
+  mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
   console.log("sorted_and_ready")
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
