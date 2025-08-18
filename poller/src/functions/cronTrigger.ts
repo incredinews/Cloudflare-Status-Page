@@ -109,7 +109,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
       mymonitors.push(mymonitor)
     } else {
-         console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+         console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
 
     }
     
@@ -312,7 +312,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     timediffcron=dontchecknow-cronStarted
     cronSeconds=timediffcron/1000
     //if(log_verbose) { 
-      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
+      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
     //}
   } // end dorequest
   counter=counter+1
