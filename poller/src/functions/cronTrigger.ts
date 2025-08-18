@@ -91,7 +91,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     let do_request=false
     const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
     const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
-    if( timesec < realdebounce  ) {
+    if( timesec > realdebounce  ) {
       do_request=true;
       reasons="+T"
     } else { 
@@ -109,7 +109,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
       mymonitors.push(mymonitor)
     } else {
-         console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+         console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
 
     }
     
@@ -150,7 +150,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
 
-    const timesec=(localnow-monitorMonth.lastFetched[monitor.id])/1000
+    const timesec=((localnow-monitorMonth.lastFetched[monitor.id])/1000).toFixed(2)
 
     let do_request = false;
     let reasons="";
