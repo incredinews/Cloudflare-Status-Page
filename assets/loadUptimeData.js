@@ -226,7 +226,7 @@ fetch(myurl).then(function(response) {
       	.attr("x", x(0))
       	.attr("y", function(d) { 
           if(hasOwn(window.curData.info,d.monitorid) && hasOwn(window.curData.info[d.monitorid],"name")  ) {
-          return y(window.curData.info[d.monitorid["name"])
+          return y(window.curData.info[d.monitorid]["name"])
           } else {
           return y(d.monitorid )
           }
