@@ -342,15 +342,6 @@
     "followRedirect": true
     },
     {
-    "id": "news_google_com",
-    "name": "news.google.com",
-    "description": "Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News.",
-    "url": "https://news.google.com/home?hl=en-US&gl=US&ceid=US:en&ucbcb=1",
-    "method": "GET",
-    "expectStatus": 200,
-    "followRedirect": true
-    },
-    {
     "id": "news_sky_com",
     "name": "Sky News",
     "description": "Sky News delivers breaking news, headlines and top stories from business, politics, entertainment and more in the UK and worldwide.",
