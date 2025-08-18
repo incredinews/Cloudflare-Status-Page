@@ -20,8 +20,11 @@
       border-bottom-right-radius: 6px;
     }
     # mainstatustxt {
-      padding: 8px;
+      padding: 12px;
     }
     #mainstatusago {
       padding: 6px;
+    }
+    #textStatus {
+      padding: 6px; 
     }
