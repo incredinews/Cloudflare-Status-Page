@@ -169,7 +169,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     } else {
       cronSeconds=(localnow-cronStarted)/1000
       //console.log("cronseconds:"+ cronSeconds.toString())
-      if ( cronSeconds > 15  ) { 
+      if ( cronSeconds > 13  ) { 
         reasons=reasons+"+LimT"
         do_request=false
       } else { 
