@@ -225,11 +225,7 @@ fetch(myurl).then(function(response) {
       	.attr("class", "bar-label")
       	.attr("x", x(0))
       	.attr("y", function(d) { 
-          if(Object.hasOwn(window.curData.info,d.monitorid) && Object.hasOwn(window.curData.info[d.monitorid],"name")  ) {
-          return y(window.curData.info[d.monitorid]["name"])
-          } else {
           return y(d.monitorid)
-          }
         })
       	.attr("dx", function(d) {
         	//let myval=d.ping_value < 0 ? -cfg.labelMargin : cfg.labelMargin
@@ -250,7 +246,13 @@ fetch(myurl).then(function(response) {
       	})
       	//.text(function(d) { return d.monitorid })
       	//.text(function(d) {  let updown=(d.ping_value >0) ? "↑" : "↓" ; let mystring= updown+" "+ d.monitorid +" "+ updown +" |  "+ parseFloat(d.ping_value.toString()).toPrecision(3).toString() + " s avg "  ;return mystring})
-      	.text(function(d) {  let updown=(d.ping_value >0) ? "↑" : "↓" ;if (d.ping_value==0) { updown= "X" }; let mystring= updown+" ("+parseFloat(d.ping_value.toString()).toFixed(3).toString().slice(0,5) + "s)  "+ d.monitorid +" "+ updown   ;return mystring})
+      	.text(function(d) { 
+            let displayname=d.monitorid
+            if(Object.hasOwn(window.curData.info,d.monitorid) && Object.hasOwn(window.curData.info[d.monitorid],"name")  ) {
+              displayname=window.curData.info[d.monitorid]["name"]
+          }
+          
+          let updown=(d.ping_value >0) ? "↑" : "↓" ;if (d.ping_value==0) { updown= "X" }; let mystring= updown+" ("+parseFloat(d.ping_value.toString()).toFixed(3).toString().slice(0,5) + "s)  "+ displayname +" "+ updown   ;return mystring})
       	.style("fill", function(d) {
         	 if (d.monitorid == "European Union") {
              return "blue";
