@@ -147,8 +147,13 @@ fetch(myurl).then(function(response) {
     	.attr("y", 20)
     	.attr("text-anchor", "end")
     	.style("opacity", 0.5)
-    	.text("DOWN: "+moniDown+" | UP: "+moniUp);
-          
+    	.text("↓ DOWN: "+moniDown+" | ↑ UP: "+moniUp);
+    legend.append("text")
+      .attr("x", width - cfg.legendRightMargin)
+    	.attr("y", 20)
+    	.attr("text-anchor", "end")
+    	.style("opacity", 0.7)
+    	.text("X=NO_PING");
       y.domain(data.map(function(d) { return d.monitorid; }));
       x.domain(d3.extent(data, function(d) { return d.ping_value; }));
       

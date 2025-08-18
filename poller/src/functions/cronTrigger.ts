@@ -26,7 +26,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   //const preset_debounce = config.debounce || 345 
   const checksPerRound=20
 
-  const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  )     )
+  const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   // Get monitors state from KV
   console.log("KV_read_1")
   let monitorMonth: MonitorMonth = await getKVMonitors(namespace,checkDay.slice(0, 7))

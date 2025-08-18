@@ -264,7 +264,7 @@
     "description": "The Inquisitr offers a constantly updated mix of the latest stories to hit the web, covering a diverse spectrum of current news events….",
     "url": "https://www.inquisitr.com/feed",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": [200,403],
     "followRedirect": true
     },
     {
