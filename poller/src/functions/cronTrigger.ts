@@ -45,18 +45,15 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       //incidents: {},
     }
   }
-  console.log("init_1_getObj")
+  //console.log("init_1_getObj")
   if (!monitorMonth.checks[checkDay]) {
     monitorMonth.checks[checkDay] = {
-      summary: {},
-      res: [],
-      incidents: [],
-    }
-  }
+      summary: {},      res: [],      incidents: [],
+  } }
   if (!monitorMonth.lastFetched) {
     monitorMonth.lastFetched={}
   }
-  console.log("init_1_lastFetched")
+  //console.log("init_1_lastFetched")
   //console.log(JSON.stringify(monitorMonth))
   const res: {
     t: number
@@ -65,14 +62,14 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       [index: string]: number | null
     }
   } = { t: now, l: checkLocation, ms: {} }
-  console.log("init_1_data_prepared")
+  //console.log("init_1_data_prepared")
   let counter=1;
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
   let monitorCount=config.monitors.length
   let cronSeconds=0
   let timediffcron=0
-  console.log("init_1_vars_set")
+  //console.log("init_1_vars_set")
   if (!Object.hasOwn(monitorMonth, 'info')) {
                         monitorMonth["info"]={}
      }
@@ -81,34 +78,34 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     if (!Object.hasOwn(monitorMonth, "lastFetched")) {
       monitorMonth.lastFetched={}
     }
-  for (const monitor of config.monitors) {
+    let timediffglobal=now-monitorMonth.lastCheck
+    for (const monitor of config.monitors) {
     //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
     // }
-    let timediffglobal=now-monitorMonth.lastCheck
     if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
       const localnow=Date.now()
       monitorMonth.lastFetched[monitor.id]=localnow-999999999
+      }
+    let mymonitor=monitor
+    mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
+    mymonitors.push(mymonitor)
+      //  let lastping=monitorMonth.lastFetched[monitor.id]
+      //  if ( newestmonitor == 0 )  {
+      //    newestmonitor=monitor.id
+      //  }
+      //  if ( oldestmonitor == 0 )  {
+      //    oldestmonitor=monitor.id
+      //  }
+      //  if (lastping>oldestmonitor ) {
+      //    oldestmonitor=monitor.id
+      //    oldestmonitors.push(monitor.id)
+      //  }
+      //  if (lastping<newestmonitor ) {
+      //    newestmonitor=monitor.id
+      //    youngestmonitors.unshift(monitor.id)
+      //  }
     }
-  let mymonitor=monitor
-  mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
-  mymonitors.push(mymonitor)
-  //  let lastping=monitorMonth.lastFetched[monitor.id]
-  //  if ( newestmonitor == 0 )  {
-  //    newestmonitor=monitor.id
-  //  }
-  //  if ( oldestmonitor == 0 )  {
-  //    oldestmonitor=monitor.id
-  //  }
-  //  if (lastping>oldestmonitor ) {
-  //    oldestmonitor=monitor.id
-  //    oldestmonitors.push(monitor.id)
-  //  }
-  //  if (lastping<newestmonitor ) {
-  //    newestmonitor=monitor.id
-  //    youngestmonitors.unshift(monitor.id)
-  //  }
-  }
-  console.log("init_2_monitors_filtered")
+  //console.log("init_2_monitors_filtered")
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
 
@@ -125,8 +122,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
 
-    const timediff=localnow-monitorMonth.lastFetched[monitor.id]
-    const timesec=timediff/1000
+    const timesec=(localnow-monitorMonth.lastFetched[monitor.id])/1000
 
     let do_request = false;
     let reasons="";
@@ -143,9 +139,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       reasons=reasons+"+LimR"
       do_request=false
     } else {
-      
-      timediffcron=localnow-cronStarted
-      cronSeconds=timediffcron/1000
+      cronSeconds=(localnow-cronStarted)/1000
       //console.log("cronseconds:"+ cronSeconds.toString())
       if ( cronSeconds > 15  ) { 
         reasons=reasons+"+LimT"
@@ -191,7 +185,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
         console.log(monitor.id+" STATUS_CODES : GOT "+ checkResponse.status + " NEED "+ JSON.stringify(monitor.expectStatus) )
       }
       returnstatus=checkResponse.status
-      monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
       //check for full text
       if (monitor.matchText && monitorOperational) {
         //const results = await gatherResponse(checkResponse)
@@ -205,7 +198,8 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
           monitorMonth.operational[monitor.id] = false;
           monitorOperational = false;
         }
-      }  
+      }
+      monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
       // Save monitor's last check response status
       monitorMonth.operational[monitor.id] = monitorOperational;
     } // end http monitors
