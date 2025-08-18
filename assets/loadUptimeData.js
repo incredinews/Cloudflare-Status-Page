@@ -188,7 +188,8 @@ fetch(myurl).then(function(response) {
       	.attr("height", y.bandwidth())
       	.attr("width", function(d) { 
           if (d.ping_value==0) {
-        	   return Math.abs(x(4) - x(0))
+        	   //return Math.abs(x(4) - x(0))
+             return 42
           } else {
             return Math.abs(x(d.ping_value) - x(0))
             //return Math.log10(Math.abs(x(d.ping_value) - x(0)))
@@ -199,7 +200,7 @@ fetch(myurl).then(function(response) {
            if(d.ping_value > 20 )  {   return "red" ; }
            if(d.ping_value < 0 )  {    return "rgba(212, 54, 54, 1)" ; }
            if(d.ping_value < 0.5 && d.ping_value > 0  )  {   
-            return 'rgba('+(84+d.ping_value*254)+', '+(84+d.ping_value*254)+', 255, 1)'
+            return 'rgba('+(42+d.ping_value*254)+', '+(42+d.ping_value*254)+', 255, 1)'
           //  return "blue" ; 
           }
            if(d.ping_value < 1 && d.ping_value > 0.499999  )  {   
@@ -210,7 +211,7 @@ fetch(myurl).then(function(response) {
           //  return "yellow" ;
             return 'rgba('+(123+d.ping_value*10)+', 255, '+(63+d.ping_value*3)+', 1)'
           }
-           return colour(d.ping_value)
+          return colour(d.ping_value)
            //if(d.ping_value > 5 )  {   return "yellow" ; }
       	});
       

@@ -86,9 +86,35 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       const localnow=Date.now()
       monitorMonth.lastFetched[monitor.id]=localnow-999999999
       }
-    let mymonitor=monitor
-    mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
-    mymonitors.push(mymonitor)
+    let reasons="";
+    let displayname = monitor.name || monitor.id.toString();
+    let do_request=false
+    const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
+    if( timesec > realdebounce  ) {
+      do_request=true;
+      reasons="+T"
+    } else { 
+      reasons="+t"
+    }
+    //subrequest limiter
+    if(sentRequests > 42 ) {
+      reasons=reasons+"+LimR"
+      do_request=false
+
+    } else {
+      do_request=true
+    }
+    if(do_request) {
+      let mymonitor=monitor
+      mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
+      mymonitors.push(mymonitor)
+    } else {
+         console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
+
+    }
+    
+
+
       //  let lastping=monitorMonth.lastFetched[monitor.id]
       //  if ( newestmonitor == 0 )  {
       //    newestmonitor=monitor.id
@@ -104,6 +130,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       //    newestmonitor=monitor.id
       //    youngestmonitors.unshift(monitor.id)
       //  }
+    counter=counter+1
     }
   //console.log("init_2_monitors_filtered")
   
@@ -111,6 +138,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
   console.log("sorted_and_ready")
+  counter=1
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -127,7 +155,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
     let do_request = false;
     let reasons="";
     let checkResponse={};
-    checkResponse
+    //checkResponse
     if( timesec > realdebounce  ) {
       do_request=true;
       reasons="+T"
