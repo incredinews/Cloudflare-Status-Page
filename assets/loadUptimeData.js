@@ -10,7 +10,6 @@ if ( !apihost.includes("http://") && !apihost.includes("https://")  ) {
     apihost="https://"+apihost
 }
 myurl=apihost+"/api/kv/"+yourDate.toISOString().split('T')[0].slice(0, 7)
-
 //fetch('https://status.jh0project.com/api/kv/2025-08').then(function(response) {
 fetch(myurl).then(function(response) {
   // response.json() returns a promise, use the same .then syntax to work with the results
@@ -42,8 +41,6 @@ fetch(myurl).then(function(response) {
         let curmonpingsum=0
         let curmonvalues=0
         let curmonping=0
-
-
         for (const findday of [today,yesterday]) {
           if(!monitorFound) {
             for (var dcloc in mydata.checks[findday].summary ) { 
@@ -150,7 +147,7 @@ fetch(myurl).then(function(response) {
     	.text("↓ DOWN: "+moniDown+" | ↑ UP: "+moniUp);
     legend.append("text")
       .attr("x", width - cfg.legendRightMargin)
-    	.attr("y", 20)
+    	.attr("y", 40)
     	.attr("text-anchor", "end")
     	.style("opacity", 0.7)
     	.text("X=NO_PING");
@@ -227,7 +224,13 @@ fetch(myurl).then(function(response) {
       .enter().append("text")
       	.attr("class", "bar-label")
       	.attr("x", x(0))
-      	.attr("y", function(d) { return y(d.monitorid )})
+      	.attr("y", function(d) { 
+          if(hasOwn(window.curData.info,d.monitorid) && hasOwn(window.curData.info[d.monitorid],"name")  ) {
+          return y(window.curData.info[d.monitorid["name"])
+          } else {
+          return y(d.monitorid )
+          }
+        })
       	.attr("dx", function(d) {
         	//let myval=d.ping_value < 0 ? -cfg.labelMargin : cfg.labelMargin
             let myval=d.ping_value < 0 ? 5 : cfg.labelMargin
@@ -236,7 +239,7 @@ fetch(myurl).then(function(response) {
             if(d.ping_value>2 )   { myval=myval+ cfg.labelMargin + cfg.labelMargin     }
             if(d.ping_value>3 )   { myval=myval+ cfg.labelMargin                       }
             if(d.ping_value>5 )   { myval=myval+ cfg.labelMargin                       }
-            if(d.ping_value>10 )  { myval=myval+ cfg.labelMargin                       }
+            if(d.ping_value>10 )  { myval=cfg.labelMargin                              }
             return myval;
             
       	})
@@ -252,10 +255,10 @@ fetch(myurl).then(function(response) {
         	 if (d.monitorid == "European Union") {
              return "blue";
            }
-           if(d.ping_value < 0 )        {   return "red" ; }
+           if(d.ping_value < 0 )        {  return "red" ; }
            if(d.ping_value > 9.9999 )   {  return "black" ; }
-           if(d.ping_value > 5 )        {   return "blue" ; }
-           if(d.ping_value < 9.9999 && d.ping_value > 3  )  {   return "yellow" ; }
+           if(d.ping_value > 5 )        {  return "blue" ; }
+           if(d.ping_value < 9.9999 && d.ping_value > 3  )  {   return 'rgba(21, 66, 0, 1)' ; }
            return "black";
       	});
   }); // end json mydata 
