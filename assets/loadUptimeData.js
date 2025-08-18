@@ -225,10 +225,10 @@ fetch(myurl).then(function(response) {
       	.attr("class", "bar-label")
       	.attr("x", x(0))
       	.attr("y", function(d) { 
-          if(hasOwn(window.curData.info,d.monitorid) && hasOwn(window.curData.info[d.monitorid],"name")  ) {
+          if(Object.hasOwn(window.curData.info,d.monitorid) && Object.hasOwn(window.curData.info[d.monitorid],"name")  ) {
           return y(window.curData.info[d.monitorid]["name"])
           } else {
-          return y(d.monitorid )
+          return y(d.monitorid)
           }
         })
       	.attr("dx", function(d) {
