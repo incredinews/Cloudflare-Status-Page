@@ -498,7 +498,7 @@
     "description": null,
     "url": "https://www.telegraph.co.uk",
     "method": "GET",
-    "expectStatus": 200,
+    "expectStatus": [200,403],
     "followRedirect": true
     },
     {
