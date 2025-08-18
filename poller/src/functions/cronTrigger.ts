@@ -88,15 +88,15 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       }
     let reasons="";
     let displayname = monitor.name || monitor.id.toString();
-    let do_request=false
+    let do_request=true
     const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
     const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
-    if( timesec > realdebounce  ) {
-      do_request=true;
-      reasons="+T"
-    } else { 
+    if( timesec < realdebounce  ) {
+      do_request=false;
       reasons="+t"
-      do_request=false
+    } else { 
+      reasons="+T"
+      do_request=true
     }
     //subrequest limiter
     if(sentRequests > 42 ) {
