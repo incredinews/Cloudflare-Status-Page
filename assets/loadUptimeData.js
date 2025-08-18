@@ -256,9 +256,8 @@ fetch(myurl).then(function(response) {
   }); // end json mydata 
 
 }).catch(err => console.error(err)); // end fetch
-if (!Object.hasOwn(window,"timerStarted") &&  Object.hasOwn(window,"lastPull") ) {
-   window.timerStarted=setInterval(function() { let myelem=document.getElementById("mainstatusago"); if (myelem) { myelem.textContent=((-1*(window.curData.lastCheck-Date.now()))/1000).toFixed(2)+" s ago "; } ; } , 3333 )
-
+if (!Object.hasOwn(window,"timerStarted") ) {
+  window.timerStarted=setInterval(function() { if (Object.hasOwn(window,"lastPull") ) { let myelem=document.getElementById("mainstatusago"); if (myelem) { myelem.textContent=((-1*(window.curData.lastCheck-Date.now()))/1000).toFixed(2)+" s ago "; } ; } ; }, 3333 )
 }
 }
 if (document.getElementById("d3-graph-main")) { 
