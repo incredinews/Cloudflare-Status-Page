@@ -263,8 +263,6 @@ if (!Object.hasOwn(window,"timerStarted") ) {
 if (document.getElementById("d3-graph-main")) { 
 while (document.getElementById("d3-graph-main").childNodes.length > 1) { document.getElementById("d3-graph-main").childNodes[1].remove() } 
 }
-
-
 }
 // -----------
 

@@ -109,7 +109,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
       mymonitors.push(mymonitor)
     } else {
-         console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
+         console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
 
     }
     
