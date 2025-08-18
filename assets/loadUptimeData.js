@@ -55,7 +55,7 @@ fetch(myurl).then(function(response) {
         }
         if(curmonvalues==0) { 
         if( curData.operational[k]  ) { 
-           curmonping = 0 
+           curmonping = 0.01 
         } else { 
            curmonping=-9999999
             curmonping=0
