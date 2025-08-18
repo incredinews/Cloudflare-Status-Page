@@ -1,30 +1,29 @@
-    .y-axis line{
-      stroke: black;
-    }
-    .annual-growth {
-      fill: black;
-    }
-    .bar-label {
-      font-size: 16px;
-    }
-    .mini-label, .x-axis {
-      font-size: 8px;
-    }
-    .domain, .tick line {
-      opacity: 0.5;
-    }
-
-    #statusheader {
-      border-radius: 10px;
-      border-top-left-radius: 5px;
-      border-bottom-right-radius: 6px;
-    }
-    # mainstatustxt {
-      padding: 12px;
-    }
-    #mainstatusago {
-      padding: 6px;
-    }
-    #textStatus {
-      padding: 6px; 
-    }
+.y-axis line{
+  stroke: black;
+}
+.annual-growth {
+  fill: black;
+}
+.bar-label {
+  font-size: 16px;
+}
+.mini-label, .x-axis {
+  font-size: 8px;
+}
+.domain, .tick line {
+  opacity: 0.5;
+}
+#statusheader {
+  border-radius: 10px;
+  border-top-left-radius: 5px;
+  border-bottom-right-radius: 6px;
+}
+#mainstatustxt {
+  padding: 12px;
+}
+#mainstatusago {
+  padding: 6px;
+}
+#textStatus {
+  padding: 6px; 
+}
