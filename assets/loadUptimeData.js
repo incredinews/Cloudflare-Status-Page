@@ -242,7 +242,7 @@ fetch(myurl).then(function(response) {
       	})
       	//.text(function(d) { return d.monitorid })
       	//.text(function(d) {  let updown=(d.ping_value >0) ? "↑" : "↓" ; let mystring= updown+" "+ d.monitorid +" "+ updown +" |  "+ parseFloat(d.ping_value.toString()).toPrecision(3).toString() + " s avg "  ;return mystring})
-      	.text(function(d) {  let updown=(d.ping_value >0) ? "↑" : "↓" ; let mystring= updown+" ("+parseFloat(d.ping_value.toString()).toFixed(3).toString().slice(0,5) + "s)  "+ d.monitorid +" "+ updown   ;return mystring})
+      	.text(function(d) {  let updown=(d.ping_value >0) ? "↑" : "↓" ;if (d.ping_value==0) { updown= "X" }; let mystring= updown+" ("+parseFloat(d.ping_value.toString()).toFixed(3).toString().slice(0,5) + "s)  "+ d.monitorid +" "+ updown   ;return mystring})
       	.style("fill", function(d) {
         	 if (d.monitorid == "European Union") {
              return "blue";
@@ -255,7 +255,11 @@ fetch(myurl).then(function(response) {
       	});
   }); // end json mydata 
 
-}).catch(err => console.error(err));
+}).catch(err => console.error(err)); // end fetch
+if (!Object.hasOwn(window,"timerStarted" &&  Object.hasOwn(window,"lastPull") {
+   window.timerStarted=setInterval(function() { let myelem=document.getElementById("mainstatusago"); if (myelem) { myelem.textContent=((-1*(window.curData.lastCheck-Date.now()))/1000).toFixed(2)+" s ago "; } ; } , 3333 )
+
+}
 }
 if (document.getElementById("d3-graph-main")) { 
 while (document.getElementById("d3-graph-main").childNodes.length > 1) { document.getElementById("d3-graph-main").childNodes[1].remove() } 
