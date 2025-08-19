@@ -339,7 +339,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
   await setKVMonitors(namespace,dayname, monitorMonth)
   //
-  	const dbResInfo = await env.DB
+  const dbResInfo = await env.STATUS_PAGE
 		.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)')
 		.bind("info", JSON.stringify(monitorMonth.info))
 		.run();
