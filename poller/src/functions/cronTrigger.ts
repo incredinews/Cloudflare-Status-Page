@@ -75,13 +75,13 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   if (!Object.hasOwn(monitorMonth, 'info')) {
                         monitorMonth["info"]={}
      }
-  let mymonitors= []
-  console.log("init_1_monitors loaded")
+    let mymonitors= []
+    console.log("init_1_monitors loaded")
     if (!Object.hasOwn(monitorMonth, "lastFetched")) {
       monitorMonth.lastFetched={}
     }
     let timediffglobal=now-monitorMonth.lastCheck
-    const localnow=Date.now()
+    let localnow=Date.now()
     const defaultlastfetch=localnow-999999999
     for (const monitor of config.monitors) {
     //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
