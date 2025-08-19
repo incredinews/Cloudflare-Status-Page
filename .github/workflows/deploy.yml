@@ -141,7 +141,7 @@ jobs:
             echo "binding = \"DB\"" >> wrangler.toml
             echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
             echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
-            //echo "[env.production.d1_databases.bindings] = "
+            #echo "[env.production.d1_databases.bindings] = "
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql 
             echo deployed     
           postCommands: |
