@@ -100,12 +100,14 @@ jobs:
             echo "[env.production]" >> wrangler.toml
             echo "kv_namespaces = [{binding=\"KV_STATUS_PAGE\", id=\""$(cat kvnamespace)"\"}]" >> wrangler.toml
             echo $D1LOC > d1location
+            npx wrangler d1 list --json
             cat d1location|grep -e "^weur$" -e "^eeur$" -e "^apac$" -e "^oc$" -e "^wnam$" -e "^enam$" || (echo "weur" > d1location)
             npx wrangler d1 list --json|grep STATUS_PAGE || npx wrangler d1 create STATUS_PAGE  --location $(cat d1location)
             echo 'CREATE TABLE IF NOT EXISTS [config] ("profile" integer DEFAULT 0 PRIMARY KEY,"cfgdata" text);' > init.sql 
             echo 'CREATE TABLE IF NOT EXISTS [info] ("id" text PRIMARY KEY,"record" text);' >> init.sql
             npx wrangler d1 execute STATUS_PAGE --file init.sql
             npx wrangler d1 list --json
+
 
             
           postCommands: |
