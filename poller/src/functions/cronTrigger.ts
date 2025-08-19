@@ -370,7 +370,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
       ).raw();
   console.log(typeof(dbresults))
   console.log("got:")
-  console.log(JSON.stringify(dbresults))
+  console.log(JSON.stringify(await dbresults))
 
 
   //const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
