@@ -270,9 +270,11 @@ if (!Object.hasOwn(window,"timerStarted") ) {
   window.timerStarted=setInterval(function() { if (Object.hasOwn(window,"lastPull") ) { let myelem=document.getElementById("mainstatusago"); if (myelem) { myelem.textContent=((-1*(window.curData.lastCheck-Date.now()))/1000).toFixed(2)+" s ago "; } ; } ; }, 3333 )
 }
 }
-if (document.getElementById("d3-graph-main")) { 
+setTimeout(function() { if (document.getElementById("d3-graph-main")) { 
 while (document.getElementById("d3-graph-main").childNodes.length > 1) { document.getElementById("d3-graph-main").childNodes[1].remove() } 
-}
+} ; }, 345 )
+
+setTimeout(function() { runSiteCron() ; }, 240 )
 }
 // -----------
 
