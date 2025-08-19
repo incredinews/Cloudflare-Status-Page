@@ -27,7 +27,9 @@ const DEBUG = false;
 //     event.respondWith(new Response('Internal Error', { status: 500 }))
 //   }
 // })
-
+interface Env {
+  STATUS_PAGE: D1Database;
+}
 
 export default {  
   async scheduled(event, env, ctx) {
@@ -37,12 +39,14 @@ export default {
     //  event.waitUntil(processCronTrigger(event))
     //}));
     let mynamespace=await env.KV_STATUS_PAGE
-    await processCronTrigger(mynamespace,"sched",event)
+    let mydatabase=await env.STATUS_PAGE
+    await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")
     let mynamespace=await env.KV_STATUS_PAGE
-    await processCronTrigger(mynamespace,"fetch",request)
+    let mydatabase=await env.STATUS_PAGE
+    await processCronTrigger(mynamespace,mydatabase,"fetch",request)
     //ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (request) => {
     //  console.log("fetch_hander_prcoc")
     //  event.waitUntil(processCronTrigger(request))

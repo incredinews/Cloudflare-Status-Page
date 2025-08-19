@@ -12,7 +12,7 @@ function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
 
-export async function processCronTrigger(namespace: KVNamespace, trigger, event: ScheduledEvent) {
+export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  trigger, event: ScheduledEvent) {
   let log_verbose=false
   let log_errors=true
   console.log("cron_function_init "+trigger)
@@ -339,7 +339,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
   await setKVMonitors(namespace,dayname, monitorMonth)
   //
-  const dbResInfo = await env.STATUS_PAGE
+  const dbResInfo = await statusdb
 		.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)')
 		.bind("info", JSON.stringify(monitorMonth.info))
 		.run();
