@@ -375,7 +375,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 
 
 const someVariable = `"summary_%"`;
-const stmt = statusdb.prepare("SELECT * FROM Customers WHERE id NOT like ?").bind(someVariable);
+const stmt = statusdb.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
 const returnValue = await stmt.raw({columnNames:true});
 console.log(JSON.stringify(Response.json(returnValue))) 
   //const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
