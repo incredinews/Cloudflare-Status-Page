@@ -32,10 +32,27 @@ jobs:
         id: get-code-cachekey
         run: |
           bash -c "cd poller;ln -s ../.yarn"|| true
+          bash -c "cd poller;ln -s ../node_modules"|| true
           sum=$((find poller types -type f  ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           sum=$((find poller types -type f  ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           echo -n "codecachekey=$sum" >> $GITHUB_OUTPUT
         shell: bash
+      - name: Cache next_npm
+        id: cache-next
+        uses: actions/cache@v4
+        with:
+          # See here for caching with `yarn`, `bun` or other package managers https://github.com/actions/cache/blob/main/examples.md or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+            .yarn
+            node_modules
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-nextjs
 #      - name: Cache yarn Poller
 #        id: cache-yarn-Poller
 #        uses: actions/cache@v4
@@ -45,14 +62,14 @@ jobs:
 #          #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('poller/src/**') }}-${{ hashFiles('poller/.yarn**') }}-${{ hashFiles('site/**') }}-${{ hashFiles('.yarnrc.yml') }}
 #          key: ${{ steps.get-machine.outputs.machine }}-yarn-poller-${{ hashFiles('poller/src/**') }}-${{ hashFiles('.yarnrc.yml') }}
 #          #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
-      - name: Cache yarn
-        id: cache-yarn
-        uses: actions/cache@v4
-        with:
-          save-always: true
-          path: .yarn
-          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('.yarnrc.yml') }}
-          #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
+#      - name: Cache yarn
+#        id: cache-yarn
+#        uses: actions/cache@v4
+#        with:
+#          save-always: true
+#          path: .yarn
+#          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('.yarnrc.yml') }}
+#          #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
       - run: bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
       - run: yarn install
         working-directory: poller
@@ -125,7 +142,7 @@ jobs:
          #cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1        
       - name: build page
         #run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1
-        run: cp -rv  .yarnrc.yml yarn.lock site && bash -c "cd site ; ln -s ../.yarn . " && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx next build && pwd && du -m -s *
+        run: cp -rv  .yarnrc.yml yarn.lock site && bash -c "cd site ; bash -c "ln -s ../node_modules || true;ln -s ../.yarn . " && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx next build && pwd && du -m -s *
         working-directory: .
       - name: patch functions
         #run: cp -rv functions  site/.vercel/output/static
@@ -135,27 +152,14 @@ jobs:
         run: cd site/dist && ls -lh1 
         #run: cd  site/.vercel/output/static && ls -lh1 
         working-directory: .
-      - name: Cache yarn
-        id: cache-yarn-page
-        uses: actions/cache@v4
-        with:
-          save-always: true
-          path: .yarn
-          key: ${{ steps.get-machine.outputs.machine }}-yarnpage-${{ hashFiles('.yarnrc.yml') }}
-          #key: ${{ steps.get-machine.outputs.machine }}-yarnpage-${{ steps.get-code-cachekey.outputs.codecachekey }}
-      - name: Cache next_npm
-        id: cache-next
-        uses: actions/cache@v4
-        with:
-          # See here for caching with `yarn`, `bun` or other package managers https://github.com/actions/cache/blob/main/examples.md or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
-          path: |
-            ~/.npm
-            ${{ github.workspace }}/.next/cache
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+#      - name: Cache yarn
+#        id: cache-yarn-page
+#        uses: actions/cache@v4
+#        with:
+#          save-always: true
+#          path: .yarn
+#          key: ${{ steps.get-machine.outputs.machine }}-yarnpage-${{ hashFiles('.yarnrc.yml') }}
+#          #key: ${{ steps.get-machine.outputs.machine }}-yarnpage-${{ steps.get-code-cachekey.outputs.codecachekey }}
       - name: replace ts config
         id: replace-ts-config
         run: |
