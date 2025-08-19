@@ -58,6 +58,8 @@ export default {
       .run();
     console.log("results: ", results);
     console.log("FCK_CLOWNFLARE")
+    console.log(JSON.stringify(results).length);
+ 
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {
