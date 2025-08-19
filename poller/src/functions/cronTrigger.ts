@@ -346,8 +346,8 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
   //  console.log(JSON.stringify(dbResInfo))
 
     const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
-  const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
-  const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
+    const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
+    const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
   
   const dbres= await statusdb.batch([
     stmtgetinfo,
