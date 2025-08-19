@@ -108,10 +108,10 @@ jobs:
             npx wrangler d1 list --json |grep STATUS_PAGE||exit 1
             npx wrangler d1 list --json|jq -c '.[]'|grep STATUS_PAGE|head -n1 |jq -r .uuid >> namespace.db
             echo "d1_databases = [{binding=\"STATUS_PAGE\", database_name=\"STATUS_PAGE\", database_id=\""$(cat namespace.db)"\"}]" >> wrangler.toml
-            echo "[d1_databases] = [{binding=\"STATUS_PAGE\", database_name=\"STATUS_PAGE\", database_id=\""$(cat namespace.db)"\"}]" >> wrangler.toml
-            #echo "binding = \"DB\"" >> wrangler.toml
-            #echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
-            #echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
+            echo "[[d1_databases]]" >> wrangler.toml
+            echo "binding = \"DB\"" >> wrangler.toml
+            echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
+            echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
 
             npx wrangler d1 execute STATUS_PAGE --file init.sql            
           postCommands: |
