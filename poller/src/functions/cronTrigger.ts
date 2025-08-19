@@ -345,21 +345,6 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 	//	.run();
   //  console.log(JSON.stringify(dbResInfo))
 
-    const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
-    const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
-    const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
-  const stmtgetall= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
-  cons resgetall=await stmtgetall.run()
-  console.log("alldbres:")
-  console.log(JSON.stringify(resgetall))
-  console.log("alldbres..:")
-  let allresjson=Response.json(resgetall)
-  console.log(JSON.stringify(allresjson))
-  const dbres= await statusdb.batch([
-    stmtgetinfo,
-    stmtgetsumm,
-    stmtgetconf
-  ])
   let resjson=Response.json(dbres)
   console.log("dbres:")
   console.log(JSON.stringify(resjson))
@@ -376,8 +361,28 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
   ]);
   console.log(JSON.stringify(dbResInfo))
   cronSeconds=(Date.now()-cronStarted) /1000
-  
+
+
   console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s")
+
+
+    const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
+    const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
+    const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
+  const stmtgetall= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
+  cons resgetall=await stmtgetall.run()
+  console.log("alldbres:")
+  console.log(JSON.stringify(resgetall))
+  console.log("alldbres..:")
+  let allresjson=Response.json(resgetall)
+  console.log(JSON.stringify(allresjson))
+  const dbres= await statusdb.batch([
+    stmtgetinfo,
+    stmtgetsumm,
+    stmtgetconf
+  ])
+
+
   return new Response('OK')
 }
 
