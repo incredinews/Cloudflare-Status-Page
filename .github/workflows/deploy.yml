@@ -111,12 +111,8 @@ jobs:
             #echo "binding = \"DB\"" >> wrangler.toml
             #echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
             #echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
-            echo "kv_namespaces = [{binding=\"STATUS_PAGE\", database_name=\"STATUS_PAGE\", database_id=\""$(cat namespace.db)"\"}]" >> wrangler.toml
-            npx wrangler d1 execute STATUS_PAGE --file init.sql
-
-
-
-            
+            echo "d1_databases = [{binding=\"STATUS_PAGE\", database_name=\"STATUS_PAGE\", database_id=\""$(cat namespace.db)"\"}]" >> wrangler.toml
+            npx wrangler d1 execute STATUS_PAGE --file init.sql            
           postCommands: |
             bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
             yarn kv-gc
