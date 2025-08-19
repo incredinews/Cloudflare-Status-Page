@@ -2,9 +2,6 @@ import { processCronTrigger } from './functions/cronTrigger.js'
 import type { addEventListener as AddEventListener } from '@cloudflare/workers-types'
 import { Client } from "pg";
 
-export interface Env {
-  DB: string;
-}
 /**
  * The DEBUG flag will do two things that help during development:
  * 1. we will skip caching on the edge, which makes it easier to
@@ -33,6 +30,7 @@ const DEBUG = false;
 // })
 interface Env {
   STATUS_PAGE: D1Database;
+  DB_URL: string;
 }
 
 export default {  
@@ -61,7 +59,15 @@ export default {
     //).bind("summary_%").run();
     //console.log("results: ", results);
     //console.log(JSON.stringify(results).length);
-
+    const client = new Client(env.DB_URL);
+    await client.connect();
+    const result = await client.query({
+      text: "SELECT * from customers",
+    });
+    console.log(JSON.stringify(result.rows));
+    const resp = Response.json(result.rows);
+    // Close the database connection, but don't block returning the response
+    ctx.waitUntil(client.end());
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {
