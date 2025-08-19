@@ -118,6 +118,12 @@ jobs:
             wc -c kvnamespace | grep "^33 kvnamespace$"  || exit 1
             echo "___5"
             #KV_NAMESPACE_ID=$(cat kvnamespace)
+            echo '[env.staging.vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo '[env.production.vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo '[vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
             echo "[env.production]" >> wrangler.toml
             echo "kv_namespaces = [{binding=\"KV_STATUS_PAGE\", id=\""$(cat kvnamespace)"\"}]" >> wrangler.toml
             echo $D1LOC > d1location
@@ -134,12 +140,6 @@ jobs:
             echo "binding = \"DB\"" >> wrangler.toml
             echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
             echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
-            echo '[vars]' >> wrangler.toml
-            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
-            echo '[env.staging.vars]' >> wrangler.toml
-            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
-            echo '[env.production.vars]' >> wrangler.toml
-            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql      
           postCommands: |
             bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
