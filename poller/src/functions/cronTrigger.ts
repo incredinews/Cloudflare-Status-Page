@@ -363,7 +363,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 
   console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s")
   const { dbresults } = await env.DB.prepare(
-        'select * from info where id NOT like "\1"',
+        'select * from info where id NOT like "?1"',
       ).bind("summary_%").run();
   console.log(JSON.stringify(dbresults))
 
