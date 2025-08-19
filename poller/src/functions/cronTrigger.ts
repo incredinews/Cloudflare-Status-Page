@@ -338,9 +338,9 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
   cronSeconds=timediffcron/1000
   console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
   await setKVMonitors(namespace,dayname, monitorMonth)
-  //
+  //INSERT INTO vocabulary(word) VALUES('jovial')   ON CONFLICT(word) DO UPDATE SET count=count+1;
   const dbResInfo = await statusdb
-		.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)')
+		.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2  ')
 		.bind("info", JSON.stringify(monitorMonth.info))
 		.run();
     console.log(JSON.stringify(dbResInfo))
