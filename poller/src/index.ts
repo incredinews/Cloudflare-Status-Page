@@ -40,14 +40,24 @@ export default {
     //}));
     let mynamespace=await env.KV_STATUS_PAGE
     let mydatabase=await env.STATUS_PAGE
-    const someVariable = `"summary_%"`;
-    const stmt = await env.STATUS_PAGE.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
-    //const returnValue = await stmt.raw({columnNames:true});
-    const returnValue = await stmt.run();
-    //console.log(JSON.stringify(Response.json(returnValue)));
-    const responseobj=await Response.json(returnValue)
-    console.log(JSON.stringify(await Response.json(responseobj).length));
-    console.log(JSON.stringify(await Response.json(responseobj)));
+    //const someVariable = `"summary_%"`;
+    //const stmt = await env.STATUS_PAGE.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
+    ////const returnValue = await stmt.raw({columnNames:true});
+    //const returnValue = await stmt.run();
+    ////console.log(JSON.stringify(Response.json(returnValue)));
+    //const responseobj=await Response.json(returnValue)
+    //console.log(JSON.stringify(await Response.json(responseobj).length));
+    //console.log(JSON.stringify(await Response.json(responseobj)));
+
+
+    // THE BRAINDEAD D*MB*F*CKS AT CLOWNFLARE DID NOT EVEN MANAGE TO MAKE THEIR CRAP d1 sh*tload queryable as in their own docs
+    const { results } = await env.DB.prepare(
+      "SELECT * FROM info WHERE id NOT like ?",
+    )
+      .bind("summary_%")
+      .run();
+    console.log("results: ", results);
+    console.log("FCK_CLOWNFLARE")
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {
