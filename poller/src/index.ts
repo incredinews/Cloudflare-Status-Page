@@ -42,8 +42,8 @@ export default {
     let mydatabase=await env.STATUS_PAGE
     const someVariable = `"summary_%"`;
     const stmt = await env.STATUS_PAGE.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
-    //const returnValue = await stmt.raw({columnNames:true});
-    const returnValue = await stmt.run();
+    const returnValue = await stmt.raw({columnNames:true});
+    //const returnValue = await stmt.run();
     //console.log(JSON.stringify(Response.json(returnValue)));
     const responseobj=await Response.json(returnValue)
     console.log(JSON.stringify(Response.json(responseobj).length));
