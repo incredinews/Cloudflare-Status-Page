@@ -1,6 +1,10 @@
 import { processCronTrigger } from './functions/cronTrigger.js'
 import type { addEventListener as AddEventListener } from '@cloudflare/workers-types'
+import { Client } from "pg";
 
+export interface Env {
+  DB: string;
+}
 /**
  * The DEBUG flag will do two things that help during development:
  * 1. we will skip caching on the edge, which makes it easier to
@@ -49,17 +53,15 @@ export default {
     //console.log(JSON.stringify(await Response.json(responseobj).length));
     //console.log(JSON.stringify(await Response.json(responseobj)));
 
-    console.log("FCK_CL0WNFL4RE")
+    //console.log("FCK_CL0WNFL4RE")
     // THE BR*IND**D D*MB*F*CKS AT CLOWNFLARE DID NOT EVEN MANAGE TO MAKE THEIR CR*P d1 sh*tload queryable as in their own docs
 
-    const { results } = await env.STATUS_PAGE.prepare(
-      "SELECT * FROM info WHERE id NOT like ?",
-    )
-      .bind("summary_%")
-      .run();
-    console.log("results: ", results);
-    console.log(JSON.stringify(results).length);
- 
+    //const { results } = await env.STATUS_PAGE.prepare(
+    //  "SELECT * FROM info WHERE id NOT like ?",
+    //).bind("summary_%").run();
+    //console.log("results: ", results);
+    //console.log(JSON.stringify(results).length);
+
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {

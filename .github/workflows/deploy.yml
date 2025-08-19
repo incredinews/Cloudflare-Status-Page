@@ -70,7 +70,7 @@ jobs:
 #          path: .yarn
 #          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('.yarnrc.yml') }}
 #          #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
-      - run: bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
+      - run: bash -c "yarn add pg || true;yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
       - run: yarn install
         working-directory: poller
       - run: yarn build
@@ -134,7 +134,12 @@ jobs:
             echo "binding = \"DB\"" >> wrangler.toml
             echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
             echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
-
+            echo '[vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo '[env.staging.vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo '[env.production.vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql      
           postCommands: |
             bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
@@ -142,6 +147,7 @@ jobs:
           environment: production
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          DB_URL: ${{ secrets.DB_URL }}
           YARN_IGNORE_NODE: 1
          #cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1        
       - name: build page
