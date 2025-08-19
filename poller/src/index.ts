@@ -45,8 +45,7 @@ export default {
     //const returnValue = await stmt.raw({columnNames:true});
     const returnValue = await stmt.run();
     //console.log(JSON.stringify(Response.json(returnValue)));
-    const responseobj=Response.json(returnValue)
-    
+    const responseobj=await Response.json(returnValue)
     console.log(JSON.stringify(Response.json(responseobj).length));
     console.log(JSON.stringify(Response.json(responseobj)));
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
