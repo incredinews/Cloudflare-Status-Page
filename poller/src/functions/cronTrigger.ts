@@ -144,7 +144,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
-    const localnow=Date.now()
+    let localnow=Date.now()
     const realdebounce=monitor.debounce||preset_debounce
     let displayname = monitor.name || monitor.id.toString();
     let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
@@ -333,7 +333,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
 
   }
   // Save monitorMonth to KV storage
-  const localnow=Date.now()
+  localnow=Date.now()
   timediffcron=localnow-cronStarted
   cronSeconds=timediffcron/1000
   console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
