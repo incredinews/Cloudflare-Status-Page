@@ -338,7 +338,6 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   cronSeconds=timediffcron/1000
   console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
   await setKVMonitors(namespace,dayname, monitorMonth)
-
   return new Response('OK')
 }
 
