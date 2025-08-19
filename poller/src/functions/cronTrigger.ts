@@ -366,7 +366,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 //        'select * from info where id NOT like "summary_%"',
 //      ).raw();
   const { dbresults } = await statusdb.prepare(
-        'select * from info "',
+        'select * from info ',
       ).raw();
   console.log(typeof(dbresults))
   console.log("got:")
