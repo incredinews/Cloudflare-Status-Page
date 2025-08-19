@@ -345,7 +345,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 	//	.run();
   //  console.log(JSON.stringify(dbResInfo))
   const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
-  const stmtrest = await statusdb.prepare('INSERT INTO ping (ts,day, loc, res ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET res=?4')
+  const stmtrest = await statusdb.prepare('INSERT INTO ping (ts,day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET res=?4')
   // second conflict should not happen since the worker runs only once
   const dbResInfo = await statusdb.batch([
     stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
