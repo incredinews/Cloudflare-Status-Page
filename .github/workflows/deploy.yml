@@ -105,8 +105,9 @@ jobs:
             npx wrangler d1 list --json|grep STATUS_PAGE || npx wrangler d1 create STATUS_PAGE  --location $(cat d1location)
             echo 'CREATE TABLE IF NOT EXISTS [config] ("profile" integer DEFAULT 0 PRIMARY KEY,"cfgdata" text);' > init.sql 
             echo 'CREATE TABLE IF NOT EXISTS [info] ("id" text PRIMARY KEY,"record" text);' >> init.sql
-            npx wrangler d1 execute STATUS_PAGE --file init.sql
             npx wrangler d1 list --json
+            npx wrangler d1 execute STATUS_PAGE --file init.sql
+
 
 
             
