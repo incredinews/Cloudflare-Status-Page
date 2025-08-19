@@ -197,41 +197,41 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
               'User-Agent': monitor.user_agent || 'cf-workers-status-poller',
             },
           }
-      // Perform a check and measure time
-      const requestStartTime = performance.now()
-      checkResponse = await fetch(monitor.url, init)
-      requestTime = Math.round(performance.now() - requestStartTime)
-      sentRequests=sentRequests+1
-      monitorMonth.lastFetched[monitor.id]=localnow
-      // Determine whether operational and status changed
-      if(Object.prototype.toString.call(monitor.expectStatus) === '[object Array]') { 
-        if (monitor.expectStatus.includes(checkResponse.status)) { monitorOperational= true }
-      } else {
-        //monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
-        // be more precise, 200 can also be raised by default placeholders etc
-        monitorOperational = checkResponse.status === monitor.expectStatus
-      }
-      if(!monitorOperational) { 
-        console.log(monitor.id+" STATUS_CODES : GOT "+ checkResponse.status + " NEED "+ JSON.stringify(monitor.expectStatus) )
-      }
-      returnstatus=checkResponse.status
-      //check for full text
-      if (monitor.matchText && monitorOperational) {
-        //const results = await gatherResponse(checkResponse)
-        let mytxt=await checkResponse.text();
-        // next level:       if(Object.prototype.toString.call(monitor.matchText) === '[object Array]') { 
-        if( mytxt.includes(monitor.matchText)  ) { 
-          monitorMonth.operational[monitor.id] = true;
-          monitorOperational = true;
-        } else {
-          console.log("STR NOT FOUND "+monitor.matchText);
-          monitorMonth.operational[monitor.id] = false;
-          monitorOperational = false;
-        }
-      }
-      monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
-      // Save monitor's last check response status
-      monitorMonth.operational[monitor.id] = monitorOperational;
+          // Perform a check and measure time
+          const requestStartTime = performance.now()
+          checkResponse = await fetch(monitor.url, init)
+          requestTime = Math.round(performance.now() - requestStartTime)
+          sentRequests=sentRequests+1
+          monitorMonth.lastFetched[monitor.id]=localnow
+          // Determine whether operational and status changed
+          if(Object.prototype.toString.call(monitor.expectStatus) === '[object Array]') { 
+            if (monitor.expectStatus.includes(checkResponse.status)) { monitorOperational= true }
+          } else {
+            //monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
+            // be more precise, 200 can also be raised by default placeholders etc
+            monitorOperational = checkResponse.status === monitor.expectStatus
+          }
+          if(!monitorOperational) { 
+            console.log(monitor.id+" STATUS_CODES : GOT "+ checkResponse.status + " NEED "+ JSON.stringify(monitor.expectStatus) )
+          }
+          returnstatus=checkResponse.status
+          //check for full text
+          if (monitor.matchText && monitorOperational) {
+            //const results = await gatherResponse(checkResponse)
+            let mytxt=await checkResponse.text();
+            // next level:       if(Object.prototype.toString.call(monitor.matchText) === '[object Array]') { 
+            if( mytxt.includes(monitor.matchText)  ) { 
+              monitorMonth.operational[monitor.id] = true;
+              monitorOperational = true;
+            } else {
+              console.log("STR NOT FOUND "+monitor.matchText);
+              monitorMonth.operational[monitor.id] = false;
+              monitorOperational = false;
+            }
+          }
+          monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
+          // Save monitor's last check response status
+          monitorMonth.operational[monitor.id] = monitorOperational;
     } // end http monitors
     if(monitor.url.includes("rediss://")) {
       parserFound=true
@@ -319,7 +319,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
   } // end dorequest
   counter=counter+1
   }
-
+  
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
   if(monCountDown==monitorCount) { 
@@ -345,11 +345,14 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 	//	.run();
   //  console.log(JSON.stringify(dbResInfo))
   const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
-  
+  const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, loc, res ) VALUES (?1, ?2,?3)  ON CONFLICT(ts) DO UPDATE SET res=?3')
+  // second conflict should not happen since the worker runs only once
   const dbResInfo = await statusdb.batch([
     stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
+    stmtinfo.bind("lastCheck", monitorMonth.lastCheck.toString()),
     stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
     stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary))
+    stmtrest.bind(res.t, res.l, JSON.stringify(res.ms))
   ]);
   console.log(JSON.stringify(dbResInfo))
   cronSeconds=(Date.now()-cronStarted) /1000
