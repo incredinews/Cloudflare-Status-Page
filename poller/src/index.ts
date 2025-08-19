@@ -59,10 +59,23 @@ export default {
     //).bind("summary_%").run();
     //console.log("results: ", results);
     //console.log(JSON.stringify(results).length);
+//CREATE TABLE uptime.ping (
+//	ts bigint NOT NULL,
+//	"day" varchar NOT NULL,
+//	loc varchar NOT NULL,
+//	ms json NOT NULL,
+//	CONSTRAINT ping_pk PRIMARY KEY (ts)
+//);
+//CREATE TABLE uptime.info (
+//	id varchar NOT NULL,
+//	record json NOT NULL
+//);
+
+
     const client = new Client(env.DB_URL);
     await client.connect();
     const result = await client.query({
-      text: "SELECT * from customers",
+      text: "SELECT * from info",
     });
     console.log(JSON.stringify(result.rows));
     const resp = Response.json(result.rows);
