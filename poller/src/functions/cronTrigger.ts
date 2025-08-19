@@ -375,9 +375,10 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 
 
 const someVariable = `"summary_%"`;
-const stmt = statusdb.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
+const stmt = await statusdb.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
 const returnValue = await stmt.raw({columnNames:true});
-console.log(JSON.stringify(Response.json(returnValue))) 
+console.log(JSON.stringify(Response.json(returnValue)));
+
   //const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
   //const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
   //const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
