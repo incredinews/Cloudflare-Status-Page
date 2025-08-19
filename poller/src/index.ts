@@ -46,8 +46,8 @@ export default {
     const returnValue = await stmt.run();
     //console.log(JSON.stringify(Response.json(returnValue)));
     const responseobj=await Response.json(returnValue)
-    console.log(JSON.stringify(Response.json(responseobj).length));
-    console.log(JSON.stringify(Response.json(responseobj)));
+    console.log(JSON.stringify(await Response.json(responseobj).length));
+    console.log(JSON.stringify(await Response.json(responseobj)));
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {
