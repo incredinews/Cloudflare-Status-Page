@@ -52,7 +52,7 @@ export default {
     console.log("FCK_CL0WNFL4RE")
     // THE BR*IND**D D*MB*F*CKS AT CLOWNFLARE DID NOT EVEN MANAGE TO MAKE THEIR CR*P d1 sh*tload queryable as in their own docs
 
-    const { results } = await env.DB.prepare(
+    const { results } = await env.STATUS_PAGE.prepare(
       "SELECT * FROM info WHERE id NOT like ?",
     )
       .bind("summary_%")
