@@ -355,6 +355,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
     stmtgetconf
   ] )
   let resjson=Response.json(dbres)
+  console.log("dbres:")
   console.log(JSON.stringify(resjson))
   const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
   const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
