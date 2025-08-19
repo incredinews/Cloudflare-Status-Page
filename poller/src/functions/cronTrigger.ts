@@ -344,12 +344,12 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 	//	.bind("info", JSON.stringify(monitorMonth.info),JSON.stringify(monitorMonth.info))
 	//	.run();
   //  console.log(JSON.stringify(dbResInfo))
-  const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?3')
+  const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
   
-  const dbResInfo = await env.DB.batch([
-    stmtinfo.bind("info",        JSON.stringify(monitorMonth.info),       JSON.stringify(monitorMonth.info)),
-    stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched),JSON.stringify(monitorMonth.lastFetched)),
-    stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary),JSON.stringify(monitorMonth.lastFetched)),
+  const dbResInfo = await statusdb.batch([
+    stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
+    stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
+    stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary))
   ]);
   console.log(JSON.stringify(dbResInfo))
   cronSeconds=(Date.now()-cronStarted) /1000
