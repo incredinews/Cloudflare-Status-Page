@@ -362,8 +362,11 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 
 
   console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s")
+//  const { dbresults } = await statusdb.prepare(
+//        'select * from info where id NOT like "summary_%"',
+//      ).raw();
   const { dbresults } = await statusdb.prepare(
-        'select * from info where id NOT like "summary_%"',
+        'select * from info "',
       ).raw();
   console.log(typeof(dbresults))
   console.log("got:")
