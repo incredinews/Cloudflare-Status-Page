@@ -365,14 +365,19 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 //  const { dbresults } = await statusdb.prepare(
 //        'select * from info where id NOT like "summary_%"',
 //      ).raw();
-  const { dbresults } = await statusdb.prepare(
-        'select * from info ',
-      ).raw();
-  console.log(typeof(dbresults))
-  console.log("got:")
-  console.log(JSON.stringify(await dbresults))
+
+///  const { dbresults } = await statusdb.prepare(
+///        'select * from info ',
+///      ).raw();
+///  console.log(typeof(dbresults))
+///  console.log("got:")
+///  console.log(JSON.stringify(await dbresults))
 
 
+const someVariable = `"summary_%"`;
+const stmt = env.DB.prepare("SELECT * FROM Customers WHERE id NOT like ?").bind(someVariable);
+const returnValue = await stmt.raw({columnNames:true});
+console.log(JSON.stringify(Response.json(returnValue))) 
   //const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
   //const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
   //const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
