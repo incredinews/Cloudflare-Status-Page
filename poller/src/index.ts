@@ -40,6 +40,14 @@ export default {
     //}));
     let mynamespace=await env.KV_STATUS_PAGE
     let mydatabase=await env.STATUS_PAGE
+    const someVariable = `"summary_%"`;
+    const stmt = await env.STATUS_PAGE.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
+    const returnValue = await stmt.raw({columnNames:true});
+    //console.log(JSON.stringify(Response.json(returnValue)));
+    const responseobj=Response.json(returnValue)
+    
+    console.log(JSON.stringify(Response.json(responseobj).length));
+    console.log(JSON.stringify(Response.json(responseobj)));
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {
