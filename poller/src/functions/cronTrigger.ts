@@ -21,15 +21,16 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   // the first went to fetch location
   let sentRequests=1;
   const now = Date.now()
-  const cronStarted = Date.now()
+  const cronStarted = now
   const checkDay = getDate(now)
+  let dayname=checkDay.slice(0, 7)
   //const preset_debounce = config.debounce || 345 
   const checksPerRound=20
 
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   // Get monitors state from KV
   console.log("KV_read_1")
-  let monitorMonth: MonitorMonth = await getKVMonitors(namespace,checkDay.slice(0, 7))
+  let monitorMonth: MonitorMonth = await getKVMonitors(namespace,dayname)
   // Create empty state objects if not exists in KV storage yet
   // the second went to fetch kv once
   sentRequests=2;
@@ -80,12 +81,13 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       monitorMonth.lastFetched={}
     }
     let timediffglobal=now-monitorMonth.lastCheck
+    const localnow=Date.now()
+    const defaultlastfetch=localnow-999999999
     for (const monitor of config.monitors) {
     //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
     // }
     if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
-      const localnow=Date.now()
-      monitorMonth.lastFetched[monitor.id]=localnow-999999999
+      monitorMonth.lastFetched[monitor.id]=defaultlastfetch
       }
     let reasons="";
     let displayname = monitor.name || monitor.id.toString();
@@ -100,11 +102,10 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
       do_request=true
     }
     //subrequest limiter
-    if(sentRequests > 42 ) {
-      reasons=reasons+"+LimR"
-      do_request=false
-
-    } 
+    //if(sentRequests > 42 ) {
+    //  reasons=reasons+"+LimR"
+    //  do_request=false
+    //} 
     if(do_request) {
       let mymonitor=monitor
       mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
@@ -336,7 +337,7 @@ export async function processCronTrigger(namespace: KVNamespace, trigger, event:
   timediffcron=localnow-cronStarted
   cronSeconds=timediffcron/1000
   console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
-  await setKVMonitors(namespace,checkDay.slice(0, 7), monitorMonth)
+  await setKVMonitors(namespace,dayname, monitorMonth)
 
   return new Response('OK')
 }
