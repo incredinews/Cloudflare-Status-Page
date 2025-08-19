@@ -333,17 +333,28 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
 
   }
   // Save monitorMonth to KV storage
-  localnow=Date.now()
-  timediffcron=localnow-cronStarted
-  cronSeconds=timediffcron/1000
-  console.log("KV_write_1 crontime:"+cronSeconds.toString()+" s")
+  //localnow=Date.now()
+  //timediffcron=localnow-cronStarted
+  cronSeconds=(Date.now()-cronStarted) /1000
+  console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
   await setKVMonitors(namespace,dayname, monitorMonth)
   //INSERT INTO vocabulary(word) VALUES('jovial')   ON CONFLICT(word) DO UPDATE SET count=count+1;
-  const dbResInfo = await statusdb
-		.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2  ')
-		.bind("info", JSON.stringify(monitorMonth.info))
-		.run();
-    console.log(JSON.stringify(dbResInfo))
+  //const dbResInfo = await statusdb
+	//	.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?3')
+	//	.bind("info", JSON.stringify(monitorMonth.info),JSON.stringify(monitorMonth.info))
+	//	.run();
+  //  console.log(JSON.stringify(dbResInfo))
+  const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?3')
+  
+  const dbResInfo = await env.DB.batch([
+    stmtinfo.bind("info",        JSON.stringify(monitorMonth.info),       JSON.stringify(monitorMonth.info)),
+    stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched),JSON.stringify(monitorMonth.lastFetched)),
+    stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary),JSON.stringify(monitorMonth.lastFetched)),
+  ]);
+  console.log(JSON.stringify(dbResInfo))
+  cronSeconds=(Date.now()-cronStarted) /1000
+  
+  console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s")
   return new Response('OK')
 }
 
