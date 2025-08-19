@@ -188,8 +188,8 @@
     
     {
     "id": "foxnews_com",
-    "name": "Fox News - Breaking News Updates | Latest News Headlines | Photos & News Videos",
-    "description": "Breaking News, Latest News and Current News from FOXNews.com. Breaking news and video. Latest Current News: U.S., World, Entertainment, Health, Business, Technology, Politics, Sports.",
+    "name": "Fox News",
+    "description": "Fox News - Breaking News Updates | Latest News Headlines | Photos & News Videos. Latest Current News: U.S., World, Entertainment, Health, Business, Technology, Politics, Sports.",
     "url": "https://www.foxnews.com/",
     "method": "GET",
     "expectStatus": 200,
@@ -207,7 +207,7 @@
     {
     "id": "huffpost_com",
     "name": "huffpost.com",
-    "description": "Read the latest headlines, news stories, and opinion from Politics, Entertainment, Life, Perspectives, and more.",
+    "description": "Huffington Post",
     "url": "https://www.huffpost.com/",
     "method": "GET",
     "expectStatus": 200,
@@ -251,8 +251,8 @@
     },
     {
     "id": "indiatoday_in",
-    "name": "Latest News, Election Results 2024, Breaking News Today, Entertainment, Politics, Cricket - IndiaToday",
-    "description": "Check out the latest news from India and around the world. Latest India news on Bollywood, Politics, Business, Cricket, Technology and Travel.",
+    "name": "IndiaToday",
+    "description": "Latest India news on Bollywood, Politics, Business, Cricket, Technology and Travel.",
     "url": "https://www.indiatoday.in/",
     "method": "GET",
     "expectStatus": 200,
@@ -373,7 +373,7 @@
     },
     {
     "id": "nj_com",
-    "name": "nj.com latest New Jersey news, sports, and breaking updates",
+    "name": "New Jersey news",
     "description": "Get the latest New Jersey news, sports, and breaking updates. View daily NJ weather and top stories from Jersey City, Atlantic City, and beyond on NJ.com.",
     "url": "https://www.nj.com:443/",
     "method": "GET",
