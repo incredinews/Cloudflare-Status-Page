@@ -348,7 +348,13 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
     const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
     const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
     const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
-  
+  const stmtgetall= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"').run()
+  console.log("alldbres:")
+  console.log(JSON.stringify(stmtgetall))
+  console.log("alldbres..:")
+  let allresjson=Response.json(dbres)
+  console.log(JSON.stringify(allresjson))
+
   const dbres= await statusdb.batch([
     stmtgetinfo,
     stmtgetsumm,
@@ -362,7 +368,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  
   // second conflict should not happen since the worker runs only once
   const dbResInfo = await statusdb.batch([
     stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
-    stmtinfo.bind("lastCheck", monitorMonth.lastCheck.toString()),
+    stmtinfo.bind("lastCheck",   monitorMonth.lastCheck.toString()),
     stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
     stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational)),
     stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary)),
