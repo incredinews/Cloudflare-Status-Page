@@ -94,6 +94,7 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           wranglerVersion: "4.29.0"
           preCommands: |
+            bash -c "yarn add redis-on-workers || true;yarn add pg || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
             #wrangler --help|grep kv
             #wrangler kv namespace list
             #wrangler kv:namespace list
@@ -140,7 +141,8 @@ jobs:
             echo "binding = \"DB\"" >> wrangler.toml
             echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
             echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
-            npx wrangler d1 execute STATUS_PAGE --remote --file init.sql      
+            npx wrangler d1 execute STATUS_PAGE --remote --file init.sql 
+            echo deployed     
           postCommands: |
             bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
             yarn kv-gc
