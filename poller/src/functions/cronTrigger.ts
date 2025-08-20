@@ -84,26 +84,34 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   //const preset_debounce = config.debounce || 345 
   const checksPerRound=20
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
+
+
   // Get monitors state from KV
   
-  if (log_verbose) {   console.log("KV_read_1")  }
-  let monitorMonth: MonitorMonth = await getKVMonitors(namespace,monthname)
-  // Create empty state objects if not exists in KV storage yet
-  // the second went to fetch kv once
-  sentRequests=2;
-  if (!monitorMonth) {
-  if (log_verbose) {   console.log("KV_read_2_generate_monitor_month")  }
-    const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastmonthame)
-  // the third went to fetch kv again
-  sentRequests=3;
-    monitorMonth = {
-      lastCheck: now,
-      operational: lastMonitorMonth ? lastMonitorMonth.operational : {},
-      checks: {}
-      //incidents: {},
-    }
+  //if (log_verbose) {   console.log("KV_read_1")  }
+  //let monitorMonth: MonitorMonth = await getKVMonitors(namespace,monthname)
+  //// Create empty state objects if not exists in KV storage yet
+  //// the second went to fetch kv once
+  //sentRequests=3;
+  //if (!monitorMonth) {
+  //if (log_verbose) {   console.log("KV_read_2_generate_monitor_month")  }
+  //  const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastmonthame)
+  //// the third went to fetch kv again
+  //sentRequests=4;
+  //  monitorMonth = {
+  //    lastCheck: now,
+  //    operational: lastMonitorMonth ? lastMonitorMonth.operational : {},
+  //    checks: {}
+  //    //incidents: {},
+  //  }
+  //}
+  // do not use KV , fill it from postgresql
+  let monitorMonth: MonitorMonth = {
+    lastCheck: now,
+    operational: {},
+    checks: {}
+    //incidents: {},
   }
-
   //console.log("init_1_getObj")
   if (!monitorMonth.checks[checkDay]) {
     monitorMonth.checks[checkDay] = {
@@ -437,11 +445,11 @@ if(dbreclog!="") {
 
   }
   // Save monitorMonth to KV storage
-  //localnow=Date.now()
-  //timediffcron=localnow-cronStarted
-  cronSeconds=(Date.now()-cronStarted) /1000
-  console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
-  await setKVMonitors(namespace,monthname, monitorMonth)
+  ////localnow=Date.now()
+  ////timediffcron=localnow-cronStarted
+  //cronSeconds=(Date.now()-cronStarted) /1000
+  //console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
+  //await setKVMonitors(namespace,monthname, monitorMonth)
 
   const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
   const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
