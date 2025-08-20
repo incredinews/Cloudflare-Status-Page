@@ -67,16 +67,18 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   await client.end()
   console.log("db_incoming: (len: " + resultsel.length +")" )
 	//console.log(JSON.stringify(resultsel[0].forw));
-  for (const dbelem of resultsel) {
-  // code block to be executed
-//  console.log(JSON.stringify(await dbelem));
-  console.log("DB_RES_"+dbelem.command+" rows: "+dbelem.rowCount )
-  if (dbelem.rowCount > 0 && dbelem.command != "DELETE") { 
-    for (const thisrow of dbelem.rows) {
-      console.log(JSON.stringify(thisrow))
-    }
-  }
-}
+
+// dump results per row
+//for (const dbelem of resultsel) {
+//  // code block to be executed
+////  console.log(JSON.stringify(await dbelem));
+//  console.log("DB_RES_"+dbelem.command+" rows: "+dbelem.rowCount )
+//  if (dbelem.rowCount > 0 && dbelem.command != "DELETE") { 
+//    for (const thisrow of dbelem.rows) {
+//      console.log(JSON.stringify(thisrow))
+//    }
+//  }
+//}
 
 
   //const preset_debounce = config.debounce || 345 
@@ -142,9 +144,9 @@ if (resultsel.length > 0) {
     for (const myrow of resultsel[0].rows ) {
       console.log(myrow)
       if(Object.hasOwn(myrow,"id")) {
-        console.log("found record:"+myrow["id"])
-        if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
           console.log("hit :"+myrow["id"])
+        if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
+        console.log("found db record:"+myrow["id"])
           monitorMonth[myrow["id"]]=myrow["record"]
           //monitorMonth.lastFetched=myrow.record
         }
