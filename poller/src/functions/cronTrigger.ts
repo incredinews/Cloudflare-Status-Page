@@ -443,8 +443,6 @@ if (resultsel.length > 1) { // 2 queries
 	//	.bind("info", JSON.stringify(monitorMonth.info),JSON.stringify(monitorMonth.info))
 	//	.run();
   //  console.log(JSON.stringify(dbResInfo))
-
-
   const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
   const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
   // second conflict should not happen since the worker runs only once
