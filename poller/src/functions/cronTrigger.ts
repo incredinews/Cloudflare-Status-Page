@@ -137,9 +137,9 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   }
 
 //parse info from db
-if (dbelem.length > 0) {
-  if(dbelem[0].rowCount>0) {
-    for (const myrow of dbelem[0].rows ) {
+if (resultsel.length > 0) {
+  if(resultsel[0].rowCount>0) {
+    for (const myrow of resultsel[0].rows ) {
       console.log(myrow)
       if(Object.hasOwn(myrow,"id")) {
         console.log("found record:"+myrow["id"])
