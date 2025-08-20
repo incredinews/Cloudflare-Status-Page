@@ -68,7 +68,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
 	//console.log(JSON.stringify(resultsel[0].forw));
   for (const dbelem of resultsel) {
   // code block to be executed
-  console.log(JSON.stringify(await dbelem));
+//  console.log(JSON.stringify(await dbelem));
   console.log("DB_RES_"+dbelem.command+" rows: "+dbelem.rowCount )
   if (dbelem.rowCount > 0 && dbelem.command != "DELETE") { 
     for (const thisrow of dbelem.rows) {
