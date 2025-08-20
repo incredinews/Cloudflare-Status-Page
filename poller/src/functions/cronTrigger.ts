@@ -2,6 +2,7 @@ import config from '../../../config.json'
 import type { ScheduledEvent } from '@cloudflare/workers-types'
 import { MonitorMonth } from 'cf-status-page-types'
 import { createRedis } from "redis-on-workers";
+import { Client } from "pg";
 
 import {
   getCheckLocation,
