@@ -114,7 +114,6 @@ export default {
 //      console.log(err.stack)
 //    }
 
-    const client = new Client(pgtarget)
     const cronres=await processCronTrigger(mynamespace,mydatabase,client,"sched",event)
 
    // // Close the database connection, but don't block returning the response

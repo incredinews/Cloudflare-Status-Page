@@ -15,7 +15,8 @@ function getDate(time: number) {
 }
 
 
-export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
+//export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
+export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context) {
   let log_verbose=false
   let log_errors=true
   console.log("cron_function_init "+trigger)
@@ -29,16 +30,23 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   const lastDay = getDate(now - 86400000)
   const lastdayname=lastDay.slice(0, 7)
   const dayname=checkDay.slice(0, 7)
-  await client.connect();
-  console.log("DB connected")
-  client.on('error', (err) => {
-          console.error('PG:something bad has happened:', err.stack)
-        connect();
-  })
-  client.on('end', (client) => {
-          console.log('PG:1:disconnect')
-         connect();
-  })
+  let client;
+
+  function connect() {
+      client = new Client(pgtarget);
+      client.on('error', error => {
+          // ⋮
+          connect();
+      });
+      client.on('end', (client) => {
+              console.log('PG:1:disconnect')
+             connect();
+      })
+      return await client.connect();
+  }
+  
+  connect();
+
   
   const resultsel = await client.query({
       text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"';",
@@ -426,10 +434,11 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
 	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
 	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING RETURNING ts'
     //const values = ['aaaa', 'ababa']
+  connect();
 
     // async/await
     try {
-	  const myfoo={"bar": "f000"}
+	    //const myfoo={"bar": "f000"}
       //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
       let pgres={}
       pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
