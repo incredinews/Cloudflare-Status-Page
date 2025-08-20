@@ -1,5 +1,6 @@
 {
   "settings": {
+    "pgmethod": "HYPERDRIVE",
     "title": "Incredinews Status",
     "url": "https://infinews-uptime.pages.dev",
     "description": "infinews observatiorium showing historical status and performane information.",
