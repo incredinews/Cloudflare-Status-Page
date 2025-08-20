@@ -458,10 +458,10 @@ if(dbreclog!="") {
   //console.log(JSON.stringify(dbResInfo))
   let donewritestring=""
   for (const d_one_res of dbResInfo ) {
-    donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]+" |"
+    donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
   }
   if (donewritestring!="") {
-    console.log(donewritestring)
+    console.log(donewritestring+" |")
   }
   cronSeconds=(Date.now()-cronStarted) /1000
 
