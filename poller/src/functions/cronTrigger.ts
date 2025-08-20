@@ -61,7 +61,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   })
   
   const resultsel = await client.query({
-      text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"';",
+      text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"'; delete from ping where  ms::text = '{}'  ;",
     });
   await client.end()
   console.log("db_incoming: (len: " + resultsel.length +")" )
