@@ -170,7 +170,7 @@ if (resultsel.length > 1) { // 2 queries
       if(Object.hasOwn(myrow,"id")) {
         // console.log("hit :"+myrow["id"])
         if(("summary_"+monthname)==myrow["id"]) {
-        console.log("found db record:"+myrow["id"])
+        console.log("found db summary: "+myrow["id"])
           //monitorMonth[myrow["id"]]=myrow["record"]
           monitorMonth.checks[checkDay].summary
         }
