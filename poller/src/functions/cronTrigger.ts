@@ -13,7 +13,7 @@ function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
 
-export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string  trigger, event: ScheduledEvent) {
+export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent) {
 const client = new Client(pgtarget)
     await client.connect();
     console.log("DB connected")
