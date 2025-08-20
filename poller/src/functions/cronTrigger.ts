@@ -448,7 +448,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
 	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING RETURNING ts'
     //const values = ['aaaa', 'ababa']
   client = new Client(pgtarget);
-  const client = new Client(pgtarget)
+  //const client = new Client(pgtarget)
   await client.connect();
   console.log("DB connected")
   client.on('error', (err) => {
