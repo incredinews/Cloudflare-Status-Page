@@ -71,7 +71,6 @@ export default {
 //	record json NOT NULL
 //);
 
-
     const client = new Client(env.DB_URL);
     await client.connect();
     const result = await client.query({
