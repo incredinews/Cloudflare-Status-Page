@@ -139,6 +139,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   }
 
 //parse info from db
+let dbreclog=""
 if (resultsel.length > 0) {
   if(resultsel[0].rowCount>0) {
     for (const myrow of resultsel[0].rows ) {
@@ -146,13 +147,20 @@ if (resultsel.length > 0) {
       if(Object.hasOwn(myrow,"id")) {
         // console.log("hit :"+myrow["id"])
         if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
-        console.log("found db record:"+myrow["id"])
-          monitorMonth[myrow["id"]]=myrow["record"]
+        dbreclog=dbreclog+"|found db record:"+myrow["id"]
+          if(myrow["id"]=="lastCheck") {
+            monitorMonth["lastCheck"]=myrow["record"]["ts"] 
+          } else { 
+            monitorMonth[myrow["id"]]=
+          }
           //monitorMonth.lastFetched=myrow.record
         }
       }
     }
   }
+}
+if(dbreclog!="") {
+  console.log(dbreclog)
 }
 //parse month summary from db
 if (resultsel.length > 1) { // 2 queries
@@ -447,7 +455,10 @@ if (resultsel.length > 1) { // 2 queries
     stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
     stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
   ]);
-  console.log(JSON.stringify(dbResInfo))
+  //console.log(JSON.stringify(dbResInfo))
+  for (const d_one_res of dbResInfo ) {
+    console.log( d_one_res["success"]+" "+d_one_res["duration"].toString() + " LOC: "+d_one_res["served_by_region"] )
+  }
   cronSeconds=(Date.now()-cronStarted) /1000
 
 
