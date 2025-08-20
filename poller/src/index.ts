@@ -53,6 +53,7 @@ export default {
 
     //console.log("FCK_CL0WNFL4RE")
     // THE BR*IND**D D*MB*F*CKS AT CLOWNFLARE DID NOT EVEN MANAGE TO MAKE THEIR CR*P d1 sh*tload queryable as in their own docs
+    // UPDATE: hyperdrive/pg seems to return data but its not shown in observability logs, only "wranger tail"
 
     //const { results } = await env.STATUS_PAGE.prepare(
     //  "SELECT * FROM info WHERE id NOT like ?",
@@ -71,27 +72,51 @@ export default {
 //	record json NOT NULL
 //);
 
-    const client = new Client(env.DB_URL);
+    
+ if(!env.DB_URL) { 
+		console.log("ERROR: no DB_URL")
+		return "FAIL";
+	}
+	//console.log(env.DB_URL)
+	let pgtarget="NONE"
+    if(env.DB_URL!="HYPERDRIVE") {
+		console.log("pg:// native client - local_dev or hosted wrangler")
+        //const client = new Client(env.DB_URL);
+		pgtarget=env.DB_URL
+	} else {
+		console.log("pg:// hyperdrive client - cf edge")
+         //const client = new Client({connectionString: env.HYPERDRIVE.connectionString})
+		 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
+	}
+	//console.log(pgtarget)
+	const client = new Client(pgtarget)
     await client.connect();
     console.log("DB connected")
-    const result = await client.query({
-      text: "SELECT version();",
-    });
-    console.log("res1:")
-    console.log(JSON.stringify(result));
-//    const resp = Response.json(result.rows);
     const resultsel = await client.query({
-      text: "SELECT * from info",
-
+      text: "SELECT * FROM public.info WHERE id NOT LIKE 'summary_%';SELECT * from ping;SELECT version();",
     });
-    console.log("res2:")
-    console.log(JSON.stringify(resultsel.rows));
-  //  const respsel = Response.json(result.rows);
-  
+    console.log("res2: (len: " + resultsel.length +")" )
+	console.log(JSON.stringify(resultsel));
+	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
+	const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
+	
+    //const values = ['aaaa', 'ababa']
+    
+    // async/await
+    try {
+	  const myfoo={"bar": "f000"}
+      const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
+      console.log(res.rows[0])
+      // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+    } catch (err) {
+      console.log(err.stack)
+    }
     // Close the database connection, but don't block returning the response
     ctx.waitUntil(client.end());
-    await processCronTrigger(mynamespace,mydatabase,"sched",event)
     console.log("db closed")
+
+    
+    await processCronTrigger(mynamespace,mydatabase,"sched",event)
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")

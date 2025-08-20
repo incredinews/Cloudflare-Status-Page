@@ -98,6 +98,11 @@ jobs:
             #wrangler --help|grep kv
             #wrangler kv namespace list
             #wrangler kv:namespace list
+            npx wrangler hyperdrive list |grep status-page || npx wrangler hyperdrive create status-page --connection-string="${DB_URL}" --caching-disabled true
+            npx wrangler hyperdrive list |grep status-page || exit 1
+            echo "[[hyperdrive]]" >> wrangler.toml
+            echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
+            echo "id = \"my_hyperdrive_id\"" >> wrangler.toml
             npx wrangler kv namespace list
             which jq || ( sudo apt-get update && sudo apt-get install -y jq)
             (  npx wrangler kv:namespace list > namespaces.json ) || (  npx wrangler kv namespace list  > namespaces.json )
@@ -138,9 +143,14 @@ jobs:
             echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
             echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
             echo '[env.staging.vars]' >> wrangler.toml
-            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            #echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo 'DB_URL = "HYPERDRIVE"' >> wrangler.toml
             echo '[env.production.vars]' >> wrangler.toml
             echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo '[[env.production.hyperdrive]]' >> wrangler.toml
+            echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
+            echo "id = \"my_hyperdrive_id\"" >> wrangler.toml
+            sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' wrangler.json wrangler.jsonc wrangler.toml || true 
             #echo "[env.production.d1_databases.bindings] = "
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql 
             echo deployed     
