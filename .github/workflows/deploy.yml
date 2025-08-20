@@ -147,7 +147,7 @@ jobs:
             echo 'DB_URL = "HYPERDRIVE"' >> wrangler.toml
             echo '[env.production.vars]' >> wrangler.toml
             cat ../config.json|grep pgmethod|grep HYPERDRIVE || echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
-            cat ../config.json|grep pgmethod|grep HYPERDRIVE && echo 'DB_URL = "HYPERDRIVE"' >> wrangler.toml
+            cat ../config.json|grep pgmethod|grep HYPERDRIVE && echo 'DB_URL = "HYPERDRIVE"'    >> wrangler.toml
             echo '[[env.production.hyperdrive]]' >> wrangler.toml
             echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
             echo "id = \"my_hyperdrive_id\"" >> wrangler.toml

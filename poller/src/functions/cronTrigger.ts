@@ -161,9 +161,7 @@ if (resultsel.length > 0) {
     }
   }
 }
-if(dbreclog!="") {
-  console.log(dbreclog)
-}
+
 //parse month summary from db
 if (resultsel.length > 1) { // 2 queries
   if(resultsel[1].rowCount>0) { 
@@ -172,7 +170,8 @@ if (resultsel.length > 1) { // 2 queries
       if(Object.hasOwn(myrow,"id")) {
         // console.log("hit :"+myrow["id"])
         if(("summary_"+monthname)==myrow["id"]) {
-        console.log("found db summary: "+myrow["id"])
+        dbreclog=dbreclog+"|found db summary:"+myrow["id"]
+
           //monitorMonth[myrow["id"]]=myrow["record"]
           monitorMonth.checks[checkDay].summary
         }
@@ -180,7 +179,9 @@ if (resultsel.length > 1) { // 2 queries
     }
   }
 }
-
+if(dbreclog!="") {
+  console.log(dbreclog)
+}
 //monitorMonth.checks[checkDay].summary
 
   let timediffglobal=now-monitorMonth.lastCheck
@@ -240,6 +241,7 @@ if (resultsel.length > 1) { // 2 queries
   mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
   console.log("sorted_and_ready")
   counter=1
+  let checkoutput=""
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -280,7 +282,8 @@ if (resultsel.length > 1) { // 2 queries
     if (do_request) {
     let monitorStatusChanged=false
       let returnstatus=0
-      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
+      //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
+      checkoutput=checkoutput+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago |`
       let monitorOperational=false
       let parserFound=false
       let requestTime = -2
@@ -418,7 +421,9 @@ if (resultsel.length > 1) { // 2 queries
   } // end dorequest
   counter=counter+1
   }
-  
+  if(checkoutput!="") {
+   console.log(checkoutput)
+  }
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
   if(monCountDown==monitorCount) { 
@@ -453,7 +458,7 @@ if (resultsel.length > 1) { // 2 queries
   //console.log(JSON.stringify(dbResInfo))
   let donewritestring=""
   for (const d_one_res of dbResInfo ) {
-    donewritestring=donewritestring+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
+    donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]+" |"
   }
   if (donewritestring!="") {
     console.log(donewritestring)
