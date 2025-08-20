@@ -32,20 +32,20 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   const dayname=checkDay.slice(0, 7)
   let client;
 
-  async function connect() {
+  function connect() {
       client = new Client(pgtarget);
       client.on('error', error => {
           // ⋮
-          await connect();
+          connect();
       });
       client.on('end', (client) => {
               console.log('PG:1:disconnect')
-             await connect();
+             connect();
       })
-      return await client.connect();
+      return client.connect();
   }
   
-  await connect();
+  connect();
 
   
   const resultsel = await client.query({
