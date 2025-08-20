@@ -376,7 +376,6 @@ if(dbreclog!="") {
           ms: 0,
           a: 0,
         }
-
       // increment number of checks and sum of ms
       const no = ++monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].n
       const ms = monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].ms += requestTime
@@ -423,7 +422,8 @@ if(dbreclog!="") {
     timediffcron=dontchecknow-cronStarted
     cronSeconds=timediffcron/1000
     //if(log_verbose) { 
-      console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
+      //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
+      checkoutput=checkoutput+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `
     //}
   } // end dorequest
   counter=counter+1
