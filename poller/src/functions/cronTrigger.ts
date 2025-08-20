@@ -65,7 +65,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
       text: pginit,
     });
   await client.end()
-  console.log("db_incoming: (len: " + resultsel.length +")" )
+if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
 	//console.log(JSON.stringify(resultsel[0].forw));
 
 // dump results per row
