@@ -549,8 +549,10 @@ if(dbreclog!="") {
       pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
       //console.log(res.rows[0])
 
-      console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-
+      //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+      cronSeconds=(Date.now()-cronStarted) /1000
+      console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+  
     } catch (err) {
       console.log(err.stack)
     }
