@@ -411,7 +411,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
 //
 	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
 	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
-	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING'
+	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING RETURNING ts'
     //const values = ['aaaa', 'ababa']
     
     // async/await
@@ -426,14 +426,19 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
       pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
       pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
       //console.log(res.rows[0])
-      console.log(JSON.stringify(pgres))
+
+      console.log(JSON.stringify(pgres["info"].rows[0]))
+      console.log(JSON.stringify(pgres["lack"].rows[0]))
+      console.log(JSON.stringify(pgres["lfet"].rows[0]))
+      console.log(JSON.stringify(pgres["oper"].rows[0]))
+      console.log(JSON.stringify(pgres["ping"].rows[0]))
 
     } catch (err) {
       console.log(err.stack)
     }
 
-    ctx.waitUntil(client.end());
-    console.log("db closed")
+    //ctx.waitUntil(client.end());
+    //console.log("db closed")
   return new Response('OK')
 }
 
