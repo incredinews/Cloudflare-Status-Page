@@ -28,8 +28,8 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   const cronStarted = now
   const checkDay = getDate(now)
   const lastDay = getDate(now - 86400000)
-  const lastdayname=lastDay.slice(0, 7)
-  const dayname=checkDay.slice(0, 7)
+  const monthname=lastDay.slice(0, 7)
+  const lastmonthame=checkDay.slice(0, 7)
   //let client;
 //
   //function connect() {
@@ -59,7 +59,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
               console.log('PG:1:disconnect')
              connect();
   })
-  let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id LIKE 'summary_%' ORDER BY id desc limit 2; delete from ping where  ms::text = '{}'  ;"
+  let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
   console.log(" asking db: "+pginit)
   const resultsel = await client.query({
       text: pginit,
@@ -86,13 +86,13 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   // Get monitors state from KV
   console.log("KV_read_1")
-  let monitorMonth: MonitorMonth = await getKVMonitors(namespace,dayname)
+  let monitorMonth: MonitorMonth = await getKVMonitors(namespace,monthname)
   // Create empty state objects if not exists in KV storage yet
   // the second went to fetch kv once
   sentRequests=2;
   if (!monitorMonth) {
     console.log("KV_read_2_generate_monitor_month")
-    const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastdayname)
+    const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastmonthame)
   // the third went to fetch kv again
   sentRequests=3;
     monitorMonth = {
@@ -142,9 +142,9 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
 if (resultsel.length > 0) {
   if(resultsel[0].rowCount>0) {
     for (const myrow of resultsel[0].rows ) {
-      console.log(myrow)
+      //console.log(myrow)
       if(Object.hasOwn(myrow,"id")) {
-          console.log("hit :"+myrow["id"])
+        // console.log("hit :"+myrow["id"])
         if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
         console.log("found db record:"+myrow["id"])
           monitorMonth[myrow["id"]]=myrow["record"]
@@ -154,6 +154,25 @@ if (resultsel.length > 0) {
     }
   }
 }
+//parse month summary from db
+if (resultsel.length > 1) { // 2 queries
+  if(resultsel[1].rowCount>0) { 
+    for (const myrow of resultsel[1].rows ) {
+      //console.log(myrow)
+      if(Object.hasOwn(myrow,"id")) {
+        // console.log("hit :"+myrow["id"])
+        if(("summary_"+monthname)==myrow["id"]) {
+        console.log("found db record:"+myrow["id"])
+          //monitorMonth[myrow["id"]]=myrow["record"]
+          monitorMonth.checks[checkDay].summary
+        }
+      }
+    }
+  }
+}
+
+//monitorMonth.checks[checkDay].summary
+
   let timediffglobal=now-monitorMonth.lastCheck
   let localnow=Date.now()
   const defaultlastfetch=localnow-999999999
@@ -407,7 +426,7 @@ if (resultsel.length > 0) {
   //timediffcron=localnow-cronStarted
   cronSeconds=(Date.now()-cronStarted) /1000
   console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
-  await setKVMonitors(namespace,dayname, monitorMonth)
+  await setKVMonitors(namespace,monthname, monitorMonth)
   //INSERT INTO vocabulary(word) VALUES('jovial')   ON CONFLICT(word) DO UPDATE SET count=count+1;
   //const dbResInfo = await statusdb
 	//	.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?3')
@@ -425,6 +444,7 @@ if (resultsel.length > 0) {
     stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
     stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational)),
     stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary)),
+    stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
     stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
   ]);
   console.log(JSON.stringify(dbResInfo))
@@ -499,6 +519,7 @@ if (resultsel.length > 0) {
       pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
       pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
       pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
+      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
       pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
       //console.log(res.rows[0])
 
