@@ -13,13 +13,13 @@ import {
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
+const resultsel = await client.query({
+      text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';",
+    });
+console.log("db_incoming: (len: " + resultsel.length +")" )
+console.log(JSON.stringify(resultsel[0].rows[0]));
 
 export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
-    const resultsel = await client.query({
-      text: "SELECT * FROM public.info WHERE id NOT LIKE 'summary_%';SELECT * from ping;SELECT version();",
-    });
-  console.log("db_incoming: (len: " + resultsel.length +")" )
-	console.log(JSON.stringify(resultsel));
   let log_verbose=false
   let log_errors=true
   console.log("cron_function_init "+trigger)
@@ -33,7 +33,6 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   let dayname=checkDay.slice(0, 7)
   //const preset_debounce = config.debounce || 345 
   const checksPerRound=20
-
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   // Get monitors state from KV
   console.log("KV_read_1")
