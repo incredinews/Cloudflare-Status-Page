@@ -60,7 +60,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
              connect();
   })
   let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
-  console.log(" asking db: "+pginit)
+  if( log_verbose ) { console.log(" asking db: "+pginit) }
   const resultsel = await client.query({
       text: pginit,
     });
