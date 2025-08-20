@@ -29,13 +29,14 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   const lastDay = getDate(now - 86400000)
   const lastdayname=lastDay.slice(0, 7)
   const dayname=checkDay.slice(0, 7)
-  await client.connect();
+  //await client.connect();
   console.log("DB connected")
   client.on('error', (err) => {
           console.error('PG:something bad has happened:', err.stack)
   })
   client.on('end', () => {
-          console.log('PG:2:disconnect')
+          console.log('PG:1:disconnect')
+          await client.connect()
   })
   const resultsel = await client.query({
       text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"';",
