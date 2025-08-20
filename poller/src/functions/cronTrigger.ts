@@ -36,7 +36,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   })
   client.on('end', (client) => {
           console.log('PG:1:disconnect')
-          await client.connect()
+         connect();
   })
   
   const resultsel = await client.query({
