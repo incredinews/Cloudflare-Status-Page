@@ -1,6 +1,6 @@
 import { processCronTrigger } from './functions/cronTrigger.js'
 import type { addEventListener as AddEventListener } from '@cloudflare/workers-types'
-import { Client } from "pg";
+//import { Client } from "pg";
 
 /**
  * The DEBUG flag will do two things that help during development:
@@ -41,6 +41,7 @@ export default {
     //  event.waitUntil(processCronTrigger(event))
     //}));
     let mynamespace=await env.KV_STATUS_PAGE
+  // d1 approach FAILED
     let mydatabase=await env.STATUS_PAGE
     //const someVariable = `"summary_%"`;
     //const stmt = await env.STATUS_PAGE.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
@@ -54,13 +55,14 @@ export default {
     //console.log("FCK_CL0WNFL4RE")
     // THE BR*IND**D D*MB*F*CKS AT CLOWNFLARE DID NOT EVEN MANAGE TO MAKE THEIR CR*P d1 sh*tload queryable as in their own docs
     // UPDATE: hyperdrive/pg seems to return data but its not shown in observability logs, only "wranger tail"
-
     //const { results } = await env.STATUS_PAGE.prepare(
     //  "SELECT * FROM info WHERE id NOT like ?",
     //).bind("summary_%").run();
     //console.log("results: ", results);
     //console.log(JSON.stringify(results).length);
-//CREATE TABLE uptime.ping (
+
+// postgres approach
+    //CREATE TABLE uptime.ping (
 //	ts bigint NOT NULL,
 //	"day" varchar NOT NULL,
 //	loc varchar NOT NULL,
@@ -80,7 +82,7 @@ export default {
 	//console.log(env.DB_URL)
 	let pgtarget="NONE"
     if(env.DB_URL!="HYPERDRIVE") {
-		console.log("pg:// native client - local_dev or hosted wrangler")
+		console.log("pg://  native client  local_dev or hosted wrangler ")
         //const client = new Client(env.DB_URL);
 		pgtarget=env.DB_URL
 	} else {
@@ -89,45 +91,47 @@ export default {
 		 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
 	}
 	//console.log(pgtarget)
-	const client = new Client(pgtarget)
-    await client.connect();
-    console.log("DB connected")
-    const resultsel = await client.query({
-      text: "SELECT * FROM public.info WHERE id NOT LIKE 'summary_%';SELECT * from ping;SELECT version();",
-    });
-    console.log("res2: (len: " + resultsel.length +")" )
-	console.log(JSON.stringify(resultsel));
-	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
-	const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
-	
-    //const values = ['aaaa', 'ababa']
-    
-    // async/await
-    try {
-	  const myfoo={"bar": "f000"}
-      const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-      console.log(res.rows[0])
-      // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
-    } catch (err) {
-      console.log(err.stack)
-    }
-    // Close the database connection, but don't block returning the response
-    ctx.waitUntil(client.end());
-    console.log("db closed")
+//	const client = new Client(pgtarget)
+//    await client.connect();
+//    console.log("DB connected")
+//    const resultsel = await client.query({
+//      text: "SELECT * FROM public.info WHERE id NOT LIKE 'summary_%';SELECT * from ping;SELECT version();",
+//    });
+//  console.log("res2: (len: " + resultsel.length +")" )
+//	console.log(JSON.stringify(resultsel));
+//	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
+//	const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
+//	
+//    //const values = ['aaaa', 'ababa']
+//    
+//    // async/await
+//    try {
+//	  const myfoo={"bar": "f000"}
+//      const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
+//      console.log(res.rows[0])
+//      // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+//    } catch (err) {
+//      console.log(err.stack)
+//    }
+
 
     
-    await processCronTrigger(mynamespace,mydatabase,"sched",event)
+    const cronres=await processCronTrigger(mynamespace,mydatabase,pgtarget,"sched",event)
+
+   // // Close the database connection, but don't block returning the response
+   // ctx.waitUntil(client.end());
+   // console.log("db closed")
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")
-    let mynamespace=await env.KV_STATUS_PAGE
-    let mydatabase=await env.STATUS_PAGE
-    await processCronTrigger(mynamespace,mydatabase,"fetch",request)
+    //let mynamespace=await env.KV_STATUS_PAGE
+    //let mydatabase=await env.STATUS_PAGE
+    //const cronres=await processCronTrigger(mynamespace,mydatabase,pgtarget,"fetch",request)
     //ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (request) => {
-    //  console.log("fetch_hander_prcoc")
+    //  console.log("fetch_hander_proc")
     //  event.waitUntil(processCronTrigger(request))
     //}));
-    return new Response('DONE');
+    return new Response('NOPE');
   },
 }
 

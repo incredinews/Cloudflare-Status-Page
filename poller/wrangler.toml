@@ -1,5 +1,5 @@
 name = "cf-workers-status-poller"
-workers_dev = true
+workers_dev = false
 main = "./dist/index.js"
 compatibility_flags = [ "nodejs_compat" ]
 compatibility_date = "2024-09-23"

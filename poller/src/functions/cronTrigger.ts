@@ -2,6 +2,7 @@ import config from '../../../config.json'
 import type { ScheduledEvent } from '@cloudflare/workers-types'
 import { MonitorMonth } from 'cf-status-page-types'
 import { createRedis } from "redis-on-workers";
+
 import {
   getCheckLocation,
   getKVMonitors,
@@ -12,7 +13,28 @@ function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
 
-export async function processCronTrigger(namespace: KVNamespace,statusdb: Env,  trigger, event: ScheduledEvent) {
+export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string  trigger, event: ScheduledEvent) {
+const client = new Client(pgtarget)
+    await client.connect();
+    console.log("DB connected")
+    const resultsel = await client.query({
+      text: "SELECT * FROM public.info WHERE id NOT LIKE 'summary_%';SELECT * from ping;SELECT version();",
+    });
+  console.log("db_incoming: (len: " + resultsel.length +")" )
+	console.log(JSON.stringify(resultsel));
+	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
+	const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
+	
+    //const values = ['aaaa', 'ababa']
+    
+    // async/await
+    try {
+	  const myfoo={"bar": "f000"}
+      const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
+      console.log(res.rows[0])
+    } catch (err) {
+      console.log(err.stack)
+    }
   let log_verbose=false
   let log_errors=true
   console.log("cron_function_init "+trigger)
