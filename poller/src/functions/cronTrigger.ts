@@ -437,12 +437,7 @@ if (resultsel.length > 1) { // 2 queries
   cronSeconds=(Date.now()-cronStarted) /1000
   console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
   await setKVMonitors(namespace,monthname, monitorMonth)
-  //INSERT INTO vocabulary(word) VALUES('jovial')   ON CONFLICT(word) DO UPDATE SET count=count+1;
-  //const dbResInfo = await statusdb
-	//	.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?3')
-	//	.bind("info", JSON.stringify(monitorMonth.info),JSON.stringify(monitorMonth.info))
-	//	.run();
-  //  console.log(JSON.stringify(dbResInfo))
+
   const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
   const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
   // second conflict should not happen since the worker runs only once
@@ -456,8 +451,12 @@ if (resultsel.length > 1) { // 2 queries
     stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
   ]);
   //console.log(JSON.stringify(dbResInfo))
+  let donewritestring=""
   for (const d_one_res of dbResInfo ) {
-    console.log( d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"] )
+    donewritestring=donewritestring+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
+  }
+  if (donewritestring!="") {
+    console.log(donewritestring)
   }
   cronSeconds=(Date.now()-cronStarted) /1000
 
@@ -534,11 +533,7 @@ if (resultsel.length > 1) { // 2 queries
       pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
       //console.log(res.rows[0])
 
-      console.log(JSON.stringify(pgres["info"].rows[0]))
-      console.log(JSON.stringify(pgres["lack"].rows[0]))
-      console.log(JSON.stringify(pgres["lfet"].rows[0]))
-      console.log(JSON.stringify(pgres["oper"].rows[0]))
-      console.log(JSON.stringify(pgres["ping"].rows[0]))
+      console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
 
     } catch (err) {
       console.log(err.stack)

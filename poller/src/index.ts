@@ -62,7 +62,7 @@ export default {
     //console.log(JSON.stringify(results).length);
 
 // postgres approach
-    //CREATE TABLE uptime.ping (
+//CREATE TABLE uptime.ping (
 //	ts bigint NOT NULL,
 //	"day" varchar NOT NULL,
 //	loc varchar NOT NULL,
@@ -71,7 +71,8 @@ export default {
 //);
 //CREATE TABLE uptime.info (
 //	id varchar NOT NULL,
-//	record json NOT NULL
+//	record json NOT NULL,
+//CONSTRAINT info_pk PRIMARY KEY (id)
 //);
 
     
