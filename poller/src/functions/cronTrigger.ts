@@ -77,6 +77,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   }
 }
 
+
   //const preset_debounce = config.debounce || 345 
   const checksPerRound=20
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
@@ -98,6 +99,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
       //incidents: {},
     }
   }
+
   //console.log("init_1_getObj")
   if (!monitorMonth.checks[checkDay]) {
     monitorMonth.checks[checkDay] = {
@@ -106,6 +108,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   if (!monitorMonth.lastFetched) {
     monitorMonth.lastFetched={}
   }
+  
   //console.log("init_1_lastFetched")
   //console.log(JSON.stringify(monitorMonth))
   const res: {
@@ -126,65 +129,78 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   if (!Object.hasOwn(monitorMonth, 'info')) {
                         monitorMonth["info"]={}
      }
-    let mymonitors= []
-    console.log("init_1_monitors loaded")
-    if (!Object.hasOwn(monitorMonth, "lastFetched")) {
-      monitorMonth.lastFetched={}
-    }
-    let timediffglobal=now-monitorMonth.lastCheck
-    let localnow=Date.now()
-    const defaultlastfetch=localnow-999999999
-    for (const monitor of config.monitors) {
-    //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-    // }
-    if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
-      monitorMonth.lastFetched[monitor.id]=defaultlastfetch
+  let mymonitors= []
+  console.log("init_1_monitors loaded")
+  if (!Object.hasOwn(monitorMonth, "lastFetched")) {
+    monitorMonth.lastFetched={}
+  }
+
+parse info from db
+if (dbelem.length > 0) {
+  if(dbelem[0].rowCount>0) {
+    for (const myrow of dbelem[0].rows ) {
+      console.log(myrow)
+      if(Object.hasOwn(myrow,"id")) {
+        console.log("found record:"+myrow["id"])
+        if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
+          console.log("hit :"+myrow["id"])
+          monitorMonth[myrow["id"]=myrow["record"]
+          //monitorMonth.lastFetched=myrow.record
+        }
       }
-    let reasons="";
-    let displayname = monitor.name || monitor.id.toString();
-    let do_request=true
-    const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
-    const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
-    if( timesec < realdebounce  ) {
-      do_request=false;
-      reasons="+t"
-    } else { 
-      reasons="+T"
-      do_request=true
     }
-    //subrequest limiter
-    //if(sentRequests > 42 ) {
-    //  reasons=reasons+"+LimR"
-    //  do_request=false
-    //} 
-    if(do_request) {
-      let mymonitor=monitor
-      mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
-      mymonitors.push(mymonitor)
-    } else {
-         // console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
-
+  }
+}
+  let timediffglobal=now-monitorMonth.lastCheck
+  let localnow=Date.now()
+  const defaultlastfetch=localnow-999999999
+  for (const monitor of config.monitors) {
+  //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+  // }
+  if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
+    monitorMonth.lastFetched[monitor.id]=defaultlastfetch
     }
-    
-
-
-      //  let lastping=monitorMonth.lastFetched[monitor.id]
-      //  if ( newestmonitor == 0 )  {
-      //    newestmonitor=monitor.id
-      //  }
-      //  if ( oldestmonitor == 0 )  {
-      //    oldestmonitor=monitor.id
-      //  }
-      //  if (lastping>oldestmonitor ) {
-      //    oldestmonitor=monitor.id
-      //    oldestmonitors.push(monitor.id)
-      //  }
-      //  if (lastping<newestmonitor ) {
-      //    newestmonitor=monitor.id
-      //    youngestmonitors.unshift(monitor.id)
-      //  }
-    counter=counter+1
-    }
+  let reasons="";
+  let displayname = monitor.name || monitor.id.toString();
+  let do_request=true
+  const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
+  const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
+  if( timesec < realdebounce  ) {
+    do_request=false;
+    reasons="+t"
+  } else { 
+    reasons="+T"
+    do_request=true
+  }
+  //subrequest limiter
+  //if(sentRequests > 42 ) {
+  //  reasons=reasons+"+LimR"
+  //  do_request=false
+  //} 
+  if(do_request) {
+    let mymonitor=monitor
+    mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
+    mymonitors.push(mymonitor)
+  } else {
+       // console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+  }
+    //  let lastping=monitorMonth.lastFetched[monitor.id]
+    //  if ( newestmonitor == 0 )  {
+    //    newestmonitor=monitor.id
+    //  }
+    //  if ( oldestmonitor == 0 )  {
+    //    oldestmonitor=monitor.id
+    //  }
+    //  if (lastping>oldestmonitor ) {
+    //    oldestmonitor=monitor.id
+    //    oldestmonitors.push(monitor.id)
+    //  }
+    //  if (lastping<newestmonitor ) {
+    //    newestmonitor=monitor.id
+    //    youngestmonitors.unshift(monitor.id)
+    //  }
+  counter=counter+1
+  }
   //console.log("init_2_monitors_filtered")
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
