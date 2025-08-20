@@ -431,7 +431,7 @@ if(dbreclog!="") {
   if(checkoutput!="") {
    console.log(checkoutput)
   }
-  if( mymonitors.length < 0 ) {
+  if( mymonitors.length > 0 ) {
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
 
