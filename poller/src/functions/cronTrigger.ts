@@ -445,7 +445,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
 //
 	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
 	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
-	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING RETURNING ts'
+	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
     //const values = ['aaaa', 'ababa']
   client = new Client(pgtarget);
   //const client = new Client(pgtarget)
