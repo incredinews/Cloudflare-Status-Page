@@ -119,10 +119,6 @@ jobs:
             wc -c kvnamespace | grep "^33 kvnamespace$"  || exit 1
             echo "___5"
             #KV_NAMESPACE_ID=$(cat kvnamespace)
-            echo '[env.staging.vars]' >> wrangler.toml
-            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
-            echo '[env.production.vars]' >> wrangler.toml
-            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
             echo '[vars]' >> wrangler.toml
             echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
             echo "[env.production]" >> wrangler.toml
@@ -141,6 +137,10 @@ jobs:
             echo "binding = \"DB\"" >> wrangler.toml
             echo "database_name = \"STATUS_PAGE\"" >> wrangler.toml
             echo "database_id = \""$(cat namespace.db)"\"" >> wrangler.toml
+            echo '[env.staging.vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo '[env.production.vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
             #echo "[env.production.d1_databases.bindings] = "
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql 
             echo deployed     
