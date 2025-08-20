@@ -419,12 +419,12 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
 	  const myfoo={"bar": "f000"}
       //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
       let pgres={}
-      const pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
-      const pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
-      const pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
-      const pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
-      const pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-      const pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+      pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
+      pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+      pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
+      pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
+      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
+      pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
       //console.log(res.rows[0])
       console.log(JSON.stringify(pgres))
 
