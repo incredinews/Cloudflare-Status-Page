@@ -73,14 +73,21 @@ export default {
 
     const client = new Client(env.DB_URL);
     await client.connect();
+    console.log("DB connected")
     const result = await client.query({
       text: "SELECT * from info",
+    });
+    console.log(JSON.stringify(result.rows));
+    const resp = Response.json(result.rows);
+    const result = await client.query({
+      text: "SELECT version();",
     });
     console.log(JSON.stringify(result.rows));
     const resp = Response.json(result.rows);
     // Close the database connection, but don't block returning the response
     ctx.waitUntil(client.end());
     await processCronTrigger(mynamespace,mydatabase,"sched",event)
+    console.log("db closed")
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")
