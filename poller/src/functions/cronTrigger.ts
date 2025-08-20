@@ -66,7 +66,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   await client.end()
   console.log("db_incoming: (len: " + resultsel.length +")" )
 	//console.log(JSON.stringify(resultsel[0].forw));
-  for (dbelem of resultsel) {
+  for (const dbelem of resultsel) {
   // code block to be executed
   console.log(JSON.stringify(dbelem));
 }
