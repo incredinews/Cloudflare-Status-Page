@@ -23,19 +23,6 @@ const client = new Client(pgtarget)
     });
   console.log("db_incoming: (len: " + resultsel.length +")" )
 	console.log(JSON.stringify(resultsel));
-	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
-	const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
-	
-    //const values = ['aaaa', 'ababa']
-    
-    // async/await
-    try {
-	  const myfoo={"bar": "f000"}
-      const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-      console.log(res.rows[0])
-    } catch (err) {
-      console.log(err.stack)
-    }
   let log_verbose=false
   let log_errors=true
   console.log("cron_function_init "+trigger)
@@ -374,7 +361,7 @@ const client = new Client(pgtarget)
   // second conflict should not happen since the worker runs only once
   const dbResInfo = await statusdb.batch([
     stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
-    stmtinfo.bind("lastCheck",   monitorMonth.lastCheck.toString()),
+    stmtinfo.bind("lastCheck",   JSON.stringify({"ts": monitorMonth.lastCheck })),
     stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
     stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational)),
     stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary)),
@@ -425,6 +412,29 @@ const client = new Client(pgtarget)
   //console.log("dbres:")
   //console.log(JSON.stringify(resjson))
 //
+	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
+	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
+	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING'
+    //const values = ['aaaa', 'ababa']
+    
+    // async/await
+    try {
+	  const myfoo={"bar": "f000"}
+      //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
+      let pgres={}
+      const pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
+      const pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+      const pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
+      const pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
+      const pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
+      const pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+      //console.log(res.rows[0])
+      console.log(JSON.stringify(pgres))
+
+    } catch (err) {
+      console.log(err.stack)
+    }
+
     ctx.waitUntil(client.end());
     console.log("db closed")
   return new Response('OK')
