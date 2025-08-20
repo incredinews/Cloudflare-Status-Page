@@ -115,12 +115,11 @@ export default {
 //    }
 
     const client = new Client(pgtarget)
-    
     const cronres=await processCronTrigger(mynamespace,mydatabase,client,"sched",event)
 
    // // Close the database connection, but don't block returning the response
     ctx.waitUntil(client.end());
-    console.log("db closed")
+    console.log("CRON_END:db_closed")
   },
   async fetch(request, env, ctx) {
     console.log("fetch_handler_init")
