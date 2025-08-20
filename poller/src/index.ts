@@ -1,6 +1,6 @@
 import { processCronTrigger } from './functions/cronTrigger.js'
 import type { addEventListener as AddEventListener } from '@cloudflare/workers-types'
-//import { Client } from "pg";
+import { Client } from "pg";
 
 /**
  * The DEBUG flag will do two things that help during development:
