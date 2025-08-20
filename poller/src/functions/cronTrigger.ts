@@ -34,7 +34,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   client.on('error', (err) => {
           console.error('PG:something bad has happened:', err.stack)
   })
-  client.on('end', () => {
+  client.on('end', (client) => {
           console.log('PG:1:disconnect')
           await client.connect()
   })
