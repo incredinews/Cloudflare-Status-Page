@@ -24,7 +24,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   const checkLocation = await getCheckLocation()
   // the first went to fetch location
   let sentRequests=1;
-  const now = Date.now()
+  let now = Date.now()
   const cronStarted = now
   const checkDay = getDate(now)
   const lastDay = getDate(now - 86400000)
@@ -65,7 +65,11 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
     });
   await client.end()
   console.log("db_incoming: (len: " + resultsel.length +")" )
-	console.log(JSON.stringify(resultsel[0].rows[0]));
+	//console.log(JSON.stringify(resultsel[0].forw));
+  for (dbelem of resultsel) {
+  // code block to be executed
+  console.log(JSON.stringify(dbelem));
+}
 
   //const preset_debounce = config.debounce || 345 
   const checksPerRound=20
