@@ -59,7 +59,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
               console.log('PG:1:disconnect')
              connect();
   })
-  let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"'; delete from ping where  ms::text = '{}'  ;"
+  let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id LIKE 'summary_%' ORDER BY id desc limit 2; delete from ping where  ms::text = '{}'  ;"
   console.log(" asking db: "+pginit)
   const resultsel = await client.query({
       text: pginit,
@@ -145,7 +145,7 @@ if (dbelem.length > 0) {
         console.log("found record:"+myrow["id"])
         if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
           console.log("hit :"+myrow["id"])
-          monitorMonth[myrow["id"]=myrow["record"]
+          monitorMonth[myrow["id"]]=myrow["record"]
           //monitorMonth.lastFetched=myrow.record
         }
       }
