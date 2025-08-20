@@ -431,18 +431,21 @@ if(dbreclog!="") {
   if(checkoutput!="") {
    console.log(checkoutput)
   }
+  if( mymonitors.length < 0 ) {
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
-  if(monCountDown==monitorCount) { 
-      monitorMonth.countText=' ( Down: '+monCountDown.toString()+' )'
-  } else {
-    if(monCountOkay==monitorCount) {
-      monitorMonth.countText="   "
-    } else { 
-      monitorMonth.countText='( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )'
-    }
 
-  }
+//  if(monCountDown==monitorCount) { 
+//      monitorMonth.countText=' ( Down: '+monCountDown.toString()+' )'
+//  } else {
+//    if(monCountOkay==monitorCount) {
+//      monitorMonth.countText="   "
+//    } else { 
+//      monitorMonth.countText='( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )'
+//    }
+//
+//  }
+
   // Save monitorMonth to KV storage
   ////localnow=Date.now()
   ////timediffcron=localnow-cronStarted
@@ -551,10 +554,11 @@ if(dbreclog!="") {
     } catch (err) {
       console.log(err.stack)
     }
+  }
   await client.end()
     //ctx.waitUntil(client.end());
   cronSeconds=(Date.now()-cronStarted) /1000
-  console.log("db_closed crontime:"+cronSeconds.toString()+" s")
+  console.log("cron_done crontime:"+cronSeconds.toString()+" s")
   return new Response('OK')
 }
 
