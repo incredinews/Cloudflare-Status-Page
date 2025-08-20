@@ -81,7 +81,7 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
 
 
   //const preset_debounce = config.debounce || 345 
-  const checksPerRound=23
+  const checksPerRound=22
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 
 
