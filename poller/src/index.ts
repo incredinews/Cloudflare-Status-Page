@@ -115,8 +115,6 @@ export default {
 //    }
 
     const client = new Client(pgtarget)
-    await client.connect();
-    console.log("DB connected")
     
     const cronres=await processCronTrigger(mynamespace,mydatabase,client,"sched",event)
 

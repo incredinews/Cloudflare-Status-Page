@@ -29,7 +29,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   const lastDay = getDate(now - 86400000)
   const lastdayname=lastDay.slice(0, 7)
   const dayname=checkDay.slice(0, 7)
-  //await client.connect();
+  await client.connect();
   console.log("DB connected")
   client.on('error', (err) => {
           console.error('PG:something bad has happened:', err.stack)
@@ -38,6 +38,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
           console.log('PG:1:disconnect')
           await client.connect()
   })
+  
   const resultsel = await client.query({
       text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"';",
     });
@@ -424,14 +425,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
 	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
 	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING RETURNING ts'
     //const values = ['aaaa', 'ababa']
-    await client.connect();
-    console.log("DB connected")
-    client.on('error', (err) => {
-            console.error('PG:something bad has happened:', err.stack)
-    })
-    client.on('end', () => {
-            console.log('PG:2:disconnect')
-    })
+
     // async/await
     try {
 	  const myfoo={"bar": "f000"}
