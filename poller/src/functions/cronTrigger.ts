@@ -30,27 +30,40 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   const lastDay = getDate(now - 86400000)
   const lastdayname=lastDay.slice(0, 7)
   const dayname=checkDay.slice(0, 7)
-  let client;
-
-  function connect() {
-      client = new Client(pgtarget);
-      client.on('error', error => {
-          // ⋮
-          connect();
-      });
-      client.on('end', (client) => {
+  //let client;
+//
+  //function connect() {
+  //    client = new Client(pgtarget);
+  //    client.on('error', error => {
+  //        // ⋮
+  //        connect();
+  //    });
+  //    client.on('end', (client) => {
+  //            console.log('PG:1:disconnect')
+  //           connect();
+  //    })
+  //    return client.connect();
+  //}
+  //
+  //connect();
+  let client
+  client = new Client(pgtarget);
+  const client = new Client(pgtarget)
+  await client.connect();
+  console.log("DB connected")
+  client.on('error', (err) => {
+          console.error('PG:something bad has happened:', err.stack)
+        connect();
+  })
+  client.on('end', (client) => {
               console.log('PG:1:disconnect')
              connect();
-      })
-      return client.connect();
-  }
-  
-  connect();
-
+  })
   
   const resultsel = await client.query({
       text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"';",
     });
+  await client.end()
   console.log("db_incoming: (len: " + resultsel.length +")" )
 	console.log(JSON.stringify(resultsel[0].rows[0]));
 
@@ -434,7 +447,18 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
 	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
 	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTING RETURNING ts'
     //const values = ['aaaa', 'ababa']
-  connect();
+  client = new Client(pgtarget);
+  const client = new Client(pgtarget)
+  await client.connect();
+  console.log("DB connected")
+  client.on('error', (err) => {
+          console.error('PG:something bad has happened:', err.stack)
+        connect();
+  })
+  client.on('end', (client) => {
+              console.log('PG:1:disconnect')
+             connect();
+  })
 
     // async/await
     try {
@@ -458,9 +482,10 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
     } catch (err) {
       console.log(err.stack)
     }
-
+  await client.end()
     //ctx.waitUntil(client.end());
-    //console.log("db closed")
+  cronSeconds=(Date.now()-cronStarted) /1000
+  console.log("db_closed crontime:"+cronSeconds.toString()+" s")
   return new Response('OK')
 }
 
