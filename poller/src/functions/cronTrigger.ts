@@ -58,7 +58,6 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
               console.log('PG:1:disconnect')
              connect();
   })
-  //let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
   let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
   if( log_verbose ) { console.log(" asking db: "+pginit) }
   const resultsel = await client.query({
@@ -82,7 +81,7 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
 
 
   //const preset_debounce = config.debounce || 345 
-  const checksPerRound=20
+  const checksPerRound=23
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 
 
@@ -274,7 +273,7 @@ if(dbreclog!="") {
       reasons="+t"
     }
     //subrequest limiter
-    if(sentRequests > 42 ) {
+    if(sentRequests > 3+checksPerRound ) {
       reasons=reasons+"+LimR"
       do_request=false
     } else {
@@ -555,7 +554,7 @@ if(dbreclog!="") {
     } catch (err) {
       console.log(err.stack)
     }
-  }
+  } else { console.log("no checks scheduled")}
   await client.end()
     //ctx.waitUntil(client.end());
   cronSeconds=(Date.now()-cronStarted) /1000
