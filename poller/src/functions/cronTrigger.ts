@@ -48,7 +48,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   //connect();
   let client
   client = new Client(pgtarget);
-  const client = new Client(pgtarget)
+  //const client = new Client(pgtarget)
   await client.connect();
   console.log("DB connected")
   client.on('error', (err) => {
