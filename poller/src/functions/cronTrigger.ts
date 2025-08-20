@@ -151,7 +151,7 @@ if (resultsel.length > 0) {
           if(myrow["id"]=="lastCheck") {
             monitorMonth["lastCheck"]=myrow["record"]["ts"] 
           } else { 
-            monitorMonth[myrow["id"]]=
+            monitorMonth[myrow["id"]]=myrow["record"]
           }
           //monitorMonth.lastFetched=myrow.record
         }
