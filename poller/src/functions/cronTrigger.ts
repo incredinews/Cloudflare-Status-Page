@@ -135,7 +135,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
     monitorMonth.lastFetched={}
   }
 
-parse info from db
+//parse info from db
 if (dbelem.length > 0) {
   if(dbelem[0].rowCount>0) {
     for (const myrow of dbelem[0].rows ) {
