@@ -68,7 +68,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
 	//console.log(JSON.stringify(resultsel[0].forw));
   for (const dbelem of resultsel) {
   // code block to be executed
-  console.log(JSON.stringify(dbelem));
+  console.log(JSON.stringify(await dbelem));
 }
 
   //const preset_debounce = config.debounce || 345 
