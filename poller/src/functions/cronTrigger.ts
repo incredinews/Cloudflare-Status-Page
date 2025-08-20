@@ -13,11 +13,7 @@ import {
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
-const resultsel = await client.query({
-      text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';",
-    });
-console.log("db_incoming: (len: " + resultsel.length +")" )
-console.log(JSON.stringify(resultsel[0].rows[0]));
+
 
 export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
   let log_verbose=false
@@ -30,7 +26,15 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   const now = Date.now()
   const cronStarted = now
   const checkDay = getDate(now)
-  let dayname=checkDay.slice(0, 7)
+  const lastDay = getDate(now - 86400000)
+  const lastdayname=lastDay.slice(0, 7)
+  const dayname=checkDay.slice(0, 7)
+  const resultsel = await client.query({
+      text: "SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE  id='summary_"+dayname+"';SELECT * FROM info WHERE  id='summary_"+lastdayname+"';",
+    });
+  console.log("db_incoming: (len: " + resultsel.length +")" )
+	console.log(JSON.stringify(resultsel[0].rows[0]));
+
   //const preset_debounce = config.debounce || 345 
   const checksPerRound=20
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
@@ -41,9 +45,8 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, c
   // the second went to fetch kv once
   sentRequests=2;
   if (!monitorMonth) {
-    const lastDay = getDate(now - 86400000)
     console.log("KV_read_2_generate_monitor_month")
-    const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastDay.slice(0, 7))
+    const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastdayname)
   // the third went to fetch kv again
   sentRequests=3;
     monitorMonth = {
