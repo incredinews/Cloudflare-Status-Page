@@ -50,7 +50,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   client = new Client(pgtarget);
   //const client = new Client(pgtarget)
   await client.connect();
-  console.log("DB connected")
+  if (log_verbose) { console.log("DB connected") }
   client.on('error', (err) => {
           console.error('PG:something bad has happened:', err.stack)
         connect();
@@ -85,13 +85,14 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   const checksPerRound=20
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   // Get monitors state from KV
-  console.log("KV_read_1")
+  
+  if (log_verbose) {   console.log("KV_read_1")  }
   let monitorMonth: MonitorMonth = await getKVMonitors(namespace,monthname)
   // Create empty state objects if not exists in KV storage yet
   // the second went to fetch kv once
   sentRequests=2;
   if (!monitorMonth) {
-    console.log("KV_read_2_generate_monitor_month")
+  if (log_verbose) {   console.log("KV_read_2_generate_monitor_month")  }
     const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastmonthame)
   // the third went to fetch kv again
   sentRequests=3;
@@ -133,7 +134,8 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
                         monitorMonth["info"]={}
      }
   let mymonitors= []
-  console.log("init_1_monitors loaded")
+
+  if (log_verbose) {   console.log("init_1_monitors loaded") }
   if (!Object.hasOwn(monitorMonth, "lastFetched")) {
     monitorMonth.lastFetched={}
   }
@@ -510,7 +512,7 @@ if (resultsel.length > 1) { // 2 queries
   client = new Client(pgtarget);
   //const client = new Client(pgtarget)
   await client.connect();
-  console.log("DB connected")
+  if (log_verbose) { console.log("DB connected") }
   client.on('error', (err) => {
           console.error('PG:something bad has happened:', err.stack)
         connect();
