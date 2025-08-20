@@ -453,7 +453,7 @@ if(dbreclog!="") {
   //console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
   //await setKVMonitors(namespace,monthname, monitorMonth)
    cronSeconds=(Date.now()-cronStarted) /1000
-   console.log("write_FIN crontime:"+cronSeconds.toString()+" s")
+   console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
   const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
   const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
   // second conflict should not happen since the worker runs only once
@@ -471,13 +471,13 @@ if(dbreclog!="") {
   for (const d_one_res of dbResInfo ) {
     donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
   }
-  if (donewritestring!="") {
-    console.log(donewritestring+" |")
-  }
+  //if (donewritestring!="") {
+  //  console.log(donewritestring+" |")
+  //}
   cronSeconds=(Date.now()-cronStarted) /1000
 
 
-  console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s")
+  console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s | "+donewritestring)
 //  const { dbresults } = await statusdb.prepare(
 //        'select * from info where id NOT like "summary_%"',
 //      ).raw();
