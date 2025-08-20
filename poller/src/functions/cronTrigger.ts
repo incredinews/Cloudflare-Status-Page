@@ -459,7 +459,7 @@ if (resultsel.length > 1) { // 2 queries
   ]);
   //console.log(JSON.stringify(dbResInfo))
   for (const d_one_res of dbResInfo ) {
-    console.log( d_one_res["success"]+" "+d_one_res["duration"].toString() + " LOC: "+d_one_res["served_by_region"] )
+    console.log( d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"] )
   }
   cronSeconds=(Date.now()-cronStarted) /1000
 
