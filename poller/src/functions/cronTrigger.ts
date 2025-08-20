@@ -424,6 +424,8 @@ const client = new Client(pgtarget)
   //console.log("dbres:")
   //console.log(JSON.stringify(resjson))
 //
+    ctx.waitUntil(client.end());
+    console.log("db closed")
   return new Response('OK')
 }
 
