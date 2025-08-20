@@ -77,12 +77,14 @@ export default {
     const result = await client.query({
       text: "SELECT version();",
     });
+    console.log("res1:")
     console.log(JSON.stringify(result));
 //    const resp = Response.json(result.rows);
     const resultsel = await client.query({
       text: "SELECT * from info",
 
     });
+    console.log("res2:")
     console.log(JSON.stringify(resultsel.rows));
   //  const respsel = Response.json(result.rows);
   
