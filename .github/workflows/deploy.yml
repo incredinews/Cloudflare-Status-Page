@@ -150,7 +150,7 @@ jobs:
             echo '[[env.production.hyperdrive]]' >> wrangler.toml
             echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
             echo "id = \"my_hyperdrive_id\"" >> wrangler.toml
-            sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' wrangler.json wrangler.jsonc wrangler.toml || true 
+            sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' -i  wrangler.json wrangler.jsonc wrangler.toml || true 
             #echo "[env.production.d1_databases.bindings] = "
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql 
             echo deployed     
