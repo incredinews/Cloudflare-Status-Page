@@ -41,7 +41,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       [index: string]: number | null
     }
   } = { t: now, l: checkLocation, ms: {} }
-  let checksPerRound=42
+  let checksPerRound=23
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -219,7 +219,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   counter=counter+1
   } 
   let returnstr=JSON.stringify({"checkoutput": logline , "errlog": errline , "fullObj": monitorMonth , "res": res ,"up": monCountOkay ,"down": monCountDown } )
-  console.log("sending :"+returnstr)
+  //console.log("sending :"+returnstr)
   return returnstr; 
   }
 }
