@@ -3,7 +3,7 @@
     "pgmethod": "HYPERDRIVE",
     "title": "Incredinews Status",
     "url": "https://infinews-uptime.pages.dev",
-    "description": "infinews observatiorium showing historical status and performane information.",
+    "description": "infinews observatiorium showing historical status and performance information.",
     "logo": "logo-192x192.png",
     "collectResponseTimes": true,
     "allmonitorsOperational": "OK: All Systems Operational",
@@ -25,7 +25,7 @@
     "expectStatus": 200,
     "followRedirect": true,
     "matchText": "BBC",
-    "hidden": true
+    "hidden": false
     },
     {
     "id": "cnn",

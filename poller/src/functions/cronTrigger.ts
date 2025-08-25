@@ -55,7 +55,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
         connect();
   })
   client.on('end', (client) => {
-              console.log('PG:1:disconnect')
+                if (log_verbose) {  console.log('PG:1:disconnect') }
              connect();
   })
   let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
@@ -79,10 +79,6 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
 //  }
 //}
 
-
-  //const preset_debounce = config.debounce || 345 
-  const checksPerRound=22
-  const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 
 
   // Get monitors state from KV
@@ -189,12 +185,17 @@ if (resultsel.length > 1) { // 2 queries
 if(dbreclog!="") {
   console.log(dbreclog)
 }
+//const preset_debounce = config.debounce || 345 
+const checksPerRound=13
+const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
+const minChecksPerRound=6
+
 //monitorMonth.checks[checkDay].summary
 
-  let timediffglobal=now-monitorMonth.lastCheck
-  let localnow=Date.now()
-  const defaultlastfetch=localnow-999999999
-  for (const monitor of config.monitors) {
+let timediffglobal=now-monitorMonth.lastCheck
+let localnow=Date.now()
+const defaultlastfetch=localnow-999999999
+for (const monitor of config.monitors) {
   //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
   // }
   if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
@@ -241,6 +242,7 @@ if(dbreclog!="") {
     //  }
   counter=counter+1
   }
+
   //console.log("init_2_monitors_filtered")
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
@@ -548,7 +550,6 @@ if(dbreclog!="") {
       pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
       pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
       //console.log(res.rows[0])
-
       //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
       cronSeconds=(Date.now()-cronStarted) /1000
       console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
