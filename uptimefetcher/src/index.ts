@@ -52,7 +52,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
     mymonitors.push(mymonitor)
   } else {
-       // console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+        console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
   }
     //  let lastping=monitorMonth.lastFetched[monitor.id]
     //  if ( newestmonitor == 0 )  {

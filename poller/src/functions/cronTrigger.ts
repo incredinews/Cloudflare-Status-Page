@@ -182,7 +182,7 @@ if(dbreclog!="") {
   console.log(dbreclog)
 }
 //const preset_debounce = config.debounce || 345 
-const checksPerRound=13
+const checksPerRound=12
 const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 const minChecksPerRound=6
 
@@ -194,7 +194,7 @@ let timediffglobal=now-monitorMonth.lastCheck
   let selectres=JSON.parse(selectresjson)
   let mymonitors=selectres.mon
   let counter=1
-  console.log("sorted_and_ready: "+mymonitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
+  console.log("sorted_and_ready: "+mymonitors.length.toString()+" / "+config.monitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
   
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
@@ -204,7 +204,7 @@ let timediffglobal=now-monitorMonth.lastCheck
   let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
   //console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
-  let checkoutput=subfetchres.checkoutput.replace("@CRLF@",'\n')
+  let checkoutput=subfetchres.checkoutput.replaceAll("@CRLF@",'\n')
 
   if(checkoutput!="") {
    console.log(checkoutput)
