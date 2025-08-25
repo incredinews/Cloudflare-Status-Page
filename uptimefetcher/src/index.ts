@@ -31,7 +31,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let now = Date.now()
   const cronStarted = now
   let cronSeconds=0
-
+  let timediffcron=0
+  let counter=1;
+  const preset_debounce = config.settings.debounce || 300
   const res: {
     t: number
     l: string
