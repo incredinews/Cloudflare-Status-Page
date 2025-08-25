@@ -28,7 +28,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
   //let monitorCount=config.monitors.length
-  let mymonitors.cofig.monitors
+  let mymonitors=config.monitors
   const checkLocation = await getCheckLocation()
   // the first went to fetch location
   let sentRequests=1;
