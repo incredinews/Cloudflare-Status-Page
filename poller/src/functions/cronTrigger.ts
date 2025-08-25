@@ -299,7 +299,7 @@ for (const monitor of config.monitors) {
      }
      //monitorMonth.
   } catch (error) {
-          console.error("RETURN_OBJ NOT PARSED ");console.error(error)
+          console.error("RETURN_OBJ NOT PARSED |"+parseline);console.error(error)
   }
   monCountDown=subfetchres.down
   monCountOkay=subfetchres.up
