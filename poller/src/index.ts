@@ -53,8 +53,7 @@ export default {
     //console.log(JSON.stringify(await Response.json(responseobj)));
 
     //console.log("FCK_CL0WNFL4RE")
-    // THE BR*IND**D D*MB*F*CKS AT CLOWNFLARE DID NOT EVEN MANAGE TO MAKE THEIR CR*P d1 sh*tload queryable as in their own docs
-    // UPDATE: hyperdrive/pg seems to return data but its not shown in observability logs, only "wranger tail"
+    // NOTE: hyperdrive/pg works  but its not shown in observability logs, only "wranger tail"
     //const { results } = await env.STATUS_PAGE.prepare(
     //  "SELECT * FROM info WHERE id NOT like ?",
     //).bind("summary_%").run();

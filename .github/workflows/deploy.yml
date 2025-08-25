@@ -87,6 +87,22 @@ jobs:
             .yarn
             node_modules
             site/node_modules
+      - name: Publish_fetcher
+        uses: cloudflare/wrangler-action@v3
+        with:
+          workingDirectory: uptimefetcher
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+#          wranglerVersion: "4.29.0"
+          preCommands: |
+            bash -c "yarn add redis-on-workers || true;yarn add pg || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
+#          postCommands: |
+#            bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
+#            yarn kv-gc
+          environment: production
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          DB_URL: ${{ secrets.DB_URL }}
+          YARN_IGNORE_NODE: 1
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
@@ -154,7 +170,7 @@ jobs:
             sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' -i  wrangler.json wrangler.jsonc wrangler.toml || true 
             #echo "[env.production.d1_databases.bindings] = "
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql 
-            echo deployed     
+            echo deployed  
           postCommands: |
             bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
             yarn kv-gc
@@ -163,6 +179,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           DB_URL: ${{ secrets.DB_URL }}
           YARN_IGNORE_NODE: 1
+
          #cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1        
       - name: build page
         #run: cp -rv .yarn .yarnrc.yml yarn.lock site && node ./scripts/removeLocalDeps.js && cd site && yarn install --mode=update-lockfile && npx @cloudflare/next-on-pages@1

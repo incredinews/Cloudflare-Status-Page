@@ -250,186 +250,14 @@ for (const monitor of config.monitors) {
   mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
   console.log("sorted_and_ready")
   counter=1
-  let checkoutput=""
-  for (const monitor of mymonitors) {
-    //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
-    //console.log(JSON.stringify(monitor))
-    let localnow=Date.now()
-    const realdebounce=monitor.debounce||preset_debounce
-    let displayname = monitor.name || monitor.id.toString();
-    let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
-    monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
-    //let laststr=monitorMonth.lastCheck
-    //let nowstr=
+  //let checkoutput=""
+  //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
+  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),JSON.stringify(config), log_verbose,log_errors, checkDay)
+  console.log(subfetchresjson)
+  let subfetchres=JSON.parse(subfetchresjson)
+  let checkoutput=subfetchres.checkoutput
+  let res=subfetchres.res
 
-    const timesec=((localnow-monitorMonth.lastFetched[monitor.id])/1000).toFixed(2)
-
-    let do_request = false;
-    let reasons="";
-    let checkResponse={};
-    //checkResponse
-    if( timesec > realdebounce  ) {
-      do_request=true;
-      reasons="+T"
-    } else { 
-      reasons="+t"
-    }
-    //subrequest limiter
-    if(sentRequests > 3+checksPerRound ) {
-      reasons=reasons+"+LimR"
-      do_request=false
-    } else {
-      cronSeconds=(localnow-cronStarted)/1000
-      //console.log("cronseconds:"+ cronSeconds.toString())
-      if ( cronSeconds > 13  ) { 
-        reasons=reasons+"+LimT"
-        do_request=false
-      } else { 
-        reasons=reasons+" "
-      }
-    }
-    if (do_request) {
-    let monitorStatusChanged=false
-      let returnstatus=0
-      //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
-      checkoutput=checkoutput+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago |`
-      let monitorOperational=false
-      let parserFound=false
-      let requestTime = -2
-      if(monitor.url.includes("http://")||monitor.url.includes("https://")) {
-            parserFound=true
-                  // Fetch the monitors URL
-          const init: Parameters<typeof fetch>[1] = {
-            method: monitor.method || 'GET',
-            redirect: monitor.followRedirect ? 'follow' : 'manual',
-            headers: {
-              //@ts-expect-error
-              //'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
-              'User-Agent': monitor.user_agent || 'cf-workers-status-poller',
-            },
-          }
-          // Perform a check and measure time
-          const requestStartTime = performance.now()
-          checkResponse = await fetch(monitor.url, init)
-          requestTime = Math.round(performance.now() - requestStartTime)
-          sentRequests=sentRequests+1
-          monitorMonth.lastFetched[monitor.id]=localnow
-          // Determine whether operational and status changed
-          if(Object.prototype.toString.call(monitor.expectStatus) === '[object Array]') { 
-            if (monitor.expectStatus.includes(checkResponse.status)) { monitorOperational= true }
-          } else {
-            //monitorOperational = checkResponse.status === (monitor.expectStatus || 200)
-            // be more precise, 200 can also be raised by default placeholders etc
-            monitorOperational = checkResponse.status === monitor.expectStatus
-          }
-          if(!monitorOperational) { 
-            console.log(monitor.id+" STATUS_CODES : GOT "+ checkResponse.status + " NEED "+ JSON.stringify(monitor.expectStatus) )
-          }
-          returnstatus=checkResponse.status
-          //check for full text
-          if (monitor.matchText && monitorOperational) {
-            //const results = await gatherResponse(checkResponse)
-            let mytxt=await checkResponse.text();
-            // next level:       if(Object.prototype.toString.call(monitor.matchText) === '[object Array]') { 
-            if( mytxt.includes(monitor.matchText)  ) { 
-              monitorMonth.operational[monitor.id] = true;
-              monitorOperational = true;
-            } else {
-              console.log("STR NOT FOUND "+monitor.matchText);
-              monitorMonth.operational[monitor.id] = false;
-              monitorOperational = false;
-            }
-          }
-          monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
-          // Save monitor's last check response status
-          monitorMonth.operational[monitor.id] = monitorOperational;
-    } // end http monitors
-    if(monitor.url.includes("rediss://")) {
-      parserFound=true
-      //const redis = createRedis("rediss://user:the_token@host.of.redis.lan:11111");
-      const requestStartTime = performance.now()
-      try {
-        const redis = createRedis(monitor.url);
-        const value = await redis.sendRawOnce("PING","");
-        const redecoder = new TextDecoder();
-        monitorOperational=true
-        console.log("redis_ping_resp:" + decoder.decode(value)); 
-        returnstatus=200
-        checkResponse.status=200
-        checkResponse.statusText=decoder.decode(value)
-        monitorStatusChanged = monitorMonth.operational[monitor.id] ? monitorMonth.operational[monitor.id] !== monitorOperational : false
-            } catch (error) {
-        console.log("redis_resp_err"+error)
-        returnstatus=503
-        checkResponse.status=503
-        checkResponse.statusText=error.toString()
-      }
-      requestTime = Math.round(performance.now() - requestStartTime)
-      sentRequests=sentRequests+1
-      monitorMonth.lastFetched[monitor.id]=localnow
-    }
-    if (do_request && config.settings.collectResponseTimes && monitorOperational) {
-      // make sure location exists in current checkDay
-      if (!monitorMonth.checks[checkDay].summary[checkLocation])
-        monitorMonth.checks[checkDay].summary[checkLocation] = {}
-      if (!monitorMonth.checks[checkDay].summary[checkLocation][monitor.id])
-        monitorMonth.checks[checkDay].summary[checkLocation][monitor.id] = {
-          n: 0,
-          ms: 0,
-          a: 0,
-        }
-      // increment number of checks and sum of ms
-      const no = ++monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].n
-      const ms = monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].ms += requestTime
-      // save new average ms
-      monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].a = Math.round(ms / no)
-      // back online
-       if (monitorStatusChanged) {
-         monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
-       }
-    }
-
-    res.ms[monitor.id] = monitorOperational ? requestTime : null
-    if(monitorOperational) { monCountOkay=monCountOkay+1 } else { monCountDown=monCountDown+1 }
-    // go dark
-    if(!monitorOperational ) {
-      if (monitorStatusChanged || log_errors ) {
-                 console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     FAILING ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck/1000}`)
-      }
-    }
-     if (!monitorOperational && monitorStatusChanged) {
-      console.log("changed status");
-//      //console.log(JSON.stringify(monitorMonth))
-//       if (!Object.hasOwn(monitorMonth, 'incidents')) {
-//                          monitorMonth.incidents=[]
-//       }
-//      if (!monitorMonth.incidents.includes(monitor.id)) {
-//        monitorMonth.incidents[monitor.id]=[]
-//      }
-////       if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
-////                          monitorMonth.monitors[monitor.id].incidents=[]
-////       }
-//       monitorMonth.incidents[monitor.id].push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
-//       console.log("get incident count")
-//       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
-       console.log("save incident ");
-       if(typeof monitorMonth.checks[checkDay].incidents === 'object' && !Array.isArray(monitorMonth.checks[checkDay].incidents) && monitorMonth.checks[checkDay].incidents !== null) {
-          monitorMonth.checks[checkDay].incidents=[]
-       }
-       monitorMonth.checks[checkDay].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
-     }
-  // end timediff
-   } else { // dorequest
-    const dontchecknow=Date.now()
-    timediffcron=dontchecknow-cronStarted
-    cronSeconds=timediffcron/1000
-    //if(log_verbose) { 
-      //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
-      checkoutput=checkoutput+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `
-    //}
-  } // end dorequest
-  counter=counter+1
-  }
   if(checkoutput!="") {
    console.log(checkoutput)
   }
@@ -456,7 +284,41 @@ for (const monitor of config.monitors) {
   //await setKVMonitors(namespace,monthname, monitorMonth)
    cronSeconds=(Date.now()-cronStarted) /1000
    console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
-  const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
+
+	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
+	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
+	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
+    //const values = ['aaaa', 'ababa']
+  client = new Client(pgtarget);
+  //const client = new Client(pgtarget)
+  await client.connect();
+  if (log_verbose) { console.log("DB connected") }
+  client.on('error', (err) => {
+          console.error('PG:something bad has happened:', err.stack)
+        connect();
+  })
+  client.on('end', (client) => {
+              console.log('PG:2:disconnect')
+             connect();
+  })
+
+    // async/await
+    try {
+	    //const myfoo={"bar": "f000"}
+      //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
+      let pgres={}
+      pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
+      pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+      pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
+      pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
+      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
+      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
+      pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+      //console.log(res.rows[0])
+      //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+      cronSeconds=(Date.now()-cronStarted) /1000
+      console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+    const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
   const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
   // second conflict should not happen since the worker runs only once
   const dbResInfo = await statusdb.batch([
@@ -520,40 +382,6 @@ for (const monitor of config.monitors) {
   //console.log("dbres:")
   //console.log(JSON.stringify(resjson))
 //
-	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
-	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
-	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
-    //const values = ['aaaa', 'ababa']
-  client = new Client(pgtarget);
-  //const client = new Client(pgtarget)
-  await client.connect();
-  if (log_verbose) { console.log("DB connected") }
-  client.on('error', (err) => {
-          console.error('PG:something bad has happened:', err.stack)
-        connect();
-  })
-  client.on('end', (client) => {
-              console.log('PG:2:disconnect')
-             connect();
-  })
-
-    // async/await
-    try {
-	    //const myfoo={"bar": "f000"}
-      //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-      let pgres={}
-      pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
-      pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
-      pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
-      pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
-      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-      pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
-      //console.log(res.rows[0])
-      //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-      cronSeconds=(Date.now()-cronStarted) /1000
-      console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-  
     } catch (err) {
       console.log(err.stack)
     }
