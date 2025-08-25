@@ -73,6 +73,22 @@ jobs:
 #          path: .yarn
 #          key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ hashFiles('.yarnrc.yml') }}
 #          #key: ${{ steps.get-machine.outputs.machine }}-yarn-${{ steps.get-code-cachekey.outputs.codecachekey }}
+      - name: Publish_fetcher
+        uses: cloudflare/wrangler-action@v3
+        with:
+          workingDirectory: uptimefetcher
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+#          wranglerVersion: "4.29.0"
+          preCommands: |
+            pwd;bash -c "npm install redis-on-workers || true;npm install pg || true;"
+#          postCommands: |
+#            bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
+#            yarn kv-gc
+          environment: production
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          DB_URL: ${{ secrets.DB_URL }}
+          YARN_IGNORE_NODE: 1
       - run: bash -c "yarn add pg || true;yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
       - run: yarn install
         working-directory: poller
@@ -90,22 +106,6 @@ jobs:
             .yarn
             node_modules
             site/node_modules
-      - name: Publish_fetcher
-        uses: cloudflare/wrangler-action@v3
-        with:
-          workingDirectory: uptimefetcher
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-#          wranglerVersion: "4.29.0"
-          preCommands: |
-            pwd;bash -c "yarn add redis-on-workers || true;yarn add pg || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
-#          postCommands: |
-#            bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
-#            yarn kv-gc
-          environment: production
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-          DB_URL: ${{ secrets.DB_URL }}
-          YARN_IGNORE_NODE: 1
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
