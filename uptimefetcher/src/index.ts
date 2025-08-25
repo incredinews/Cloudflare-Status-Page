@@ -15,16 +15,20 @@ function getDate(time: number) {
 export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
-
-  async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string) { 
+  async checkMonitors( monitorMonthjson: string,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
+  let monitorids = []
   let logline=""
   let errline=""
   let monitorMonth: MonitorMonth = JSON.parse(monitorMonthjson)
-  let mymonitors: MonitorMonth = JSON.parse(mymonitorsjson)
+  //let mymonitors: MonitorMonth = JSON.parse(mymonitorsjson)
+  // the worker doesnt know all incidentes
+  monitorMonth.checks[checkDay].incidents=[]
+
   let config: MonitorMonth = JSON.parse(myconfigjson)
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
-  let monitorCount=config.monitors.length
+  //let monitorCount=config.monitors.length
+  let mymonitors.cofig.monitors
   const checkLocation = await getCheckLocation()
   // the first went to fetch location
   let sentRequests=1;
@@ -41,11 +45,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       [index: string]: number | null
     }
   } = { t: now, l: checkLocation, ms: {} }
-  let checksPerRound=23
+  let checksPerRound=13
   for (const monitor of mymonitors) {
+    monitorids.push(monitor.id)
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
     let localnow=Date.now()
+    cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
     let displayname = monitor.name || monitor.id.toString();
     let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
@@ -53,7 +59,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
     const timesec=((localnow-monitorMonth.lastFetched[monitor.id])/1000).toFixed(2)
-
     let do_request = true;
     let reasons="";
     let checkResponse={};
@@ -67,7 +72,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       reasons=reasons+"+LimR"
       do_request=false
     } else {
-      cronSeconds=(localnow-cronStarted)/1000
+      //cronSeconds=(localnow-cronStarted)/1000
       //console.log("cronseconds:"+ cronSeconds.toString())
       if ( cronSeconds > 13  ) { 
         reasons=reasons+"+LimT"
@@ -77,10 +82,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       }
     }
     if (do_request) {
+      let checknow=Date.now()
+      timediffcron=checknow-cronStarted
+      cronSeconds=timediffcron/1000
       let monitorStatusChanged=false
       let returnstatus=0
       //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
-      logline=logline+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago |`
       let monitorOperational=false
       let parserFound=false
       let requestTime = -2
@@ -91,8 +98,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
             method: monitor.method || 'GET',
             redirect: monitor.followRedirect ? 'follow' : 'manual',
             headers: {
-              //@ts-expect-error
               //'User-Agent': config.settings.user_agent || 'cf-workers-status-poller',
+              //@ts-expect-error
               'User-Agent': monitor.user_agent || 'cf-workers-status-poller',
             },
           }
@@ -169,6 +176,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       // increment number of checks and sum of ms
       const no = ++monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].n
       const ms = monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].ms += requestTime
+      checknow=Date.now()
+      timediffcron=checknow-cronStarted
+      cronSeconds=timediffcron/1000
+      logline=logline+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | rqTime ${requestTime} |  crontime: ${cronSeconds} `
       // save new average ms
       monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].a = Math.round(ms / no)
       // back online
@@ -185,7 +196,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                  console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     FAILING ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck/1000}`)
       }
     }
-     if (!monitorOperational && monitorStatusChanged) {
+    if (!monitorOperational && monitorStatusChanged) {
       console.log("changed status");
 //      //console.log(JSON.stringify(monitorMonth))
 //       if (!Object.hasOwn(monitorMonth, 'incidents')) {
@@ -194,17 +205,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 //      if (!monitorMonth.incidents.includes(monitor.id)) {
 //        monitorMonth.incidents[monitor.id]=[]
 //      }
-////       if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
-////                          monitorMonth.monitors[monitor.id].incidents=[]
-////       }
-//       monitorMonth.incidents[monitor.id].push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
-//       console.log("get incident count")
-//       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
-       console.log("save incident ");
+       if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
+                          monitorMonth.monitors[monitor.id].incidents=[]
+       }
+       monitorMonth.incidents[monitor.id].push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
+       console.log("get incident count")
+       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
+       console.log("save incident month");
        if(typeof monitorMonth.checks[checkDay].incidents === 'object' && !Array.isArray(monitorMonth.checks[checkDay].incidents) && monitorMonth.checks[checkDay].incidents !== null) {
           monitorMonth.checks[checkDay].incidents=[]
        }
-       monitorMonth.checks[checkDay].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
+       monitorMonth.checks[checkDay].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText, monitor: monitor.id })
      }
   // end timediff
    } else { // dorequest
@@ -218,7 +229,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   } // end dorequest
   counter=counter+1
   } 
-  let returnstr=JSON.stringify({"checkoutput": logline , "errlog": errline , "fullObj": monitorMonth , "res": res ,"up": monCountOkay ,"down": monCountDown } )
+  let returnstr=JSON.stringify({"checkoutput": logline , "errlog": errline , "fullObj": monitorMonth , "res": res ,"up": monCountOkay ,"down": monCountDown , "monitors": monitorids , "loc": checkLocation } )
   //console.log("sending :"+returnstr)
   return returnstr; 
   }

@@ -58,7 +58,8 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
                 if (log_verbose) {  console.log('PG:1:disconnect') }
              connect();
   })
-  let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
+  ///let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
+  let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ; delete from ping where  ms::text = '{}'  ;"
   if( log_verbose ) { console.log(" asking db: "+pginit) }
   const resultsel = await client.query({
       text: pginit,
@@ -78,8 +79,6 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
 //    }
 //  }
 //}
-
-
 
   // Get monitors state from KV
   
@@ -115,7 +114,6 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   if (!monitorMonth.lastFetched) {
     monitorMonth.lastFetched={}
   }
-  
   //console.log("init_1_lastFetched")
   //console.log(JSON.stringify(monitorMonth))
   //const res: {
@@ -174,9 +172,8 @@ if (resultsel.length > 1) { // 2 queries
         // console.log("hit :"+myrow["id"])
         if(("summary_"+monthname)==myrow["id"]) {
         dbreclog=dbreclog+"|found db summary:"+myrow["id"]
-
           //monitorMonth[myrow["id"]]=myrow["record"]
-          monitorMonth.checks[checkDay].summary
+          monitorMonth.checks[checkDay].summary=myrow["record"]
         }
       }
     }
@@ -253,10 +250,13 @@ for (const monitor of config.monitors) {
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
-  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),JSON.stringify(config), log_verbose,log_errors, checkDay)
-  console.log(subfetchresjson)
+  let sendconfig=config
+  sendconfig.monitors=mymonitors
+  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+  //console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
   let checkoutput=subfetchres.checkoutput
+
   if(checkoutput!="") {
    console.log(checkoutput)
   }
@@ -272,13 +272,29 @@ for (const monitor of config.monitors) {
   } catch (error) {
       console.error("RETURN_RES NOT PARSED ");console.error(error)
   }
+  
   try {
-     monitorMonth=subfetchres.fullObj
+  //   monitorMonth=subfetchres.fullObj
+     //let FetchedMonitorMonth=subfetchres.fullObj
+     if (subfetchres.fullObj.checks[checkDay].incidents.length > 0) {
+      monitorMonth.checks[checkDay].incidents=monitorMonth.checks[checkDay].incidents.concat(subfetchres.fullObj.checks[checkDay].incidents)
+     }
+     for (const fetchedmonid in subfetchres.monitors) { 
+        monitorMonth.operational[fetchedmonid]=subfetchres.fullObj.operational[fetchedmonid]
+        monitorMonth.lastFetched[fetchedmonid]=subfetchres.fullObj.lastFetched[fetchedmonid]
+        monitorMonth.info[fetchedmonid]=subfetchres.fullObj.info[fetchedmonid]
+        if (subfetchres.fullObj.monitors[fetchedmonid].incidents.length > 0) { 
+          monitorMonth.monitors[fetchedmonid].incidents=subfetchres.fullObj.monitors[fetchedmonid].incidents
+        }
+        monitorMonth.checks[checkDay].summary[subfetchres.loc][monitor.id]=subfetchres.fullObj.checks[checkDay].summary[subfetchres.loc][monitor.id]
+     }
+     //monitorMonth.
   } catch (error) {
           console.error("RETURN_OBJ NOT PARSED ");console.error(error)
   }
   monCountDown=subfetchres.down
   monCountOkay=subfetchres.up
+  
   if( mymonitors.length > 0 ) {
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
@@ -309,6 +325,7 @@ for (const monitor of config.monitors) {
     //const values = ['aaaa', 'ababa']
   client = new Client(pgtarget);
   //const client = new Client(pgtarget)
+  let pgres={}
   await client.connect();
   if (log_verbose) { console.log("DB connected") }
   client.on('error', (err) => {
@@ -317,14 +334,13 @@ for (const monitor of config.monitors) {
   })
   client.on('end', (client) => {
               console.log('PG:2:disconnect')
-             connect();
+             //connect();
   })
 
     // async/await
     try {
 	    //const myfoo={"bar": "f000"}
       //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-      let pgres={}
       pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
       pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
       pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
