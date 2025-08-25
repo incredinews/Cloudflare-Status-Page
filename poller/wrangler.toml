@@ -12,7 +12,12 @@ enabled = true
 binding = "UPTIMEFETCHER"
 service = "uptimefetcher"
 entrypoint = "UptimeFetcher"
- 
+
+[[env.production.services]]
+binding = "UPTIMEFETCHER"
+service = "uptimefetcher-production"
+entrypoint = "UptimeFetcher"
+
 [assets]
 directory = "./dist/"
 not_found_handling = "single-page-application"
