@@ -270,7 +270,12 @@ for (const monitor of config.monitors) {
             [index: string]: number | null
           }
         } = { t: now, l: "FAILED", ms: {} }
-      console.error("RETURN_RES NOT PARSED")
+      console.error("RETURN_RES NOT PARSED ");console.error(error)
+  }
+  try {
+     monitorMonth=subfetchres.fullObj
+  } catch (error) {
+          console.error("RETURN_OBJ NOT PARSED ");console.error(error)
   }
   monCountDown=subfetchres.down
   monCountOkay=subfetchres.up
