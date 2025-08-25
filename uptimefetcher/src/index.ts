@@ -17,16 +17,15 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   async fetch() { return new Response(null, {status: 404}); }
   async selectMonitors( monitorMonth: MonitorMonth, myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checksPerRound: number ) { 
   //console.log("start_sel")
-
   let cronStarted=Date.now()
   let logline=""
   let config = JSON.parse(myconfigjson)
-  let monitorCount=config.monitors.length
+  let monitorCount=Object.keys(config.monitors).length
   let localnow=Date.now()
   let sentRequests=1;
   const defaultlastfetch=localnow-999999999
   let counter=1;
-  const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
+  const preset_debounce = config.debounce || (  42 + ( Object.keys(config.monitors).length * 3 )  ) 
   const minChecksPerRound=6
   let gomonitors=[]
   //console.log("start_for")
@@ -165,7 +164,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     } else {
       //cronSeconds=(localnow-cronStarted)/1000
       //console.log("cronseconds:"+ cronSeconds.toString())
-      if ( cronSeconds > 13  ) { 
+      if ( cronSeconds > 14  ) { 
         reasons=reasons+"+LimT"
         do_request=false
       } else { 

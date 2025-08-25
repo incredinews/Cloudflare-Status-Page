@@ -127,7 +127,7 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   let counter=1;
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
-  let monitorCount=config.monitors.length
+  let monitorCount=Object.keys(config.monitors).length
   let cronSeconds=0
   let timediffcron=0
   //console.log("init_1_vars_set")
@@ -183,7 +183,7 @@ if(dbreclog!="") {
 }
 //const preset_debounce = config.debounce || 345 
 const checksPerRound=12
-const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
+const preset_debounce = config.debounce || (  42 + ( monitorCount * 3 )  ) 
 const minChecksPerRound=6
 
 //monitorMonth.checks[checkDay].summary
@@ -199,7 +199,7 @@ let timediffglobal=now-monitorMonth.lastCheck
   //console.log(JSON.stringify(selectres.mon))
   let mymonitorbatches=selectres.mon
   let counter=1
-console.log("sorted_and_ready: "+selectres.count.toString()+" / "+selectres.total.toString()+" | version: COMMITSHA | COMMITMSG | ")
+console.log("sorted_and_ready: "+selectres.count.toString()+" / "+selectres.total.toString()+" batches: "+selectres.batches+" | version: COMMITSHA | COMMITMSG | ")
 
 if( mymonitorbatches.length > 0 ) {
   //let checkoutput=""
