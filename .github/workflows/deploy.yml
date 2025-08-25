@@ -106,7 +106,8 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
 #          wranglerVersion: "4.29.0"
           preCommands: |
-            bash -c "yarn add redis-on-workers || true;yarn add pg || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
+            pwd;bash -c "npm install redis-on-workers || true;npm install pg || true;"
+            #bash -c "yarn add redis-on-workers || true;yarn add pg || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
             #wrangler --help|grep kv
             #wrangler kv namespace list
             #wrangler kv:namespace list
