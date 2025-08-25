@@ -21,6 +21,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let logline=""
   let config = JSON.parse(myconfigjson)
   let monitorCount=Object.keys(config.monitors).length
+  console.log("Total monitors: "+monitorCount)
   let localnow=Date.now()
   let sentRequests=1;
   const defaultlastfetch=localnow-999999999
@@ -178,7 +179,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       let monitorStatusChanged=false
       let returnstatus=0
       //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
-      logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`
+      //logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`
       let monitorOperational=false
       let parserFound=false
       let requestTime = -2
