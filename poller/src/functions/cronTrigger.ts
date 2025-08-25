@@ -192,10 +192,10 @@ let timediffglobal=now-monitorMonth.lastCheck
   //console.log("selecting")
   let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), log_verbose ,log_errors, checksPerRound )
   let selectres=JSON.parse(selectresjson)
-  if(selectres.log!="") {
-    console.log(selectres.log.replaceAll("@CRLF@",'\n'))
-  }
-  console.log(JSON.stringify(selectres.mon))
+  //if(selectres.log!="") {
+  //  console.log(selectres.log.replaceAll("@CRLF@",'\n'))
+  //}
+  //console.log(JSON.stringify(selectres.mon))
   let mymonitorbatches=selectres.mon
   let counter=1
   console.log("sorted_and_ready: "+selectres.count.toString()+" / "+config.monitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
