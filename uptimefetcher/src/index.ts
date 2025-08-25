@@ -2,6 +2,7 @@ import { WorkerEntrypoint } from "cloudflare:workers";
 import { MonitorMonth } from './../../types/src/KvMonitors'
 import { createRedis } from "redis-on-workers";
 import { Client } from "pg";
+import config from '../../../config.json'
 
 import {
   getCheckLocation,
@@ -15,91 +16,160 @@ function getDate(time: number) {
 export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
-  async selectMonitors( monitorMonth: MonitorMonth, myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checksPerRound: number ) { 
-  //console.log("start_sel")
-  let cronStarted=Date.now()
-  let logline=""
-  let config = JSON.parse(myconfigjson)
-  let monitorCount=Object.keys(config.monitors).length
-  console.log("Total monitors: "+monitorCount)
-  let localnow=Date.now()
-  let sentRequests=1;
-  const defaultlastfetch=localnow-999999999
-  let counter=1;
-  const preset_debounce = config.debounce || (  42 + ( Object.keys(config.monitors).length * 3 )  ) 
-  const minChecksPerRound=6
-  let gomonitors=[]
-  //console.log("start_for")
-  for (const monitor of config.monitors) {
 
-    let localnow=Date.now()
-    let cronSeconds=(localnow-cronStarted)/1000
-  //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-  // }
-  if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
-    monitorMonth.lastFetched[monitor.id]=defaultlastfetch
-    }
-  let reasons="";
-  let displayname = monitor.name || monitor.id.toString();
-  let do_request=true
-  const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
-  const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
-  if( timesec < realdebounce  ) {
-    do_request=false;
-    reasons="+t"
-  } else { 
-    reasons="+T"
-    do_request=true
+  async selectMonitors( monitorMonth: MonitorMonth ,log_verbose: boolean , log_errors: boolean , checksPerRound: number ) { 
+      //console.log("start_sel")
+      let cronStarted=Date.now()
+      let logline=""
+      //let config = JSON.parse(myconfigjson)
+      //let monitorCount=Object.keys(config.monitors).length
+        //const res: {
+        //  t: number
+        //  l: string
+        //  ms: {
+        //    [index: string]: number | null
+        //  }
+        //} = { t: now, l: checkLocation, ms: {} }
+        //console.log("init_1_data_prepared")
+        let counter=1;
+        let monCountDown = 0 ;
+        let monCountOkay = 0 ;
+        const monitorCount=config.monitors.length
+        let cronSeconds=0
+        let timediffcron=0
+        //console.log("init_1_vars_set")
+        if (!Object.hasOwn(monitorMonth, 'info')) {
+                              monitorMonth["info"]={}
+           }
+      
+        if (log_verbose) {   console.log("init_1_monitors loaded") }
+        if (!Object.hasOwn(monitorMonth, "lastFetched")) {
+          monitorMonth.lastFetched={}
+        }
+      
+      //parse info from db
+      let dbreclog=""
+      if (resultsel.length > 0) {
+        if(resultsel[0].rowCount>0) {
+          for (const myrow of resultsel[0].rows ) {
+            //console.log(myrow)
+            if(Object.hasOwn(myrow,"id")) {
+              // console.log("hit :"+myrow["id"])
+              if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
+              dbreclog=dbreclog+"|found db record:"+myrow["id"]
+                if(myrow["id"]=="lastCheck") {
+                  monitorMonth["lastCheck"]=myrow["record"]["ts"] 
+                } else { 
+                  monitorMonth[myrow["id"]]=myrow["record"]
+                }
+                //monitorMonth.lastFetched=myrow.record
+              }
+            }
+          }
+        }
+      }
+      
+      //parse month summary from db
+      if (resultsel.length > 1) { // 2 queries
+        if(resultsel[1].rowCount>0) { 
+          for (const myrow of resultsel[1].rows ) {
+            //console.log(myrow)
+            if(Object.hasOwn(myrow,"id")) {
+              // console.log("hit :"+myrow["id"])
+              if(("summary_"+monthname)==myrow["id"]) {
+              dbreclog=dbreclog+"|found db summary:"+myrow["id"]
+                //monitorMonth[myrow["id"]]=myrow["record"]
+                monitorMonth.checks[checkDay].summary=myrow["record"]
+              }
+            }
+          }
+        }
+      }
+      if(dbreclog!="") {
+        //console.log("mons:"+monitorCount.toString() +"/"+Object.keys(config.monitors).length.toString()+dbreclog)
+        logline=logline+'@CRLF@'+" | "+dbreclog
+      }
+      //const preset_debounce = config.debounce || 345 
+      let monitorCount=config.monitors.length
+      console.log("Total monitors: "+monitorCount)
+      let localnow=Date.now()
+      let sentRequests=1;
+      const defaultlastfetch=localnow-999999999
+      let counter=1;
+      const preset_debounce = config.debounce || (  42 + ( Object.keys(config.monitors).length * 3 )  ) 
+      const minChecksPerRound=6
+      let gomonitors=[]
+      //console.log("start_for")
+      for (const monitor of config.monitors) {
+          let localnow=Date.now()
+          let cronSeconds=(localnow-cronStarted)/1000
+          //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+          // }
+          if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
+            monitorMonth.lastFetched[monitor.id]=defaultlastfetch
+            }
+          let reasons="";
+          let displayname = monitor.name || monitor.id.toString();
+          let do_request=true
+          const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
+          const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
+          if( timesec < realdebounce  ) {
+            do_request=false;
+            reasons="+t"
+          } else { 
+            reasons="+T"
+            do_request=true
+          }
+          //subrequest limiter
+          //if(sentRequests > 42 ) {
+          //  reasons=reasons+"+LimR"
+          //  do_request=false
+          //} 
+          if(do_request) {
+            let mymonitor=monitor
+            mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
+            gomonitors.push(mymonitor)
+          } else {
+              //  console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+              logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `
+          }
+          //  let lastping=monitorMonth.lastFetched[monitor.id]
+          //  if ( newestmonitor == 0 )  {
+          //    newestmonitor=monitor.id
+          //  }
+          //  if ( oldestmonitor == 0 )  {
+          //    oldestmonitor=monitor.id
+          //  }
+          //  if (lastping>oldestmonitor ) {
+          //    oldestmonitor=monitor.id
+          //    oldestmonitors.push(monitor.id)
+          //  }
+          //  if (lastping<newestmonitor ) {
+          //    newestmonitor=monitor.id
+          //    youngestmonitors.unshift(monitor.id)
+          //  }
+          counter=counter+1
+          }
+          //console.log("end_for")
+          //console.log("init_2_monitors_filtered:"+gomonitors.length.toString())
+          
+          //const allpings = youngestmonitors.concat(oldestmonitors);
+          gomonitors.sort((a, b) => a.lastFetched - b.lastFetched)
+          //console.log("start_batch")
+          let mymonitors=[]
+          let batchcount=0
+          let thisbatch=[]
+          for (const monitor of gomonitors) {
+          thisbatch.push(monitor)
+          if(thisbatch.length > checksPerRound ) { 
+            mymonitors.push(thisbatch)
+            thisbatch=[]
+            batchcount=batchcount+1
+            } 
+          }
+  return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , count: counter , total: monitorCount, batches: batchcount  } )
   }
-  //subrequest limiter
-  //if(sentRequests > 42 ) {
-  //  reasons=reasons+"+LimR"
-  //  do_request=false
-  //} 
-  if(do_request) {
-    let mymonitor=monitor
-    mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
-    gomonitors.push(mymonitor)
-  } else {
-      //  console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
-      logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `
-  }
-    //  let lastping=monitorMonth.lastFetched[monitor.id]
-    //  if ( newestmonitor == 0 )  {
-    //    newestmonitor=monitor.id
-    //  }
-    //  if ( oldestmonitor == 0 )  {
-    //    oldestmonitor=monitor.id
-    //  }
-    //  if (lastping>oldestmonitor ) {
-    //    oldestmonitor=monitor.id
-    //    oldestmonitors.push(monitor.id)
-    //  }
-    //  if (lastping<newestmonitor ) {
-    //    newestmonitor=monitor.id
-    //    youngestmonitors.unshift(monitor.id)
-    //  }
-  counter=counter+1
-  }
-  //console.log("end_for")
-  //console.log("init_2_monitors_filtered")
-  
-  //const allpings = youngestmonitors.concat(oldestmonitors);
-  gomonitors.sort((a, b) => a.lastFetched - b.lastFetched)
-  //console.log("start_batch")
-  let mymonitors=[]
-  let batchcount=0
-  let thisbatch=[]
-  for (const monitor of gomonitors) {
-    thisbatch.push(monitor)
-    if(thisbatch.length > checksPerRound ) { 
-      mymonitors.push(thisbatch)
-      thisbatch=[]
-      batchcount=batchcount+1
-    } 
-  }
-  return JSON.stringify({"mon": mymonitors,"log": logline , count: counter , total: monitorCount, batches: batchcount  } )
-  }
+
   async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
   //let monitorMonth: MonitorMonth =
   let monitorids = []
