@@ -179,7 +179,7 @@ if (resultsel.length > 1) { // 2 queries
   }
 }
 if(dbreclog!="") {
-  console.log(dbreclog)
+  console.log("mons:"+monitorCount.toString() +dbreclog)
 }
 //const preset_debounce = config.debounce || 345 
 const checksPerRound=12
