@@ -255,10 +255,10 @@ for (const monitor of config.monitors) {
   let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
   //console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
-  let checkoutput=subfetchres.checkoutput
+  let checkoutput=subfetchres.checkoutput.replace("@CLRF@",'\n')
 
   if(checkoutput!="") {
-   console.log(checkoutput.replace("@CLRF@",'\n'))
+   console.log(checkoutput)
   }
   const res: {
             t: number
@@ -281,12 +281,17 @@ for (const monitor of config.monitors) {
       monitorMonth.checks[checkDay].incidents=monitorMonth.checks[checkDay].incidents.concat(subfetchres.fullObj.checks[checkDay].incidents)
      }
      for (const fetchedmonid of subfetchres.monitors) { 
+        parseline=parseline+"+op"
         monitorMonth.operational[fetchedmonid]=subfetchres.fullObj.operational[fetchedmonid]
+        parseline=parseline+"+lf"
         monitorMonth.lastFetched[fetchedmonid]=subfetchres.fullObj.lastFetched[fetchedmonid]
+        parseline=parseline+"+if"
         monitorMonth.info[fetchedmonid]=subfetchres.fullObj.info[fetchedmonid]
+        parseline=parseline+"+in"
         if (subfetchres.fullObj.monitors[fetchedmonid].incidents.length > 0) { 
           monitorMonth.monitors[fetchedmonid].incidents=subfetchres.fullObj.monitors[fetchedmonid].incidents
         }
+        parseline=parseline+"+sum"
         if(!Object.hasOwn(monitorMonth.checks[checkDay].summary, subfetchres.loc)) {
           monitorMonth.checks[checkDay].summary[subfetchres.loc]={}
         }
