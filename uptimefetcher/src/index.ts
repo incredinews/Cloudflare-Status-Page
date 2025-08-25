@@ -7,7 +7,7 @@ import {
   getCheckLocation,
   getKVMonitors,
   setKVMonitors,
-} from './../../poller/src/helpers'
+} from './../../poller/src/functions/helpers'
 
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
