@@ -30,7 +30,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let sentRequests=1;
   let now = Date.now()
   const cronStarted = now
-  
+  let cronSeconds=0
+
   const res: {
     t: number
     l: string
