@@ -16,6 +16,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
   async selectMonitors( monitorMonth: MonitorMonth, myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checksPerRound: number ) { 
+  //console.log("start_sel")
 
   let cronStarted=Date.now()
   let logline=""
@@ -27,10 +28,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let counter=1;
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   const minChecksPerRound=6
-  let gomonitors= []
-
+  let gomonitors=[]
+  //console.log("start_for")
   for (const monitor of config.monitors) {
-
 
     let localnow=Date.now()
     let cronSeconds=(localnow-cronStarted)/1000
@@ -80,11 +80,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     //  }
   counter=counter+1
   }
-
+  //console.log("end_for")
   //console.log("init_2_monitors_filtered")
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
   gomonitors.sort((a, b) => a.lastFetched - b.lastFetched)
+  //console.log("start_batch")
   let mymonitors=[]
   let batchcount=0
   let thisbatch=[]
@@ -94,9 +95,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       thisbatch=[]
       batchcount=batchcount+1
     }
-  }env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+  }
 
-  return JSON.stringify({"mon": mymonitors,"log": logline})
+  return JSON.stringify({"mon": mymonitors,"log": logline , count: counter})
   }
   async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
   //let monitorMonth: MonitorMonth =

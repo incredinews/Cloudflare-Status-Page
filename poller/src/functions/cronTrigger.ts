@@ -189,13 +189,13 @@ const minChecksPerRound=6
 //monitorMonth.checks[checkDay].summary
 
 let timediffglobal=now-monitorMonth.lastCheck
-  console.log("selecting")
+  //console.log("selecting")
   let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), log_verbose ,log_errors, checksPerRound )
   let selectres=JSON.parse(selectresjson)
-  console.log("selected")
+  //console.log("selected")
   let mymonitorbatches=selectres.mon
   let counter=1
-  console.log("sorted_and_ready: "+mymonitors.length.toString()+" / "+config.monitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
+  console.log("sorted_and_ready: "+selectres.count.toString()+" / "+config.monitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
   if( mymonitorbatches.length > 0 ) {
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
