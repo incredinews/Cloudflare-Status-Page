@@ -191,7 +191,7 @@ const minChecksPerRound=6
 let timediffglobal=now-monitorMonth.lastCheck
 
   let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), ,log_verbose ,log_errors, checksPerRound )
-  let selectres={}
+  let selectres=JSON.parse(selectresjson)
 
   console.log("sorted_and_ready | version: COMMITSHA | COMMITMSG | ")
   counter=1

@@ -16,6 +16,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
   async selectMonitors( monitorMonth: MonitorMonth, myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checksPerRound: number ) { 
+  let logline=""
   let config = JSON.parse(myconfigjson)
   let localnow=Date.now()
   const defaultlastfetch=localnow-999999999
@@ -75,7 +76,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
   mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
-  return JSON.stringify("mon": mymonitors,"log": loglines)
+  return JSON.stringify("mon": mymonitors,"log": logline)
   }
   async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
   //let monitorMonth: MonitorMonth =
