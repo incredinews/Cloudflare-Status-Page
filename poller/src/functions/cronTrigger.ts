@@ -127,7 +127,7 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   let counter=1;
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
-  let monitorCount=Object.keys(config.monitors).length
+  const monitorCount=config.monitors.length
   let cronSeconds=0
   let timediffcron=0
   //console.log("init_1_vars_set")
@@ -179,7 +179,7 @@ if (resultsel.length > 1) { // 2 queries
   }
 }
 if(dbreclog!="") {
-  console.log("mons:"+monitorCount.toString() +"/"+config.monitors.length.toString()+dbreclog)
+  console.log("mons:"+monitorCount.toString() +"/"+Object.keys(config.monitors).length.toString()+dbreclog)
 }
 //const preset_debounce = config.debounce || 345 
 const checksPerRound=12
