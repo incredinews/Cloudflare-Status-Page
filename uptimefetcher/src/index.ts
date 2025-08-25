@@ -17,13 +17,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
 
-  async selectMonitors( monitorMonth: MonitorMonth ,log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
+  async selectMonitors(log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
       let sentRequests=1;
       let now = Date.now()
       const cronStarted = now
-      let cronStarted=Date.now()
       let logline=""
+
       //let config = JSON.parse(myconfigjson)
       //let monitorCount=Object.keys(config.monitors).length
         //const res: {
@@ -49,7 +49,100 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         if (!Object.hasOwn(monitorMonth, "lastFetched")) {
           monitorMonth.lastFetched={}
         }
-      
+      let client
+  client = new Client(pgtarget);
+  //const client = new Client(pgtarget)
+  await client.connect();
+  if (log_verbose) { console.log("DB connected") }
+  client.on('error', (err) => {
+          console.error('PG:something bad has happened:', err.stack)
+        connect();
+  })
+  client.on('end', (client) => {
+                if (log_verbose) {  console.log('PG:1:disconnect') }
+             connect();
+  })
+  ///let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ;SELECT * FROM info WHERE id LIKE 'summary_"+monthname+"-%' ORDER BY id desc limit 3; delete from ping where  ms::text = '{}'  ;"
+  let pginit="SELECT * FROM info WHERE id NOT LIKE 'summary_%'; SELECT * FROM info WHERE id = 'summary_"+monthname+"'  ; delete from ping where  ms::text = '{}'  ;"
+  if( log_verbose ) { console.log(" asking db: "+pginit) }
+  const resultsel = await client.query({
+      text: pginit,
+    });
+  await client.end()
+if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
+	//console.log(JSON.stringify(resultsel[0].forw));
+
+// dump results per row
+//for (const dbelem of resultsel) {
+//  // code block to be executed
+////  console.log(JSON.stringify(await dbelem));
+//  console.log("DB_RES_"+dbelem.command+" rows: "+dbelem.rowCount )
+//  if (dbelem.rowCount > 0 && dbelem.command != "DELETE") { 
+//    for (const thisrow of dbelem.rows) {
+//      console.log(JSON.stringify(thisrow))
+//    }
+//  }
+//}
+
+  // Get monitors state from KV
+  
+  //if (log_verbose) {   console.log("KV_read_1")  }
+  //let monitorMonth: MonitorMonth = await getKVMonitors(namespace,monthname)
+  //// Create empty state objects if not exists in KV storage yet
+  //// the second went to fetch kv once
+  //sentRequests=3;
+  //if (!monitorMonth) {
+  //if (log_verbose) {   console.log("KV_read_2_generate_monitor_month")  }
+  //  const lastMonitorMonth: MonitorMonth = await getKVMonitors( namespace, lastmonthame)
+  //// the third went to fetch kv again
+  //sentRequests=4;
+  //  monitorMonth = {
+  //    lastCheck: now,
+  //    operational: lastMonitorMonth ? lastMonitorMonth.operational : {},
+  //    checks: {}
+  //    //incidents: {},
+  //  }
+  //}
+  // do not use KV , fill it from postgresql
+  let monitorMonth: MonitorMonth = {
+    lastCheck: now,
+    operational: {},
+    checks: {}
+    //incidents: {},
+  }
+  //console.log("init_1_getObj")
+  if (!monitorMonth.checks[checkDay]) {
+    monitorMonth.checks[checkDay] = {
+      summary: {},      res: [],      incidents: [],
+  } }
+  if (!monitorMonth.lastFetched) {
+    monitorMonth.lastFetched={}
+  }
+  //console.log("init_1_lastFetched")
+  //console.log(JSON.stringify(monitorMonth))
+  //const res: {
+  //  t: number
+  //  l: string
+  //  ms: {
+  //    [index: string]: number | null
+  //  }
+  //} = { t: now, l: checkLocation, ms: {} }
+  //console.log("init_1_data_prepared")
+ // let counter=1;
+  //let monCountDown = 0 ;
+  //let monCountOkay = 0 ;
+//  let monitorCount=Object.keys(config.monitors).length
+  //let cronSeconds=0
+  //let timediffcron=0
+  //console.log("init_1_vars_set")
+  if (!Object.hasOwn(monitorMonth, 'info')) {
+                        monitorMonth["info"]={}
+     }
+
+  if (log_verbose) {   console.log("init_1_monitors loaded") }
+  if (!Object.hasOwn(monitorMonth, "lastFetched")) {
+    monitorMonth.lastFetched={}
+  }
       //parse info from db
       let dbreclog=""
       if (resultsel.length > 0) {
