@@ -222,6 +222,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   } // end dorequest
   counter=counter+1
   } 
-  return JSON.stringify({"checkoutput": logline , "errlog": errline , "res": res ,"up": monCountOkay ,"down": monCountDown } ); 
+  let returnstr=JSON.stringify({"checkoutput": logline , "errlog": errline , "res": res ,"up": monCountOkay ,"down": monCountDown } )
+  console.log("sending :"+returnstr)
+  return returnstr; 
   }
 }

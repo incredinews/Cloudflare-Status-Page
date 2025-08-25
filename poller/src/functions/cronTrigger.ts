@@ -257,16 +257,23 @@ for (const monitor of config.monitors) {
   console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
   let checkoutput=subfetchres.checkoutput
+  if(checkoutput!="") {
+   console.log(checkoutput)
+  }
   try {
-      res=subfetchres.res
+      let res=subfetchres.res
   } catch (error) {
+        const res: {
+          t: number
+          l: string
+          ms: {
+            [index: string]: number | null
+          }
+        } = { t: now, l: "FAILED", ms: {} }
       console.error("RETURN_RES NOT PARSED")
   }
   monCountDown=subfetchres.down
   monCountOkay=subfetchres.up
-  if(checkoutput!="") {
-   console.log(checkoutput)
-  }
   if( mymonitors.length > 0 ) {
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
