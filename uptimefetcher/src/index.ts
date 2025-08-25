@@ -98,8 +98,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     } 
     thisbatch.push(monitor)
   }
-
-  return JSON.stringify({"mon": mymonitors,"log": logline , count: counter})
+  return JSON.stringify({"mon": mymonitors,"log": logline , count: counter , total: monitorCount, batches: batchcount  } )
   }
   async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
   //let monitorMonth: MonitorMonth =
