@@ -90,12 +90,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         logline=logline+'@CRLF@'+" | "+dbreclog
       }
       //const preset_debounce = config.debounce || 345 
-      let monitorCount=config.monitors.length
+     // let monitorCount=config.monitors.length
       console.log("Total monitors: "+monitorCount)
       let localnow=Date.now()
       let sentRequests=1;
       const defaultlastfetch=localnow-999999999
-      let counter=1;
+      //let counter=1;
       const preset_debounce = config.debounce || (  42 + ( Object.keys(config.monitors).length * 3 )  ) 
       //const minChecksPerRound=6
       let gomonitors=[]

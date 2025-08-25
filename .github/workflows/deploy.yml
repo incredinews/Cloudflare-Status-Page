@@ -82,6 +82,15 @@ jobs:
 #          wranglerVersion: "4.29.0"
           preCommands: |
             pwd;bash -c "npm install redis-on-workers || true;npm install pg || true;"
+            npx wrangler hyperdrive list |grep status-page || npx wrangler hyperdrive create status-page --connection-string="${DB_URL}" --caching-disabled true
+            npx wrangler hyperdrive list |grep status-page || exit 1
+            echo "[[hyperdrive]]" >> wrangler.toml
+            echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
+            echo "id = \"my_hyperdrive_id\"" >> wrangler.toml
+            echo '[[env.production.hyperdrive]]' >> wrangler.toml
+            echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
+            echo "id = \"my_hyperdrive_id\"" >> wrangler.toml
+            sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' -i  wrangler.json wrangler.jsonc wrangler.toml || true 
 #          postCommands: |
 #            bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
 #            yarn kv-gc
