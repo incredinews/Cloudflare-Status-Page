@@ -36,7 +36,7 @@ const minChecksPerRound=6
 
 //monitorMonth.checks[checkDay].summary
 
-let timediffglobal=now-monitorMonth.lastCheck
+//let timediffglobal=now-monitorMonth.lastCheck
   //console.log("selecting")
 let selectresjson=await env.UPTIMEFETCHER.selectMonitors(  pgtarget  ,log_verbose ,log_errors, checksPerRound , checksPerSubrequest )
 let selectres=JSON.parse(selectresjson)
