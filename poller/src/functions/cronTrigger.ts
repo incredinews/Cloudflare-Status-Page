@@ -192,18 +192,26 @@ let timediffglobal=now-monitorMonth.lastCheck
 
   let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), log_verbose ,log_errors, checksPerRound )
   let selectres=JSON.parse(selectresjson)
-  let mymonitors=selectres.mon
+  let mymonitorbatches=selectres.mon
   let counter=1
   console.log("sorted_and_ready: "+mymonitors.length.toString()+" / "+config.monitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
-  
+  if( mymonitorbatches.length > 0 ) {
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
-  let sendconfig=config
-  sendconfig.monitors=mymonitors
-  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+      const allpromises=[]
+      for (const mymonitors of mymonitorbatches) {        
+          let sendconfig=config
+          sendconfig.monitors=mymonitors
+          allpromises.push(env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount))
+      }
+      Promise.allSettled(allpromises).then((results) =>
+        results.forEach((result) => { 
+
+//  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
   //console.log(subfetchresjson)
-  let subfetchres=JSON.parse(subfetchresjson)
+  //let subfetchres=JSON.parse(subfetchresjson)
+  let subfetchres=JSON.parse(result)
   let checkoutput=subfetchres.checkoutput.replaceAll("@CRLF@",'\n')
 
   if(checkoutput!="") {
@@ -253,7 +261,6 @@ let timediffglobal=now-monitorMonth.lastCheck
   }
   monCountDown=subfetchres.down
   monCountOkay=subfetchres.up
-  if( mymonitors.length > 0 ) {
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
 
@@ -377,6 +384,11 @@ let timediffglobal=now-monitorMonth.lastCheck
     } catch (err) {
       console.log(err.stack)
     }
+
+             //console.log(result.status) 
+
+        } ),
+      );
   } else { console.log("no checks scheduled")}
   await client.end()
     //ctx.waitUntil(client.end());

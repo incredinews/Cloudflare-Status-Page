@@ -16,15 +16,24 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
   async selectMonitors( monitorMonth: MonitorMonth, myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checksPerRound: number ) { 
+
+  let cronStarted=Date.now()
   let logline=""
   let config = JSON.parse(myconfigjson)
+  let monitorCount=config.monitors.length
   let localnow=Date.now()
+  let sentRequests=1;
   const defaultlastfetch=localnow-999999999
   let counter=1;
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   const minChecksPerRound=6
-  let mymonitors= []
+  let gomonitors= []
+
   for (const monitor of config.monitors) {
+
+
+    let localnow=Date.now()
+    let cronSeconds=(localnow-cronStarted)/1000
   //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
   // }
   if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
@@ -50,9 +59,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   if(do_request) {
     let mymonitor=monitor
     mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
-    mymonitors.push(mymonitor)
+    gomonitors.push(mymonitor)
   } else {
-        console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+      //  console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
   }
     //  let lastping=monitorMonth.lastFetched[monitor.id]
     //  if ( newestmonitor == 0 )  {
@@ -75,7 +84,18 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   //console.log("init_2_monitors_filtered")
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
-  mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
+  gomonitors.sort((a, b) => a.lastFetched - b.lastFetched)
+  let mymonitors=[]
+  let batchcount=0
+  let thisbatch=[]
+  for (const monitor of gomonitors) {
+    if(thisbatch.length > checksPerRound ) { 
+      mymonitors.push(thisbatch)
+      thisbatch=[]
+      batchcount=batchcount+1
+    }
+  }env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+
   return JSON.stringify({"mon": mymonitors,"log": logline})
   }
   async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
