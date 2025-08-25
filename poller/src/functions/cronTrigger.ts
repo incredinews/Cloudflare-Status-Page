@@ -193,9 +193,9 @@ let timediffglobal=now-monitorMonth.lastCheck
   let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), log_verbose ,log_errors, checksPerRound )
   let selectres=JSON.parse(selectresjson)
   let mymonitors=selectres.mon
-
+  let counter=1
   console.log("sorted_and_ready: "+mymonitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
-  counter=1
+  
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
