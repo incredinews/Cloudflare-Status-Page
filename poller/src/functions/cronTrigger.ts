@@ -8,14 +8,14 @@ import {
   getKVMonitors,
   setKVMonitors,
 } from './helpers'
-import { env } from 'cloudflare:workers'
+//import { env } from 'cloudflare:workers'
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
 
 
 //export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
-export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context) {
+export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context , fetcher: Env) {
   let log_verbose=false
   let log_errors=true
   if(log_verbose) { console.log("cron_function_init "+trigger) }
@@ -252,7 +252,7 @@ for (const monitor of config.monitors) {
   counter=1
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
-  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),JSON.stringify(config), log_verbose,log_errors, checkDay)
+  let subfetchresjson=await fetcher.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),JSON.stringify(config), log_verbose,log_errors, checkDay)
   console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
   let checkoutput=subfetchres.checkoutput
