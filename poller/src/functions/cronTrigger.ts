@@ -201,7 +201,9 @@ let timediffglobal=now-monitorMonth.lastCheck
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
 //      const allpromises=[]
-      for (const mymonitors of mymonitorbatches) {        
+      for (const mymonitors of mymonitorbatches) {   
+        cronSeconds=(Date.now()-cronStarted) /1000 
+        if(cronSeconds<32)  {
           let sendconfig=config
           sendconfig.monitors=mymonitors
      //     allpromises.push(env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount))
@@ -387,6 +389,7 @@ let timediffglobal=now-monitorMonth.lastCheck
                           console.log(err.stack)
                         }
          // } else { console.log(JSON.stringify(thisres))  }
+          } // end if crontime
         } // end for mymonitors batches
   } else { console.log("no checks scheduled")}
   await client.end()
