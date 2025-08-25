@@ -19,6 +19,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 
   async selectMonitors( monitorMonth: MonitorMonth ,log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
+      let sentRequests=1;
+      let now = Date.now()
+      const cronStarted = now
       let cronStarted=Date.now()
       let logline=""
       //let config = JSON.parse(myconfigjson)
@@ -93,7 +96,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
      // let monitorCount=config.monitors.length
       console.log("Total monitors: "+monitorCount)
       let localnow=Date.now()
-      let sentRequests=1;
+      //let sentRequests=1;
       const defaultlastfetch=localnow-999999999
       //let counter=1;
       const preset_debounce = config.debounce || (  42 + ( Object.keys(config.monitors).length * 3 )  ) 
