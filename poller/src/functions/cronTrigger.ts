@@ -255,7 +255,7 @@ for (const monitor of config.monitors) {
   let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
   //console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
-  let checkoutput=subfetchres.checkoutput.replace("@CLRF@",'\n')
+  let checkoutput=subfetchres.checkoutput.replace("@CRLF@",'\n')
 
   if(checkoutput!="") {
    console.log(checkoutput)
