@@ -76,7 +76,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   
   //const allpings = youngestmonitors.concat(oldestmonitors);
   mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
-  return JSON.stringify("mon": mymonitors,"log": logline)
+  return JSON.stringify({"mon": mymonitors,"log": logline})
   }
   async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
   //let monitorMonth: MonitorMonth =
