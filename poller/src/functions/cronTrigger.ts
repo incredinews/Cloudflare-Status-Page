@@ -207,188 +207,188 @@ let timediffglobal=now-monitorMonth.lastCheck
       }
       Promise.allSettled(allpromises).then((results) =>
         results.forEach((result) => { 
+                    
+                                 //console.log(result.status) 
+                    
+                    //  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+                      //console.log(subfetchresjson)
+                      //let subfetchres=JSON.parse(subfetchresjson)
+                      let subfetchres=JSON.parse(result)
+                      let checkoutput=subfetchres.checkoutput.replaceAll("@CRLF@",'\n')
+                    
+                      if(checkoutput!="") {
+                       console.log(checkoutput)
+                      }
+                      const res: {
+                                t: number
+                                l: string
+                                ms: {
+                                  [index: string]: number | null
+                                }
+                              } = { t: now, l: "FAILED", ms: {} }
+                      try {
+                          res=subfetchres.res
+                      } catch (error) {
+                          console.error("RETURN_RES NOT PARSED ");console.error(error)
+                      }
+                      let parseline=""
+                      try {
+                    
+                        //   monitorMonth=subfetchres.fullObj
+                         //let FetchedMonitorMonth=subfetchres.fullObj
+                            parseline=parseline+"+incM"
+                         if (subfetchres.fullObj.checks[checkDay].incidents.length > 0) {
+                          monitorMonth.checks[checkDay].incidents=monitorMonth.checks[checkDay].incidents.concat(subfetchres.fullObj.checks[checkDay].incidents)
+                         }
+                         for (const fetchedmonid of subfetchres.monitors) { 
+                            parseline=parseline+"+op"
+                            monitorMonth.operational[fetchedmonid]=subfetchres.fullObj.operational[fetchedmonid]
+                            parseline=parseline+"+lf"
+                            monitorMonth.lastFetched[fetchedmonid]=subfetchres.fullObj.lastFetched[fetchedmonid]
+                            parseline=parseline+"+if"
+                            monitorMonth.info[fetchedmonid]=subfetchres.fullObj.info[fetchedmonid]
+                            //parseline=parseline+"+in"
+                            //if (subfetchres.fullObj.monitors[fetchedmonid].incidents.length > 0) { 
+                            //  monitorMonth.monitors[fetchedmonid].incidents=subfetchres.fullObj.monitors[fetchedmonid].incidents
+                            //}
+                            parseline=parseline+"+sum"
+                            if(!Object.hasOwn(monitorMonth.checks[checkDay].summary, subfetchres.loc)) {
+                              monitorMonth.checks[checkDay].summary[subfetchres.loc]={}
+                            }
+                            monitorMonth.checks[checkDay].summary[subfetchres.loc][fetchedmonid]=subfetchres.fullObj.checks[checkDay].summary[subfetchres.loc][fetchedmonid]
+                         }
+                         //monitorMonth.
+                      } catch (error) {
+                              console.error("RETURN_OBJ NOT PARSED |"+parseline);console.error(error)
+                      }
+                      monCountDown=subfetchres.down
+                      monCountOkay=subfetchres.up
+                      monitorMonth.checks[checkDay].res.push(res)
+                      monitorMonth.lastCheck = now
+                    
+                    //  if(monCountDown==monitorCount) { 
+                    //      monitorMonth.countText=' ( Down: '+monCountDown.toString()+' )'
+                    //  } else {
+                    //    if(monCountOkay==monitorCount) {
+                    //      monitorMonth.countText="   "
+                    //    } else { 
+                    //      monitorMonth.countText='( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )'
+                    //    }
+                    //
+                    //  }
+                    
+                      // Save monitorMonth to KV storage
+                      ////localnow=Date.now()
+                      ////timediffcron=localnow-cronStarted
+                      //cronSeconds=(Date.now()-cronStarted) /1000
+                      //console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
+                      //await setKVMonitors(namespace,monthname, monitorMonth)
+                       cronSeconds=(Date.now()-cronStarted) /1000
+                       console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
+                    
+                    	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
+                    	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
+                    	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
+                        //const values = ['aaaa', 'ababa']
+                      client = new Client(pgtarget);
+                      //const client = new Client(pgtarget)
+                      let pgres={}
+                      await client.connect();
+                      if (log_verbose) { console.log("DB connected") }
+                      client.on('error', (err) => {
+                              console.error('PG:something bad has happened:', err.stack)
+                            connect();
+                      })
+                      client.on('end', (client) => {
+                                  console.log('PG:2:disconnect')
+                                 //connect();
+                      })
+                    
+                        // async/await
+                        try {
+                    	    //const myfoo={"bar": "f000"}
+                          //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
+                          pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
+                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+                          pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
+                          pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
+                          pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
+                          pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
+                          pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                          //console.log(res.rows[0])
+                          //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+                          cronSeconds=(Date.now()-cronStarted) /1000
+                          console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+                        const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
+                      const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
+                      // second conflict should not happen since the worker runs only once
+                      const dbResInfo = await statusdb.batch([
+                        stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
+                        stmtinfo.bind("lastCheck",   JSON.stringify({"ts": monitorMonth.lastCheck })),
+                        stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
+                        stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational)),
+                        stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary)),
+                        stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
+                        stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
+                      ]);
+                      //console.log(JSON.stringify(dbResInfo))
+                      let donewritestring=""
+                      for (const d_one_res of dbResInfo ) {
+                        donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
+                      }
+                      //if (donewritestring!="") {
+                      //  console.log(donewritestring+" |")
+                      //}
+                      cronSeconds=(Date.now()-cronStarted) /1000
+                    
+                    
+                      console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s | "+donewritestring)
+                    //  const { dbresults } = await statusdb.prepare(
+                    //        'select * from info where id NOT like "summary_%"',
+                    //      ).raw();
+                    
+                    ///  const { dbresults } = await statusdb.prepare(
+                    ///        'select * from info ',
+                    ///      ).raw();
+                    ///  console.log(typeof(dbresults))
+                    ///  console.log("got:")
+                    ///  console.log(JSON.stringify(await dbresults))
+                    
+                    
+                    //////////////////////////////const someVariable = `"summary_%"`;
+                    //////////////////////////////const stmt = await statusdb.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
+                    //////////////////////////////const returnValue = await stmt.raw({columnNames:true});
+                    ////////////////////////////////console.log(JSON.stringify(Response.json(returnValue)));
+                    //////////////////////////////const responseobj=Response.json(returnValue)
+                    //////////////////////////////
+                    //////////////////////////////console.log(JSON.stringify(Response.json(responseobj).length));
+                    //////////////////////////////console.log(JSON.stringify(Response.json(responseobj)));
+                    
+                      //const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
+                      //const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
+                      //const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
+                      //const stmtgetall= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
+                      //const resgetall=await stmtgetall.run()
+                      //console.log("alldbres:")
+                      //console.log(JSON.stringify(resgetall))
+                      //console.log("alldbres..:")
+                      //let allresjson=Response.json(resgetall)
+                      //console.log(JSON.stringify(allresjson))
+                      //const dbres= await statusdb.batch([
+                      //  stmtgetinfo,
+                      //  stmtgetsumm,
+                      //  stmtgetconf
+                      //])
+                      //let resjson=Response.json(dbres)
+                      //console.log("dbres:")
+                      //console.log(JSON.stringify(resjson))
+                    //
+                        } catch (err) {
+                          console.log(err.stack)
+                        }
 
-//  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
-  //console.log(subfetchresjson)
-  //let subfetchres=JSON.parse(subfetchresjson)
-  let subfetchres=JSON.parse(result)
-  let checkoutput=subfetchres.checkoutput.replaceAll("@CRLF@",'\n')
-
-  if(checkoutput!="") {
-   console.log(checkoutput)
-  }
-  const res: {
-            t: number
-            l: string
-            ms: {
-              [index: string]: number | null
-            }
-          } = { t: now, l: "FAILED", ms: {} }
-  try {
-      res=subfetchres.res
-  } catch (error) {
-      console.error("RETURN_RES NOT PARSED ");console.error(error)
-  }
-  let parseline=""
-  try {
-
-    //   monitorMonth=subfetchres.fullObj
-     //let FetchedMonitorMonth=subfetchres.fullObj
-        parseline=parseline+"+incM"
-     if (subfetchres.fullObj.checks[checkDay].incidents.length > 0) {
-      monitorMonth.checks[checkDay].incidents=monitorMonth.checks[checkDay].incidents.concat(subfetchres.fullObj.checks[checkDay].incidents)
-     }
-     for (const fetchedmonid of subfetchres.monitors) { 
-        parseline=parseline+"+op"
-        monitorMonth.operational[fetchedmonid]=subfetchres.fullObj.operational[fetchedmonid]
-        parseline=parseline+"+lf"
-        monitorMonth.lastFetched[fetchedmonid]=subfetchres.fullObj.lastFetched[fetchedmonid]
-        parseline=parseline+"+if"
-        monitorMonth.info[fetchedmonid]=subfetchres.fullObj.info[fetchedmonid]
-        //parseline=parseline+"+in"
-        //if (subfetchres.fullObj.monitors[fetchedmonid].incidents.length > 0) { 
-        //  monitorMonth.monitors[fetchedmonid].incidents=subfetchres.fullObj.monitors[fetchedmonid].incidents
-        //}
-        parseline=parseline+"+sum"
-        if(!Object.hasOwn(monitorMonth.checks[checkDay].summary, subfetchres.loc)) {
-          monitorMonth.checks[checkDay].summary[subfetchres.loc]={}
-        }
-        monitorMonth.checks[checkDay].summary[subfetchres.loc][fetchedmonid]=subfetchres.fullObj.checks[checkDay].summary[subfetchres.loc][fetchedmonid]
-     }
-     //monitorMonth.
-  } catch (error) {
-          console.error("RETURN_OBJ NOT PARSED |"+parseline);console.error(error)
-  }
-  monCountDown=subfetchres.down
-  monCountOkay=subfetchres.up
-  monitorMonth.checks[checkDay].res.push(res)
-  monitorMonth.lastCheck = now
-
-//  if(monCountDown==monitorCount) { 
-//      monitorMonth.countText=' ( Down: '+monCountDown.toString()+' )'
-//  } else {
-//    if(monCountOkay==monitorCount) {
-//      monitorMonth.countText="   "
-//    } else { 
-//      monitorMonth.countText='( Down: '+monCountDown.toString()+' | Up : '+monCountOkay.toString()+' )'
-//    }
-//
-//  }
-
-  // Save monitorMonth to KV storage
-  ////localnow=Date.now()
-  ////timediffcron=localnow-cronStarted
-  //cronSeconds=(Date.now()-cronStarted) /1000
-  //console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
-  //await setKVMonitors(namespace,monthname, monitorMonth)
-   cronSeconds=(Date.now()-cronStarted) /1000
-   console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
-
-	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
-	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
-	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
-    //const values = ['aaaa', 'ababa']
-  client = new Client(pgtarget);
-  //const client = new Client(pgtarget)
-  let pgres={}
-  await client.connect();
-  if (log_verbose) { console.log("DB connected") }
-  client.on('error', (err) => {
-          console.error('PG:something bad has happened:', err.stack)
-        connect();
-  })
-  client.on('end', (client) => {
-              console.log('PG:2:disconnect')
-             //connect();
-  })
-
-    // async/await
-    try {
-	    //const myfoo={"bar": "f000"}
-      //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-      pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
-      pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
-      pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
-      pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
-      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-      pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-      pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
-      //console.log(res.rows[0])
-      //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-      cronSeconds=(Date.now()-cronStarted) /1000
-      console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-    const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
-  const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
-  // second conflict should not happen since the worker runs only once
-  const dbResInfo = await statusdb.batch([
-    stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
-    stmtinfo.bind("lastCheck",   JSON.stringify({"ts": monitorMonth.lastCheck })),
-    stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
-    stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational)),
-    stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary)),
-    stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
-    stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
-  ]);
-  //console.log(JSON.stringify(dbResInfo))
-  let donewritestring=""
-  for (const d_one_res of dbResInfo ) {
-    donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
-  }
-  //if (donewritestring!="") {
-  //  console.log(donewritestring+" |")
-  //}
-  cronSeconds=(Date.now()-cronStarted) /1000
-
-
-  console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s | "+donewritestring)
-//  const { dbresults } = await statusdb.prepare(
-//        'select * from info where id NOT like "summary_%"',
-//      ).raw();
-
-///  const { dbresults } = await statusdb.prepare(
-///        'select * from info ',
-///      ).raw();
-///  console.log(typeof(dbresults))
-///  console.log("got:")
-///  console.log(JSON.stringify(await dbresults))
-
-
-//////////////////////////////const someVariable = `"summary_%"`;
-//////////////////////////////const stmt = await statusdb.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
-//////////////////////////////const returnValue = await stmt.raw({columnNames:true});
-////////////////////////////////console.log(JSON.stringify(Response.json(returnValue)));
-//////////////////////////////const responseobj=Response.json(returnValue)
-//////////////////////////////
-//////////////////////////////console.log(JSON.stringify(Response.json(responseobj).length));
-//////////////////////////////console.log(JSON.stringify(Response.json(responseobj)));
-
-  //const stmtgetinfo= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
-  //const stmtgetsumm= await statusdb.prepare('select * from info where id="summary_'+checkDay+'"')
-  //const stmtgetconf= await statusdb.prepare('select * from config where profile=0')
-  //const stmtgetall= await statusdb.prepare('select * from info where id="operational" or id="lastCheck" or id="info"')
-  //const resgetall=await stmtgetall.run()
-  //console.log("alldbres:")
-  //console.log(JSON.stringify(resgetall))
-  //console.log("alldbres..:")
-  //let allresjson=Response.json(resgetall)
-  //console.log(JSON.stringify(allresjson))
-  //const dbres= await statusdb.batch([
-  //  stmtgetinfo,
-  //  stmtgetsumm,
-  //  stmtgetconf
-  //])
-  //let resjson=Response.json(dbres)
-  //console.log("dbres:")
-  //console.log(JSON.stringify(resjson))
-//
-    } catch (err) {
-      console.log(err.stack)
-    }
-
-             //console.log(result.status) 
-
-        } ),
-      );
+        } ), 
+      );  // end of promise all
   } else { console.log("no checks scheduled")}
   await client.end()
     //ctx.waitUntil(client.end());
