@@ -179,11 +179,11 @@ if (resultsel.length > 1) { // 2 queries
   }
 }
 if(dbreclog!="") {
-  console.log("mons:"+monitorCount.toString() +dbreclog)
+  console.log("mons:"+monitorCount.toString() +"/"+config.monitors.length.toString()+dbreclog)
 }
 //const preset_debounce = config.debounce || 345 
 const checksPerRound=12
-const preset_debounce = config.debounce || (  42 + ( monitorCount * 3 )  ) 
+const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 const minChecksPerRound=6
 
 //monitorMonth.checks[checkDay].summary
