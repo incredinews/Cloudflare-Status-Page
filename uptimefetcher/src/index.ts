@@ -43,14 +43,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         let cronSeconds=0
         let timediffcron=0
         //console.log("init_1_vars_set")
-        if (!Object.hasOwn(monitorMonth, 'info')) {
-                              monitorMonth["info"]={}
-           }
-      
-        if (log_verbose) {   console.log("init_1_monitors loaded") }
-        if (!Object.hasOwn(monitorMonth, "lastFetched")) {
-          monitorMonth.lastFetched={}
-        }
+
       let client
   client = new Client(pgtarget);
   //const client = new Client(pgtarget)
