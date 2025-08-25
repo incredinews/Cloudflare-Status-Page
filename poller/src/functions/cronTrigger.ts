@@ -272,9 +272,9 @@ for (const monitor of config.monitors) {
   } catch (error) {
       console.error("RETURN_RES NOT PARSED ");console.error(error)
   }
-  
+  let parseline=""
   try {
-    let parseline=""
+
     //   monitorMonth=subfetchres.fullObj
      //let FetchedMonitorMonth=subfetchres.fullObj
      if (subfetchres.fullObj.checks[checkDay].incidents.length > 0) {
