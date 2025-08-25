@@ -118,7 +118,7 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   
   //console.log("init_1_lastFetched")
   //console.log(JSON.stringify(monitorMonth))
-  const res: {
+  let res: {
     t: number
     l: string
     ms: {
