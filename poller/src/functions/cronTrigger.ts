@@ -192,7 +192,7 @@ let timediffglobal=now-monitorMonth.lastCheck
   //console.log("selecting")
   let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), log_verbose ,log_errors, checksPerRound )
   let selectres=JSON.parse(selectresjson)
-  console.log(JSON.stringify(selectres))
+  ///console.log(JSON.stringify(selectres))
   if(selectres.log!="") {
     console.log(selectres.log.replaceAll("@CRLF@",'\n'))
   }
