@@ -46,7 +46,7 @@ export default {
     let mynamespace=await env.KV_STATUS_PAGE
   // d1 approach FAILED
     let mydatabase=await env.STATUS_PAGE
-    let myfetcher=await env.UPTIMEFETCHER
+
     //const someVariable = `"summary_%"`;
     //const stmt = await env.STATUS_PAGE.prepare("SELECT * FROM info WHERE id NOT like ?").bind(someVariable);
     ////const returnValue = await stmt.raw({columnNames:true});
@@ -118,7 +118,7 @@ export default {
 //      console.log(err.stack)
 //    }
 
-    const cronres=await processCronTrigger(mynamespace,mydatabase,pgtarget,"sched",event,myfetcher)
+    const cronres=await processCronTrigger(mynamespace,mydatabase,pgtarget,"sched",event, env.UPTIMEFETCHER )
 
    // // Close the database connection, but don't block returning the response
     //ctx.waitUntil(client.end());
