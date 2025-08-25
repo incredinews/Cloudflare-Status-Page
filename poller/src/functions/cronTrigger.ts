@@ -194,7 +194,7 @@ let timediffglobal=now-monitorMonth.lastCheck
   let selectres=JSON.parse(selectresjson)
   let mymonitors=selectres.mon
 
-  console.log("sorted_and_ready: "+mymonitors.length+" | version: COMMITSHA | COMMITMSG | ")
+  console.log("sorted_and_ready: "+mymonitors.length.toString()+" | version: COMMITSHA | COMMITMSG | ")
   counter=1
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 

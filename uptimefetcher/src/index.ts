@@ -111,10 +111,15 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   } = { t: now, l: checkLocation, ms: {} }
   let checksPerRound=13
   for (const monitor of mymonitors) {
+
     monitorids.push(monitor.id)
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
     let localnow=Date.now()
+    const defaultlastfetch=localnow-999999999
+    if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
+    monitorMonth.lastFetched[monitor.id]=defaultlastfetch
+    }
     cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
     let displayname = monitor.name || monitor.id.toString();
