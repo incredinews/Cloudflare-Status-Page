@@ -15,7 +15,7 @@ function getDate(time: number) {
 
 
 //export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
-export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context , fetcher: Env) {
+export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context , myenv: Env) {
   let log_verbose=false
   let log_errors=true
   if(log_verbose) { console.log("cron_function_init "+trigger) }
@@ -248,11 +248,11 @@ for (const monitor of config.monitors) {
   //const allpings = youngestmonitors.concat(oldestmonitors);
 
   mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
-  console.log("sorted_and_ready")
+  console.log("sorted_and_ready | version: COMMITSHA")
   counter=1
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
-  let subfetchresjson=await fetcher.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),JSON.stringify(config), log_verbose,log_errors, checkDay)
+  let subfetchresjson=await myenv.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),JSON.stringify(config), log_verbose,log_errors, checkDay)
   console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
   let checkoutput=subfetchres.checkoutput

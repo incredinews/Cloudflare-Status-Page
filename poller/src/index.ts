@@ -118,7 +118,7 @@ export default {
 //      console.log(err.stack)
 //    }
 
-    const cronres=await processCronTrigger(mynamespace,mydatabase,pgtarget,"sched",event, env.UPTIMEFETCHER )
+    const cronres=await processCronTrigger(mynamespace,mydatabase,pgtarget,"sched",event, env)
 
    // // Close the database connection, but don't block returning the response
     //ctx.waitUntil(client.end());

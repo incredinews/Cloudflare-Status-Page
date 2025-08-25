@@ -171,6 +171,8 @@ jobs:
             sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' -i  wrangler.json wrangler.jsonc wrangler.toml || true 
             #echo "[env.production.d1_databases.bindings] = "
             npx wrangler d1 execute STATUS_PAGE --remote --file init.sql 
+            git log --pretty=format:'%h' -n 1 > commithash
+            sed 's/COMMITSHA/'$(cat commithash)'/g' -i src/index.ts || true
             echo deployed  
           postCommands: |
             bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
