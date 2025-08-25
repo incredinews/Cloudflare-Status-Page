@@ -387,8 +387,6 @@ let timediffglobal=now-monitorMonth.lastCheck
                         }
          // } else { console.log(JSON.stringify(thisres))  }
         } // end for mymonitors batches
-      }
-
   } else { console.log("no checks scheduled")}
   await client.end()
     //ctx.waitUntil(client.end());
