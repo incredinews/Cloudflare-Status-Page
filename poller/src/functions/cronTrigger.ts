@@ -252,7 +252,9 @@ for (const monitor of config.monitors) {
   counter=1
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
-  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),JSON.stringify(config), log_verbose,log_errors, checkDay)
+  let cfgstr=JSON.stringify(config)
+  console.log("sending")
+  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(mymonitors),cfgstr, log_verbose,log_errors, checkDay)
   console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
   let checkoutput=subfetchres.checkoutput

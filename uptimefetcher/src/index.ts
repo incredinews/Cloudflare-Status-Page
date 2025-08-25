@@ -21,7 +21,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let errline=""
   let monitorMonth: MonitorMonth = JSON.parse(monitorMonthjson)
   let mymonitors: MonitorMonth = JSON.parse(mymonitorsjson)
-  let myconfig: MonitorMonth = JSON.parse(myconfigjson)
+  let config: MonitorMonth = JSON.parse(myconfigjson)
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
   let monitorCount=config.monitors.length
