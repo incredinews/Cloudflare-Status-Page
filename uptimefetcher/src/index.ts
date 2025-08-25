@@ -62,6 +62,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     gomonitors.push(mymonitor)
   } else {
       //  console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+      logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `
   }
     //  let lastping=monitorMonth.lastFetched[monitor.id]
     //  if ( newestmonitor == 0 )  {
@@ -179,6 +180,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       let monitorStatusChanged=false
       let returnstatus=0
       //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`)
+      logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | last time: ${monitorMonth.lastCheck}`
       let monitorOperational=false
       let parserFound=false
       let requestTime = -2

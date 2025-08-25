@@ -193,7 +193,7 @@ let timediffglobal=now-monitorMonth.lastCheck
   let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), log_verbose ,log_errors, checksPerRound )
   let selectres=JSON.parse(selectresjson)
   if(selectres.log!="") {
-    console.log(selectres.log)
+    console.log(selectres.log.replaceAll("@CRLF@",'\n'))
   }
   //console.log(JSON.stringify(selectres))
   let mymonitorbatches=selectres.mon
