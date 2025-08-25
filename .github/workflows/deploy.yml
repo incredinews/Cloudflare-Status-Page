@@ -32,6 +32,7 @@ jobs:
         id: get-code-cachekey
         run: |
           bash -c "cd poller;ln -s ../.yarn"|| true
+          bash -c "cd uptimefetcher;ln -s ../.yarn"|| true
           sum=$((find poller types -type f  ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           sum=$((find poller types -type f  ;echo .yarnrc.yml ) |while read a ;do cat $a ;done|md5sum|cut -d" " -f1) 
           echo -n "codecachekey=$sum" >> $GITHUB_OUTPUT
@@ -92,7 +93,7 @@ jobs:
         with:
           workingDirectory: uptimefetcher
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          wranglerVersion: "4.32.0"
+          wranglerVersion: "4.29.0"
           preCommands: |
             pwd;bash -c "yarn add redis-on-workers || true;yarn add pg || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
 #          postCommands: |
@@ -108,7 +109,7 @@ jobs:
         with:
           workingDirectory: poller
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          wranglerVersion: "4.32.0"
+          wranglerVersion: "4.29.0"
           preCommands: |
             bash -c "yarn add redis-on-workers || true;yarn add pg || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
             #wrangler --help|grep kv
