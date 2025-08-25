@@ -179,12 +179,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       checknow=Date.now()
       timediffcron=checknow-cronStarted
       cronSeconds=timediffcron/1000
-      logline=logline+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | rqTime ${requestTime} |  crontime: ${cronSeconds} `
+      logline=logline+'@CRLF@'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | rqTime ${requestTime} |  crontime: ${cronSeconds} `
       // save new average ms
       monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].a = Math.round(ms / no)
       // back online
-       if (monitorStatusChanged) {
-         monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
+       if (monitorStatusChanged && monitorMonth.monitors[monitor.id].incidents.length >0 ) {
+           monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
        }
     }
 
@@ -224,7 +224,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     cronSeconds=timediffcron/1000
     //if(log_verbose) { 
       //console.log(` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `) 
-      logline=logline+'\n'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `
+      logline=logline+'@CRLF@'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} | NOT Checking ${displayname}  | lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} | crontime: ${cronSeconds} `
     //}
   } // end dorequest
   counter=counter+1

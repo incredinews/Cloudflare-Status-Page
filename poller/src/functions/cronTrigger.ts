@@ -258,7 +258,7 @@ for (const monitor of config.monitors) {
   let checkoutput=subfetchres.checkoutput
 
   if(checkoutput!="") {
-   console.log(checkoutput)
+   console.log(checkoutput.replace("@CLRF@",'\n'))
   }
   const res: {
             t: number
@@ -279,7 +279,7 @@ for (const monitor of config.monitors) {
      if (subfetchres.fullObj.checks[checkDay].incidents.length > 0) {
       monitorMonth.checks[checkDay].incidents=monitorMonth.checks[checkDay].incidents.concat(subfetchres.fullObj.checks[checkDay].incidents)
      }
-     for (const fetchedmonid in subfetchres.monitors) { 
+     for (const fetchedmonid of subfetchres.monitors) { 
         monitorMonth.operational[fetchedmonid]=subfetchres.fullObj.operational[fetchedmonid]
         monitorMonth.lastFetched[fetchedmonid]=subfetchres.fullObj.lastFetched[fetchedmonid]
         monitorMonth.info[fetchedmonid]=subfetchres.fullObj.info[fetchedmonid]
