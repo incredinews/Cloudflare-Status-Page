@@ -94,7 +94,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       mymonitors.push(thisbatch)
       thisbatch=[]
       batchcount=batchcount+1
-    }
+    } 
+    thisbatch.push(monitor)
   }
 
   return JSON.stringify({"mon": mymonitors,"log": logline , count: counter})
