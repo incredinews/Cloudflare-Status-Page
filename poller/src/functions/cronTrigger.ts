@@ -256,7 +256,11 @@ for (const monitor of config.monitors) {
   console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
   let checkoutput=subfetchres.checkoutput
-  let res=subfetchres.res
+  try {
+      res=subfetchres.res
+  } catch (error) {
+      console.error("RETURN_RES NOT PARSED")
+  }
 
   if(checkoutput!="") {
    console.log(checkoutput)
