@@ -245,7 +245,7 @@ let timediffglobal=now-monitorMonth.lastCheck
         if(!Object.hasOwn(monitorMonth.checks[checkDay].summary, subfetchres.loc)) {
           monitorMonth.checks[checkDay].summary[subfetchres.loc]={}
         }
-        monitorMonth.checks[checkDay].summary[subfetchres.loc][monitor.id]=subfetchres.fullObj.checks[checkDay].summary[subfetchres.loc][monitor.id]
+        monitorMonth.checks[checkDay].summary[subfetchres.loc][fetchedmonid]=subfetchres.fullObj.checks[checkDay].summary[subfetchres.loc][fetchedmonid]
      }
      //monitorMonth.
   } catch (error) {
