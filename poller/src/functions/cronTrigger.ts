@@ -260,16 +260,16 @@ for (const monitor of config.monitors) {
   if(checkoutput!="") {
    console.log(checkoutput)
   }
+  const res: {
+            t: number
+            l: string
+            ms: {
+              [index: string]: number | null
+            }
+          } = { t: now, l: "FAILED", ms: {} }
   try {
-      let res=subfetchres.res
+      res=subfetchres.res
   } catch (error) {
-        const res: {
-          t: number
-          l: string
-          ms: {
-            [index: string]: number | null
-          }
-        } = { t: now, l: "FAILED", ms: {} }
       console.error("RETURN_RES NOT PARSED ");console.error(error)
   }
   try {
