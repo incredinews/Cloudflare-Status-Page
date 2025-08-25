@@ -15,16 +15,79 @@ function getDate(time: number) {
 export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
-  async checkMonitors( monitorMonthjson: string,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
+  async selectMonitors( monitorMonth: MonitorMonth, myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checksPerRound: number ) { 
+  let config = JSON.parse(myconfigjson)
+  let localnow=Date.now()
+  const defaultlastfetch=localnow-999999999
+
+  const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
+  const minChecksPerRound=6
+  let mymonitors= []
+  for (const monitor of config.monitors) {
+  //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+  // }
+  if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
+    monitorMonth.lastFetched[monitor.id]=defaultlastfetch
+    }
+  let reasons="";
+  let displayname = monitor.name || monitor.id.toString();
+  let do_request=true
+  const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
+  const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
+  if( timesec < realdebounce  ) {
+    do_request=false;
+    reasons="+t"
+  } else { 
+    reasons="+T"
+    do_request=true
+  }
+  //subrequest limiter
+  //if(sentRequests > 42 ) {
+  //  reasons=reasons+"+LimR"
+  //  do_request=false
+  //} 
+  if(do_request) {
+    let mymonitor=monitor
+    mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
+    mymonitors.push(mymonitor)
+  } else {
+       // console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
+  }
+    //  let lastping=monitorMonth.lastFetched[monitor.id]
+    //  if ( newestmonitor == 0 )  {
+    //    newestmonitor=monitor.id
+    //  }
+    //  if ( oldestmonitor == 0 )  {
+    //    oldestmonitor=monitor.id
+    //  }
+    //  if (lastping>oldestmonitor ) {
+    //    oldestmonitor=monitor.id
+    //    oldestmonitors.push(monitor.id)
+    //  }
+    //  if (lastping<newestmonitor ) {
+    //    newestmonitor=monitor.id
+    //    youngestmonitors.unshift(monitor.id)
+    //  }
+  counter=counter+1
+  }
+
+  //console.log("init_2_monitors_filtered")
+  
+  //const allpings = youngestmonitors.concat(oldestmonitors);
+  mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
+  return JSON.stringify("mon": mymonitors,"log": loglines)
+  }
+  async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number) { 
+  //let monitorMonth: MonitorMonth =
   let monitorids = []
   let logline=""
   let errline=""
-  let monitorMonth: MonitorMonth = JSON.parse(monitorMonthjson)
+  //let monitorMonth: MonitorMonth = JSON.parse(monitorMonthjson)
   //let mymonitors: MonitorMonth = JSON.parse(mymonitorsjson)
   // the worker doesnt know all incidentes
   monitorMonth.checks[checkDay].incidents=[]
 
-  let config: MonitorMonth = JSON.parse(myconfigjson)
+  let config = JSON.parse(myconfigjson)
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
   //let monitorCount=config.monitors.length

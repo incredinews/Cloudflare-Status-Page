@@ -134,7 +134,6 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   if (!Object.hasOwn(monitorMonth, 'info')) {
                         monitorMonth["info"]={}
      }
-  let mymonitors= []
 
   if (log_verbose) {   console.log("init_1_monitors loaded") }
   if (!Object.hasOwn(monitorMonth, "lastFetched")) {
@@ -190,69 +189,18 @@ const minChecksPerRound=6
 //monitorMonth.checks[checkDay].summary
 
 let timediffglobal=now-monitorMonth.lastCheck
-let localnow=Date.now()
-const defaultlastfetch=localnow-999999999
-for (const monitor of config.monitors) {
-  //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-  // }
-  if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
-    monitorMonth.lastFetched[monitor.id]=defaultlastfetch
-    }
-  let reasons="";
-  let displayname = monitor.name || monitor.id.toString();
-  let do_request=true
-  const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
-  const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
-  if( timesec < realdebounce  ) {
-    do_request=false;
-    reasons="+t"
-  } else { 
-    reasons="+T"
-    do_request=true
-  }
-  //subrequest limiter
-  //if(sentRequests > 42 ) {
-  //  reasons=reasons+"+LimR"
-  //  do_request=false
-  //} 
-  if(do_request) {
-    let mymonitor=monitor
-    mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
-    mymonitors.push(mymonitor)
-  } else {
-       // console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
-  }
-    //  let lastping=monitorMonth.lastFetched[monitor.id]
-    //  if ( newestmonitor == 0 )  {
-    //    newestmonitor=monitor.id
-    //  }
-    //  if ( oldestmonitor == 0 )  {
-    //    oldestmonitor=monitor.id
-    //  }
-    //  if (lastping>oldestmonitor ) {
-    //    oldestmonitor=monitor.id
-    //    oldestmonitors.push(monitor.id)
-    //  }
-    //  if (lastping<newestmonitor ) {
-    //    newestmonitor=monitor.id
-    //    youngestmonitors.unshift(monitor.id)
-    //  }
-  counter=counter+1
-  }
 
-  //console.log("init_2_monitors_filtered")
-  
-  //const allpings = youngestmonitors.concat(oldestmonitors);
+  let selectresjson=await env.UPTIMEFETCHER.selectMonitors( monitorMonth ,  JSON.stringify(config), ,log_verbose ,log_errors, checksPerRound )
+  let selectres={}
 
-  mymonitors.sort((a, b) => a.lastFetched - b.lastFetched)
-  console.log("sorted_and_ready | version: COMMITSHA")
+  console.log("sorted_and_ready | version: COMMITSHA | COMMITMSG | ")
   counter=1
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
   let sendconfig=config
   sendconfig.monitors=mymonitors
-  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(JSON.stringify(monitorMonth),JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
   //console.log(subfetchresjson)
   let subfetchres=JSON.parse(subfetchresjson)
   let checkoutput=subfetchres.checkoutput.replace("@CRLF@",'\n')
