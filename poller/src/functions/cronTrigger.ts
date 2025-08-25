@@ -274,7 +274,8 @@ for (const monitor of config.monitors) {
   }
   
   try {
-  //   monitorMonth=subfetchres.fullObj
+    let parseline=""
+    //   monitorMonth=subfetchres.fullObj
      //let FetchedMonitorMonth=subfetchres.fullObj
      if (subfetchres.fullObj.checks[checkDay].incidents.length > 0) {
       monitorMonth.checks[checkDay].incidents=monitorMonth.checks[checkDay].incidents.concat(subfetchres.fullObj.checks[checkDay].incidents)
@@ -297,7 +298,6 @@ for (const monitor of config.monitors) {
   }
   monCountDown=subfetchres.down
   monCountOkay=subfetchres.up
-  
   if( mymonitors.length > 0 ) {
   monitorMonth.checks[checkDay].res.push(res)
   monitorMonth.lastCheck = now
