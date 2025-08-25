@@ -2,7 +2,7 @@ import { WorkerEntrypoint } from "cloudflare:workers";
 import { MonitorMonth } from './../../types/src/KvMonitors'
 import { createRedis } from "redis-on-workers";
 import { Client } from "pg";
-import config from '../../../config.json'
+import config from '../../config.json'
 
 import {
   getCheckLocation,
