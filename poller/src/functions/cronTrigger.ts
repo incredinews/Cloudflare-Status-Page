@@ -205,17 +205,16 @@ let timediffglobal=now-monitorMonth.lastCheck
           sendconfig.monitors=mymonitors
           allpromises.push(env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount))
       }
-      Promise.allSettled(allpromises).then((results) =>
-        results.forEach((result) => { 
-                    
-                                 //console.log(result.status) 
-                    
-                    //  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+      let promiseres=await Promise.allSettled(allpromises)
+      for (const thisres of promiseres) {  
+         if(thisres.status=="fulfilled") {
+                      // let result=thisres.value
+                      //console.log(result.status) 
+                      //  let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
                       //console.log(subfetchresjson)
                       //let subfetchres=JSON.parse(subfetchresjson)
-                      let subfetchres=JSON.parse(result)
+                      let subfetchres=JSON.parse(thisres.value)
                       let checkoutput=subfetchres.checkoutput.replaceAll("@CRLF@",'\n')
-                    
                       if(checkoutput!="") {
                        console.log(checkoutput)
                       }
@@ -386,9 +385,9 @@ let timediffglobal=now-monitorMonth.lastCheck
                         } catch (err) {
                           console.log(err.stack)
                         }
+         } else { console.log(JSON.stringify(thisres))  }
+      }
 
-        } ), 
-      );  // end of promise all
   } else { console.log("no checks scheduled")}
   await client.end()
     //ctx.waitUntil(client.end());
