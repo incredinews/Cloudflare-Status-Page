@@ -19,6 +19,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 
   async selectMonitors(log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
+      try {
+      let batchcount=0
       let sentRequests=1;
       let now = Date.now()
       const cronStarted = now
@@ -253,7 +255,6 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
           gomonitors.sort((a, b) => a.lastFetched - b.lastFetched)
           //console.log("start_batch")
           let mymonitors=[]
-          let batchcount=0
           let thisbatch=[]
           for (const monitor of gomonitors) {
           thisbatch.push(monitor)
@@ -263,7 +264,11 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
             batchcount=batchcount+1
             } 
           }
-  return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , count: counter , total: monitorCount, batches: batchcount  } )
+          return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , count: counter , total: monitorCount, batches: batchcount  } )
+      } catch (error) {
+        console.error(error)
+        return JSON.stringify({ "statusObject": monitorMonth ,"mon": {},"log": logline+"@CRLF@"+error , count: counter , total: monitorCount, batches: batchcount  } )
+      }
   }
 
   async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number ,checksPerRound: number) { 
