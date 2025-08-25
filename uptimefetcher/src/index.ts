@@ -42,7 +42,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         const monitorCount=config.monitors.length
         let cronSeconds=0
         let timediffcron=0
-        //console.log("init_1_vars_set")
+  if (log_verbose) { console.log("init_1_vars_set") }
 
       let client
   client = new Client(pgtarget);
@@ -64,7 +64,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       text: pginit,
     });
   await client.end()
-if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
+  if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
 	//console.log(JSON.stringify(resultsel[0].forw));
 
 // dump results per row
@@ -138,6 +138,7 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   if (!Object.hasOwn(monitorMonth, "lastFetched")) {
     monitorMonth.lastFetched={}
   }
+  if (log_verbose) {   console.log("init_1_parse_db_info") }
       //parse info from db
       let dbreclog=""
       if (resultsel.length > 0) {
@@ -159,7 +160,7 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
           }
         }
       }
-      
+  if (log_verbose) {   console.log("init_2_parse_db_sum") }
       //parse month summary from db
       if (resultsel.length > 1) { // 2 queries
         if(resultsel[1].rowCount>0) { 
