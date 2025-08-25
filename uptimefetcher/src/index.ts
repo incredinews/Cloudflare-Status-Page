@@ -41,7 +41,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       [index: string]: number | null
     }
   } = { t: now, l: checkLocation, ms: {} }
-  let sentRequests=0
   let checksPerRound=42
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
@@ -55,17 +54,14 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     //let nowstr=
     const timesec=((localnow-monitorMonth.lastFetched[monitor.id])/1000).toFixed(2)
 
-    let do_request = false;
+    let do_request = true;
     let reasons="";
     let checkResponse={};
     //checkResponse
     if( timesec < realdebounce  ) {
       do_request=false;
       reasons="+t"
-    } else { 
-      reasons="+T"
-      do_request=true
-    }
+    } 
     //subrequest limiter
     if(sentRequests > 3+checksPerRound ) {
       reasons=reasons+"+LimR"
