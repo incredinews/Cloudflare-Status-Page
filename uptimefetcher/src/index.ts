@@ -20,7 +20,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let config = JSON.parse(myconfigjson)
   let localnow=Date.now()
   const defaultlastfetch=localnow-999999999
-
+  let counter=1;
   const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
   const minChecksPerRound=6
   let mymonitors= []
