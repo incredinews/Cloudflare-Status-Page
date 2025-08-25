@@ -286,6 +286,9 @@ for (const monitor of config.monitors) {
         if (subfetchres.fullObj.monitors[fetchedmonid].incidents.length > 0) { 
           monitorMonth.monitors[fetchedmonid].incidents=subfetchres.fullObj.monitors[fetchedmonid].incidents
         }
+        if(!Object.hasOwn(monitorMonth.checks[checkDay].summary, subfetchres.loc)) {
+          monitorMonth.checks[checkDay].summary[subfetchres.loc]={}
+        }
         monitorMonth.checks[checkDay].summary[subfetchres.loc][monitor.id]=subfetchres.fullObj.checks[checkDay].summary[subfetchres.loc][monitor.id]
      }
      //monitorMonth.
