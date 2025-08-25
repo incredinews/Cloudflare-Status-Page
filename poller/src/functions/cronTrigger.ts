@@ -29,7 +29,8 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   //console.log("init_1_lastFetched")
   //console.log(JSON.stringify(monitorMonth))
 
-const checksPerRound=12
+const checksPerRound=42
+const checksPerSubrequest=42
 const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 const minChecksPerRound=6
 
@@ -37,7 +38,7 @@ const minChecksPerRound=6
 
 let timediffglobal=now-monitorMonth.lastCheck
   //console.log("selecting")
-let selectresjson=await env.UPTIMEFETCHER.selectMonitors(  pgtarget  ,log_verbose ,log_errors, checksPerRound )
+let selectresjson=await env.UPTIMEFETCHER.selectMonitors(  pgtarget  ,log_verbose ,log_errors, checksPerRound , checksPerSubrequest )
 let selectres=JSON.parse(selectresjson)
 ///console.log(JSON.stringify(selectres))
 if(selectres.log!="") {
@@ -69,7 +70,7 @@ if( mymonitorbatches.length > 0 ) {
      //    if(thisres.status=="fulfilled") {
                       // let result=thisres.value
                       //console.log(result.status) 
-                       let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount)
+                       let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount ,checksPerSubrequest)
                       //console.log(subfetchresjson)
                       let subfetchres=JSON.parse(subfetchresjson)
                       //let subfetchres=JSON.parse(thisres.value)
