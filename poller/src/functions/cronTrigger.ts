@@ -277,6 +277,7 @@ for (const monitor of config.monitors) {
 
     //   monitorMonth=subfetchres.fullObj
      //let FetchedMonitorMonth=subfetchres.fullObj
+        parseline=parseline+"+incM"
      if (subfetchres.fullObj.checks[checkDay].incidents.length > 0) {
       monitorMonth.checks[checkDay].incidents=monitorMonth.checks[checkDay].incidents.concat(subfetchres.fullObj.checks[checkDay].incidents)
      }
@@ -287,10 +288,10 @@ for (const monitor of config.monitors) {
         monitorMonth.lastFetched[fetchedmonid]=subfetchres.fullObj.lastFetched[fetchedmonid]
         parseline=parseline+"+if"
         monitorMonth.info[fetchedmonid]=subfetchres.fullObj.info[fetchedmonid]
-        parseline=parseline+"+in"
-        if (subfetchres.fullObj.monitors[fetchedmonid].incidents.length > 0) { 
-          monitorMonth.monitors[fetchedmonid].incidents=subfetchres.fullObj.monitors[fetchedmonid].incidents
-        }
+        //parseline=parseline+"+in"
+        //if (subfetchres.fullObj.monitors[fetchedmonid].incidents.length > 0) { 
+        //  monitorMonth.monitors[fetchedmonid].incidents=subfetchres.fullObj.monitors[fetchedmonid].incidents
+        //}
         parseline=parseline+"+sum"
         if(!Object.hasOwn(monitorMonth.checks[checkDay].summary, subfetchres.loc)) {
           monitorMonth.checks[checkDay].summary[subfetchres.loc]={}

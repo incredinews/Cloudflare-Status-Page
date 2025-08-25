@@ -205,17 +205,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 //      if (!monitorMonth.incidents.includes(monitor.id)) {
 //        monitorMonth.incidents[monitor.id]=[]
 //      }
-       if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
-                          monitorMonth.monitors[monitor.id].incidents=[]
-       }
-       monitorMonth.incidents[monitor.id].push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
-       console.log("get incident count")
-       const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
-       console.log("save incident month");
-       if(typeof monitorMonth.checks[checkDay].incidents === 'object' && !Array.isArray(monitorMonth.checks[checkDay].incidents) && monitorMonth.checks[checkDay].incidents !== null) {
-          monitorMonth.checks[checkDay].incidents=[]
-       }
-       monitorMonth.checks[checkDay].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText, monitor: monitor.id })
+       ///////////if (!Object.hasOwn(monitorMonth.monitors[monitor.id], 'incidents')) {
+       ///////////                   monitorMonth.monitors[monitor.id].incidents=[]
+       ///////////}
+       ///////////monitorMonth.incidents[monitor.id].push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText })
+       ///////////console.log("get incident count")
+       ///////////const incidentNumber = monitorMonth.monitors[monitor.id].incidents.length - 1
+       ///////////console.log("save incident month");
+       ///////////if(typeof monitorMonth.checks[checkDay].incidents === 'object' && !Array.isArray(monitorMonth.checks[checkDay].incidents) && monitorMonth.checks[checkDay].incidents !== null) {
+       ///////////   monitorMonth.checks[checkDay].incidents=[]
+       ///////////}
+       //////////monitorMonth.checks[checkDay].incidents.push({ start: now, status: checkResponse.status, statusText: checkResponse.statusText, monitor: monitor.id })
      }
   // end timediff
    } else { // dorequest
