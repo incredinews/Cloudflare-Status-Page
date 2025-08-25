@@ -1,4 +1,6 @@
+import { env } from 'cloudflare:workers'
 import { processCronTrigger } from './functions/cronTrigger.js'
+
 import type { addEventListener as AddEventListener } from '@cloudflare/workers-types'
 import { Client } from "pg";
 
@@ -31,6 +33,7 @@ const DEBUG = false;
 interface Env {
   STATUS_PAGE: D1Database;
   DB_URL: string;
+  UPTIMEFETCHER: Service<UptimeFetcher>;
 }
 
 export default {  

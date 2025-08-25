@@ -25,7 +25,19 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
   let monitorCount=config.monitors.length
-
+  const checkLocation = await getCheckLocation()
+  // the first went to fetch location
+  let sentRequests=1;
+  let now = Date.now()
+  const cronStarted = now
+  
+  const res: {
+    t: number
+    l: string
+    ms: {
+      [index: string]: number | null
+    }
+  } = { t: now, l: checkLocation, ms: {} }
   for (const monitor of mymonitors) {
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))

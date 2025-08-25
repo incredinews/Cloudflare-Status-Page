@@ -8,7 +8,7 @@ import {
   getKVMonitors,
   setKVMonitors,
 } from './helpers'
-
+import { env } from 'cloudflare:workers'
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
@@ -20,7 +20,7 @@ export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, p
   let log_errors=true
   if(log_verbose) { console.log("cron_function_init "+trigger) }
   // Get Worker PoP and save it to monitorMonthMetadata
-  const checkLocation = await getCheckLocation()
+//  const checkLocation = await getCheckLocation()
   // the first went to fetch location
   let sentRequests=1;
   let now = Date.now()
@@ -118,13 +118,13 @@ if(log_verbose) {  console.log("db_incoming: (len: " + resultsel.length +")" ) }
   
   //console.log("init_1_lastFetched")
   //console.log(JSON.stringify(monitorMonth))
-  let res: {
-    t: number
-    l: string
-    ms: {
-      [index: string]: number | null
-    }
-  } = { t: now, l: checkLocation, ms: {} }
+  //const res: {
+  //  t: number
+  //  l: string
+  //  ms: {
+  //    [index: string]: number | null
+  //  }
+  //} = { t: now, l: checkLocation, ms: {} }
   //console.log("init_1_data_prepared")
   let counter=1;
   let monCountDown = 0 ;
