@@ -3,12 +3,16 @@ import { MonitorMonth } from './../../types/src/KvMonitors'
 import { createRedis } from "redis-on-workers";
 import { Client } from "pg";
 import config from '../../config.json'
-
+interface Env {
+  STATUS_PAGE: D1Database;
+  DB_URL: string;
+}
 import {
   getCheckLocation,
   getKVMonitors,
   setKVMonitors,
 } from './../../poller/src/functions/helpers'
+import { env } from 'cloudflare:workers'
 
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
@@ -17,8 +21,23 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   // Currently, entrypoints without a named handler are not supported
   async fetch() { return new Response(null, {status: 404}); }
 
-  async selectMonitors(pgtarget: string, log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
+  async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
+      if(!env.DB_URL) { 
+	      	console.log("ERROR: no DB_URL")
+	      	return "FAIL";
+	      }
+	      //console.log(env.DB_URL)
+	      let pgtarget="NONE"
+          if(env.DB_URL!="HYPERDRIVE") {
+	      	console.log("pg://  native client  local_dev or hosted wrangler ")
+              //const client = new Client(env.DB_URL);
+	      	pgtarget=env.DB_URL
+	      } else {
+	      	console.log("pg:// hyperdrive client - cf edge")
+               //const client = new Client({connectionString: env.HYPERDRIVE.connectionString})
+	      	 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
+	      }
       try {
       let batchcount=0
       let sentRequests=1;
