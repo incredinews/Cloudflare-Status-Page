@@ -43,6 +43,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       let sentRequests=1;
       let now = Date.now()
       const cronStarted = now
+      const checkDay = getDate(now)
+      const lastDay = getDate(now - 86400000)
+      const monthname=lastDay.slice(0, 7)
+      const lastmonthame=checkDay.slice(0, 7)
       let logline=""
 
       //let config = JSON.parse(myconfigjson)
@@ -61,6 +65,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         const monitorCount=config.monitors.length
         let cronSeconds=0
         let timediffcron=0
+
   if (log_verbose) { console.log("init_1_vars_set") }
 
       let client
