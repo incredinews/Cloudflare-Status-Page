@@ -76,7 +76,7 @@ if( mymonitorbatches.length > 0 ) {
      //    if(thisres.status=="fulfilled") {
                       // let result=thisres.value
                       //console.log(result.status) 
-                       let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount ,checksPerSubrequest)
+                       let subfetchresjson=await env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , selectres.total ,checksPerSubrequest)
                       //console.log(subfetchresjson)
                       let subfetchres=JSON.parse(subfetchresjson)
                       //let subfetchres=JSON.parse(thisres.value)
