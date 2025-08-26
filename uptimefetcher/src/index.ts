@@ -229,18 +229,18 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           let do_request=true
           const timesec=(Date.now()-monitorMonth.lastFetched[monitor.id])/1000
           const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
-          if( timesec < realdebounce  ) {
+          if( (timesec+10) < realdebounce  ) {
             do_request=false;
             reasons="+t"
           } else { 
             reasons="+T"
             do_request=true
           }
-          //subrequest limiter
-          //if(sentRequests > 42 ) {
-          //  reasons=reasons+"+LimR"
-          //  do_request=false
-          //} 
+          subrequest limiter
+          if(sentRequests > 42 ) {
+            reasons=reasons+"+LimR"
+            do_request=false
+          } 
           if(do_request) {
             let mymonitor=monitor
             mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]

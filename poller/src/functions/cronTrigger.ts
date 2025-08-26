@@ -50,7 +50,7 @@ if(selectres.log!="") {
   console.log(selectres.log.replaceAll("@CRLF@","\n"))
 }
 if(selectres.err!="") {
-  console.log(selectres.log.replaceAll("@CRLF@","\n"))
+  console.log(selectres.err.replaceAll("@CRLF@","\n"))
 }
 //console.log(JSON.stringify(selectres.mon))
 let monitorMonth: MonitorMonth = selectres.statusObject
