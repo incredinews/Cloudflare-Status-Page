@@ -52,7 +52,7 @@ if(selectres.err!="") {
 let monitorMonth: MonitorMonth = selectres.statusObject
 let mymonitorbatches=selectres.mon
 let counter=1
-let cronSeconds=(localnow-cronStarted)/1000
+let cronSeconds=(Date.now()-cronStarted) /1000 
 console.log("sorted_and_ready: "+selectres.count.toString()+" / "+selectres.total.toString()+" batches: "+selectres.batches+" | version: COMMITSHA | COMMITMSG | ")
 
 if( mymonitorbatches.length > 0 ) {
