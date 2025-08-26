@@ -276,13 +276,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           let thisbatch=[]
           let mybatchsize=checksPerRound
           if(checksPerRound<11 ) { mybatchsize= 11 }
+          batchcount=1
           for (const monitor of gomonitors) {
-          thisbatch.push(monitor)
-          if(thisbatch.length > mybatchsize ) { 
-            mymonitors.push(thisbatch)
-            thisbatch=[]
-            batchcount=batchcount+1
-            } 
+            if(batchcount < 3) {
+              thisbatch.push(monitor)
+              if(thisbatch.length > mybatchsize ) { 
+                mymonitors.push(thisbatch)
+                thisbatch=[]
+                batchcount=batchcount+1
+                } 
+            }
+
           }
           return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , count: counter , total: monitorCount, batches: batchcount  } )
       } catch (error) {
