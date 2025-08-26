@@ -128,10 +128,10 @@ if( mymonitorbatches.length > 0 ) {
                       } catch (error) {
                               console.error("RETURN_OBJ NOT PARSED |"+parseline);console.error(error)
                       }
-                      monCountDown=subfetchres.down
-                      monCountOkay=subfetchres.up
+                      monCountDown=moncountDown+subfetchres.down
+                      monCountOkay=moncountOkay+subfetchres.up
                       monitorMonth.checks[checkDay].res.push(res)
-                      monitorMonth.lastCheck = now
+                      monitorMonth.lastCheck = Date.now()
                     
                     //  if(monCountDown==monitorCount) { 
                     //      monitorMonth.countText=' ( Down: '+monCountDown.toString()+' )'
