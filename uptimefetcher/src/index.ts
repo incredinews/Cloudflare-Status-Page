@@ -48,6 +48,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       const monthname=lastDay.slice(0, 7)
       const lastmonthame=checkDay.slice(0, 7)
       let logline=""
+      let errorline=""
 
       //let config = JSON.parse(myconfigjson)
       //let monitorCount=Object.keys(config.monitors).length
@@ -288,10 +289,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
             }
 
           }
-          return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , count: counter , total: monitorCount, batches: batchcount  } )
+          return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , "err": errorline, count: counter , total: monitorCount, batches: batchcount  } )
       } catch (error) {
         console.error(error)
-        return JSON.stringify({ "statusObject": monitorMonth ,"mon": {},"log": logline+"@CRLF@"+error , count: counter , total: monitorCount, batches: batchcount  } )
+        return JSON.stringify({ "statusObject": monitorMonth ,"mon": {},"log": logline+"@CRLF@"+error , "err": error , count: counter , total: monitorCount, batches: batchcount  } )
       }
   }
 
