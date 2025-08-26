@@ -46,7 +46,7 @@ const lastmonthame=checkDay.slice(0, 7)
 let selectresjson=await env.UPTIMEFETCHER.selectMonitors(  pgtarget  ,log_verbose ,log_errors, checksPerRound , checksPerSubrequest )
 let selectres=JSON.parse(selectresjson)
 ///console.log(JSON.stringify(selectres))
-if(selectres.log!="") {
+if(selectres.log!="" && log_verbose) {
   console.log(selectres.log.replaceAll("@CRLF@","\n"))
 }
 if(selectres.err!="") {
