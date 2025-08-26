@@ -92,6 +92,18 @@ jobs:
             echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
             echo "id = \"my_hyperdrive_id\"" >> wrangler.toml
             sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' -i  wrangler.json wrangler.jsonc wrangler.toml || true 
+            echo '[vars]' >> wrangler.toml
+            echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo '[env.staging.vars]' >> wrangler.toml
+            #echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            echo 'DB_URL = "HYPERDRIVE"' >> wrangler.toml
+            echo '[env.production.vars]' >> wrangler.toml
+            cat ../config.json|grep pgmethod|grep HYPERDRIVE || echo 'DB_URL = "'"${DB_URL}"'"' >> wrangler.toml
+            cat ../config.json|grep pgmethod|grep HYPERDRIVE && echo 'DB_URL = "HYPERDRIVE"'    >> wrangler.toml
+            echo '[[env.production.hyperdrive]]' >> wrangler.toml
+            echo "binding = \"HYPERDRIVE\"" >> wrangler.toml
+            echo "id = \"my_hyperdrive_id\"" >> wrangler.toml
+            sed 's/my_hyperdrive_id/'$(npx wrangler hyperdrive list |grep status-page |cut -d" " -f2)'/g' -i  wrangler.json wrangler.jsonc wrangler.toml || true 
 #          postCommands: |
 #            bash -c "yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
 #            yarn kv-gc
