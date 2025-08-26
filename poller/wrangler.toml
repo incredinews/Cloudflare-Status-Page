@@ -18,9 +18,9 @@ binding = "UPTIMEFETCHER"
 service = "uptimefetcher-production"
 entrypoint = "UptimeFetcher"
 
-[assets]
-directory = "./dist/"
-not_found_handling = "single-page-application"
-binding = "ASSETS"
-run_worker_first = [ "/api/*", "!/api/docs/*" ]
+#[assets]
+#directory = "./dist/"
+#not_found_handling = "single-page-application"
+#binding = "ASSETS"
+#run_worker_first = [ "/api/*", "!/api/docs/*" ]
 
