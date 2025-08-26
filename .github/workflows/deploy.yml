@@ -177,10 +177,10 @@ jobs:
           DB_URL: ${{ secrets.DB_URL }}
           YARN_IGNORE_NODE: 1
       - run: bash -c "yarn add pg || true;yarn add redis-on-workers || true; yarn config get enableImmutableInstalls ; echo '--install.no-lockfile true' >> $HOME/.yarnrc;export YARN_ENABLE_IMMUTABLE_INSTALLS=true; yarn install --refresh-lockfile"
-      - run: yarn install
-        working-directory: poller
-      - run: yarn build
-        working-directory: poller
+#      - run: yarn install
+#        working-directory: poller
+#      - run: yarn build
+#        working-directory: poller
       - name: Always Save yarn-cache
         id: cache-yarn-save
         if: always() && steps.cache-prime-numbers-restore.outputs.cache-hit != 'true'
