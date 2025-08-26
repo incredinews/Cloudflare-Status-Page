@@ -34,6 +34,10 @@ const checksPerRound=42
 const checksPerSubrequest=42
 const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 const minChecksPerRound=6
+const checkDay = getDate(now)
+const lastDay = getDate(now - 86400000)
+const monthname=lastDay.slice(0, 7)
+const lastmonthame=checkDay.slice(0, 7)
 
 //monitorMonth.checks[checkDay].summary
 
