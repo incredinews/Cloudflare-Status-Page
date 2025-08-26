@@ -66,7 +66,7 @@ if( mymonitorbatches.length > 0 ) {
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
 //      const allpromises=[]
-      for (const mymonitors of mymonitorbatches) {   
+for (const mymonitors of mymonitorbatches) {   
         cronSeconds=(Date.now()-cronStarted) /1000 
         if(cronSeconds<32)  {
           let sendconfig=config
@@ -257,7 +257,7 @@ if( mymonitorbatches.length > 0 ) {
           } // end if crontime
         } // end for mymonitors batches
   } else { console.log("no checks scheduled")}
-  await client.end()
+  if(client) { await client.end() }
     //ctx.waitUntil(client.end());
   cronSeconds=(Date.now()-cronStarted) /1000
   console.log("cron_done crontime:"+cronSeconds.toString()+" s")
