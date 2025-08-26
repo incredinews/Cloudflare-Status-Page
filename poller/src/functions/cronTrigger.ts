@@ -58,6 +58,8 @@ let mymonitorbatches=selectres.mon
 let counter=1
 let cronSeconds=(Date.now()-cronStarted) /1000 
 console.log("sorted_and_ready: "+selectres.count.toString()+" / "+selectres.total.toString()+" batches: "+selectres.batches+" | version: COMMITSHA | COMMITMSG | ")
+let monCountDown = 0 ;
+let monCountOkay = 0 ;
 
 if( mymonitorbatches.length > 0 ) {
   //let checkoutput=""
