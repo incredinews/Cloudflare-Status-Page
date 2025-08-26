@@ -79,7 +79,7 @@ if( mymonitorbatches.length > 0 ) {
                       if(checkoutput!="") {
                        console.log(checkoutput)
                       }
-                      const res: {
+                      let res: {
                                 t: number
                                 l: string
                                 ms: {
