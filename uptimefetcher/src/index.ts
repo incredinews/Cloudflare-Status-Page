@@ -236,7 +236,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
             reasons="+T"
             do_request=true
           }
-          subrequest limiter
+          //subrequest limiter
           if(gomonitors.length > 42 ) {
             reasons=reasons+"+LimR"
             do_request=false
