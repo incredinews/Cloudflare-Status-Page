@@ -62,6 +62,7 @@ let monCountDown = 0 ;
 let monCountOkay = 0 ;
 
 if( mymonitorbatches.length > 0 ) {
+let allres=[]
   //let checkoutput=""
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
@@ -172,11 +173,12 @@ for (const mymonitors of mymonitorbatches) {
                       })
                     
                         // async/await
+                        allres.push(res)
          // } else { console.log(JSON.stringify(thisres))  }
         } // end if crontime
 } // end for mymonitors batches
 
-                        try {
+                  try {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
@@ -185,7 +187,10 @@ for (const mymonitors of mymonitorbatches) {
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
                           pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
                           pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-                          pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                          //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                          for (const res of allres ) { 
+                            pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                          }
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
                           cronSeconds=(Date.now()-cronStarted) /1000
@@ -193,15 +198,19 @@ for (const mymonitors of mymonitorbatches) {
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
                       // second conflict should not happen since the worker runs only once
-                      const dbResInfo = await statusdb.batch([
+                      let donebatch=[
                         stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
                         stmtinfo.bind("lastCheck",   JSON.stringify({"ts": monitorMonth.lastCheck })),
                         stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
                         stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational)),
                         stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary)),
                         stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
-                        stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
-                      ]);
+                        //stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
+                      ]
+                      for (const res of allres ) { 
+                           donebatch.push(stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms)))
+                          }
+                      const dbResInfo = await statusdb.batch();
                       //console.log(JSON.stringify(dbResInfo))
                       let donewritestring=""
                       for (const d_one_res of dbResInfo ) {
