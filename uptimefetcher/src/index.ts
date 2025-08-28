@@ -78,7 +78,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
                           }
                           pingstring=pingstring+"+lc"
-                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({ "ts": monitorMonth.lastCheck , "lastUp": monitorMonth.lastUp , "lastDown": monitorMonth.lastDown, "failCount": monitorMonth.failCount }) ])
+                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({ "ts": monitorMonth.lastCheck }) ])
                           writecount=writecount+1
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
@@ -414,13 +414,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                 if(myrow["id"]=="lastCheck") {
                   monitorMonth["lastCheck"]=myrow["record"]["ts"] 
                   if(Object.hasOwn(myrow["record"],"lastUp")) {
-                      monitorMonth["lastUp"]=myrow["record"]["lastUp"] 
+                      monitorMonth["info"]["lastUp"]=myrow["record"]["lastUp"] 
                   }
                   if(Object.hasOwn(myrow["record"],"lastDown")) {
-                      monitorMonth["lastUp"]=myrow["record"]["lastDown"] 
+                      monitorMonth["info"]["lastUp"]=myrow["record"]["lastDown"] 
                   }
                   if(Object.hasOwn(myrow["record"],"failCount")) {
-                      monitorMonth["failCount"]=myrow["record"]["failCount"] 
+                      monitorMonth["info"]["failCount"]=myrow["record"]["failCount"] 
                   }
                 } else { 
                   if(myrow["id"]=="config") { 
@@ -594,16 +594,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   } = { t: now, l: checkLocation, ms: {} }
   //let checksPerRound=13
   
-  //monitorMonth["lastUp"]
-  if (!Object.hasOwn(monitorMonth, "lastUp")) {
-    monitorMonth["lastUp"]={}
-    }
-  if (!Object.hasOwn(monitorMonth, "lastDown")) {
-    monitorMonth["lastDown"]={}
-    }
-  if (!Object.hasOwn(monitorMonth, "failCount")) {
-    monitorMonth["failCount"]={}
-    }
+  //monitorMonth["info"]["lastUp"]
+  if (!Object.hasOwn(monitorMonth["info"], "lastUp"))    {
+    monitorMonth["info"]["lastUp"]={}
+  }
+  if (!Object.hasOwn(monitorMonth["info"], "lastDown"))  {
+    monitorMonth["info"]["lastDown"]={}
+  }
+  if (!Object.hasOwn(monitorMonth["info"], "failCount")) {
+    monitorMonth["info"]["failCount"]={}
+  }
   for (const monitor of mymonitors) {
 
     monitorids.push(monitor.id)
@@ -614,14 +614,14 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
       monitorMonth.lastFetched[monitor.id]=defaultlastfetch
     }
-    if (!Object.hasOwn(monitorMonth.lastUp  , monitor.id)) {
-      monitorMonth.lastUp[monitor.id]=null
+    if (!Object.hasOwn(monitorMonth["info"]["lastUp"]  , monitor.id)) {
+      monitorMonth["info"]["lastUp"][monitor.id]=null
     }
-    if (!Object.hasOwn(monitorMonth.lastDown, monitor.id)) {
-      monitorMonth.lastDown[monitor.id]=null
+    if (!Object.hasOwn(monitorMonth["info"]["lastDown"], monitor.id)) {
+      monitorMonth["info"]["lastDown"][monitor.id]=null
     }
-    if (!Object.hasOwn(monitorMonth.failCount, monitor.id)) {
-      monitorMonth.failCount[monitor.id]=0
+    if (!Object.hasOwn(monitorMonth["info"]["failCount"], monitor.id)) {
+      monitorMonth["info"]["failCount"][monitor.id]=0
     }
     cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
@@ -764,12 +764,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     res.ms[monitor.id] = monitorOperational ? requestTime : null
     if(monitorOperational) { 
       monCountOkay=monCountOkay+1 
-      monitorMonth["lastUp"][monitor.id]=checknow
-      monitorMonth["failCount"][monitor.id]=0
+      monitorMonth["info"]["lastUp"][monitor.id]=checknow
+      monitorMonth["info"]["failCount"][monitor.id]=0
     } else { 
       monCountDown=monCountDown+1
-      monitorMonth["lastDown"][monitor.id]=checknow
-      monitorMonth["failCount"][monitor.id]=monitorMonth["failCount"][monitor.id]+1
+      monitorMonth["info"]["lastDown"][monitor.id]=checknow
+      monitorMonth["info"]["failCount"][monitor.id]=monitorMonth["info"]["failCount"][monitor.id]+1
     }
     // go dark
     if(!monitorOperational ) {
