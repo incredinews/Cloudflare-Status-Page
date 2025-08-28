@@ -65,25 +65,29 @@ let monCountDown = 0 ;
 let monCountOkay = 0 ;
 let originfostr="{}"
 try {
-  originfostr=await md5(JSON.stringify(monitorMonth.info))
+  //originfostr=await md5(JSON.stringify(monitorMonth.info))
+  originfostr=JSON.stringify(monitorMonth.info)
 } catch (error) {
   console.log(err)
 }
 let origoperstr="{}"
 try {
-  origoperstr=await md5(JSON.stringify(monitorMonth.operational))
+  //origoperstr=await md5(JSON.stringify(monitorMonth.operational))
+  origoperstr=JSON.stringify(monitorMonth.operational)
 } catch (error) {
   console.log(err)
 }
 let origsummstr="{}"
 try {
-  origsummstr=await md5(JSON.stringify(monitorMonth.checks[checkDay].summary))
+  //origsummstr=await md5(JSON.stringify(monitorMonth.checks[checkDay].summary))
+  origsummstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
 } catch (error) {
   console.log(err)
 }
 let origlastfetchstr="{}"
 try {
-  origlastfetchstr=await md5(JSON.stringify(monitorMonth.lastFetched))
+  //origlastfetchstr=await md5(JSON.stringify(monitorMonth.lastFetched))
+  origlastfetchstr=JSON.stringify(monitorMonth.lastFetched)
 } catch (error) {
   console.log(err)
 }
@@ -189,7 +193,13 @@ for (const mymonitors of mymonitorbatches) {
                   try {
                        cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
-                      let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr,origlastfetchstr)
+                      //let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr,origlastfetchstr)
+                      let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string( checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), 
+                      (originfostr==JSON.stringify(monitorMonth.info)) ? true : false , 
+                      (origoperstr==JSON.stringify(monitorMonth.operational)) ? true : false , 
+                      (origsummstr==JSON.stringify(monitorMonth.checks[checkDay].summary)) ? true : false ,  
+                      (origlastfetchstr==JSON.stringify(monitorMonth.lastFetched)) ? true : false 
+                      )
                       let psres=JSON.parse(psresAsStr)
                       //end sql
                       console.log(psres.msg)

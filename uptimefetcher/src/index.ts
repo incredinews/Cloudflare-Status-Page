@@ -21,7 +21,7 @@ function getDate(time: number) {
 export default class UptimeFetcher extends WorkerEntrypoint {
   async fetch() { return new Response(null, {status: 404}); }   // Currently, entrypoints without a named handler are not supported
 
-  async postgrespush_statement( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string, origlastfetchstr: string) {
+  async postgrespush_statement( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: boolean,origoperationalstr: boolean, origsummstr: boolean,origlastfetchstr: boolean) {
     let monthname=checkDay.slice(0,7)
     let client
     let allres=JSON.parse(pingdata)
@@ -68,13 +68,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           let info_as_str=JSON.stringify(monitorMonth.info)
-                          if(await md5(info_as_str) != originfostr) {
+                          if(originfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
                           let operationalstr=JSON.stringify(monitorMonth.operational)
-                          if(await md5(operationalstr) != origoperationalstr) {
+                          if(origoperationalstr) {
                           pingstring=pingstring+"+o"
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
                           writecount=writecount+1
@@ -83,13 +83,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
                           writecount=writecount+1
                           let lastfetchstr=JSON.stringify(monitorMonth.lastFetched)
-                          if(await md5(lastfetchstr)!=origlastfetchstr) {
+                          if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
                           pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , lastfetchstr  ])
                           writecount=writecount+1
                           }
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
-                          if(origsummstr!=await md5(summstr)) {
+                          if(origsummstr) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
@@ -127,7 +127,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
   }
-  async postgrespush_string( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string,origlastfetchstr: string) {
+  async postgrespush_string( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string, originfostr: boolean,origoperationalstr: boolean, origsummstr: boolean,origlastfetchstr: boolean) {
     let monthname=checkDay.slice(0,7)
     let client
     let allres=JSON.parse(pingdata)
@@ -175,14 +175,14 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           let info_as_str=JSON.stringify(monitorMonth.info)
-                          if(await md5(info_as_str) != originfostr) {
+                          if(originfostr) {
                           //pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'info'").replace('$2',"'"+info_as_str+"'")
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
                           let operationalstr=JSON.stringify(monitorMonth.operational)
-                          if(await md5(operationalstr) != origoperationalstr) {
+                          if(origoperationalstr) {
                           pingstring=pingstring+"+o"
                           //pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'oper'").replace('$2',"'"+operationalstr+"'")
@@ -194,7 +194,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
 
                           let lastfetchstr=JSON.stringify(monitorMonth.lastFetched)
-                          if(await md5(lastfetchstr)!=origlastfetchstr) {
+                          if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
                           //pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify({"ts": monitorMonth.lastFetched })+"'")
@@ -202,7 +202,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
                           pingstring=pingstring+" @SEND@ "
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
-                          if(origsummstr!=await md5(summstr)) {
+                          if(origsummstr) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
