@@ -195,10 +195,10 @@ for (const mymonitors of mymonitorbatches) {
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
                       //let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr,origlastfetchstr)
                       let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string( checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), 
-                      (originfostr==JSON.stringify(monitorMonth.info)) ? true : false , 
-                      (origoperstr==JSON.stringify(monitorMonth.operational)) ? true : false , 
-                      (origsummstr==JSON.stringify(monitorMonth.checks[checkDay].summary)) ? true : false ,  
-                      (origlastfetchstr==JSON.stringify(monitorMonth.lastFetched)) ? true : false 
+                      (originfostr==JSON.stringify(monitorMonth.info))                     ? false : true , 
+                      (origoperstr==JSON.stringify(monitorMonth.operational))              ? false : true , 
+                      (origsummstr==JSON.stringify(monitorMonth.checks[checkDay].summary)) ? false : true ,  
+                      (origlastfetchstr==JSON.stringify(monitorMonth.lastFetched))         ? false : true 
                       )
                       console.log("pg_pushed")
                       let psres=JSON.parse(psresAsStr)
