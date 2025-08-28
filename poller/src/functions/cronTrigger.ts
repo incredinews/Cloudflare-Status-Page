@@ -198,6 +198,7 @@ for (const mymonitors of mymonitorbatches) {
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
                           cronSeconds=(Date.now()-cronStarted) /1000
                       console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
                       // second conflict should not happen since the worker runs only once
@@ -210,9 +211,12 @@ for (const mymonitors of mymonitorbatches) {
                         stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
                         //stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
                       ]
+                      console.log("d1_batched")
                       for (const res of allres ) { 
                            donebatch.push(stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms)))
                           }
+                      console.log("d1_batch_pushed_res")
+
                       const dbResInfo = await statusdb.batch();
                       //console.log(JSON.stringify(dbResInfo))
                       let donewritestring=""
