@@ -263,7 +263,9 @@ for (const mymonitors of mymonitorbatches) {
                     //
                         } catch (err) {
                           //console.log(err.stack)
-                          console.log(JSON.stringify(err))
+                          console.log("DB WRITE FAILED")
+                          console.log(err)
+                          console.log(JSON.stringify(err.stack))
                         }
 
 
