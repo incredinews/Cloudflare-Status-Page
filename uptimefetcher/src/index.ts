@@ -229,6 +229,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               rescount=rescount+1
                             }
                           }
+                          console.log("PG_QUERY: "+pgquery)
                           let pgmainres = await client.query({
                                 text: pgquery,
                               })
