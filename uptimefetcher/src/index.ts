@@ -21,12 +21,14 @@ function getDate(time: number) {
 export default class UptimeFetcher extends WorkerEntrypoint {
   async fetch() { return new Response(null, {status: 404}); }   // Currently, entrypoints without a named handler are not supported
 
-  async postgrespush_statement(checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string) {
+  async postgrespush_statement( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string) {
+    let monthname=checkDay.slice(0,7)
     let client
     let allres=JSON.parse(pingdata)
     let okay=true
     let writecount=0
     let pingstring=""
+    let strend=""
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
 	      	return "FAIL";
@@ -34,11 +36,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 	      //console.log(env.DB_URL)
 	      let pgtarget="NONE"
           if(env.DB_URL!="HYPERDRIVE") {
-	      	console.log("pg://  native client  local_dev or hosted wrangler ")
+	      	if(log_verbose) { console.log("pg://  native client  local_dev or hosted wrangler ") }
+          strend="| pg://  native client  local_dev or hosted wrangler "
               //const client = new Client(env.DB_URL);
 	      	pgtarget=env.DB_URL
 	      } else {
-	      	console.log("pg:// hyperdrive client - cf edge")
+	      	if(log_verbose) { console.log("pg:// hyperdrive client - cf edge") }
+          strend="| pg:// hyperdrive client - cf edge "
                //const client = new Client({connectionString: env.HYPERDRIVE.connectionString})
 	      	 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
 	      }
@@ -108,7 +112,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           } catch (psqlreserr) { 
                             console.log("PG_ERR" );console.log(psqlreserr)
                           }
-    return(JSON.stringify({"status": okay , "msg": pingstring }))
+    return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
   }
   async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
