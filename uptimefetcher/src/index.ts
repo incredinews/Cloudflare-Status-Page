@@ -185,7 +185,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
                           pingstring=pingstring+"+lc"
                           //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
-                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastCheck'").replace('$2',"'"+JSON.stringify({"ts": monitorMonth.lastCheck })+"'")
+                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastCheck'").replace('$2',"'"+JSON.stringify({ "ts": monitorMonth.lastCheck , "lastUp": monitorMonth.lastUp , "lastDown": monitorMonth.lastDown, "failCount": monitorMonth.failCount })+"'")
                           writecount=writecount+1
 
                           if(origlastfetchstr) {
