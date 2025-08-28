@@ -152,6 +152,16 @@ for (const mymonitors of mymonitorbatches) {
                       //console.log("KV_write_FIN crontime:"+cronSeconds.toString()+" s")
                       //await setKVMonitors(namespace,monthname, monitorMonth)
                        cronSeconds=(Date.now()-cronStarted) /1000
+                       console.log("00_batch_FIN crontime:"+cronSeconds.toString()+" s")
+                                        
+                        // async/await
+                        allres.push(res)
+         // } else { console.log(JSON.stringify(thisres))  }
+        } // end if crontime
+} // end for mymonitors batches
+
+                  try {
+                       cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
                     
                     	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
@@ -171,14 +181,7 @@ for (const mymonitors of mymonitorbatches) {
                                   console.log('PG:2:disconnect')
                                  //connect();
                       })
-                    
-                        // async/await
-                        allres.push(res)
-         // } else { console.log(JSON.stringify(thisres))  }
-        } // end if crontime
-} // end for mymonitors batches
 
-                  try {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
