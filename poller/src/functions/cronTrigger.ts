@@ -293,10 +293,6 @@ for (const mymonitors of mymonitorbatches) {
                           console.log(err)
                           console.log(JSON.stringify(err.stack))
                         }
-
-
-
-
   } else { console.log("no checks scheduled")}
   if(client) { await client.end() }
     //ctx.waitUntil(client.end());

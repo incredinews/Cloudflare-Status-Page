@@ -78,7 +78,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
                           }
                           pingstring=pingstring+"+lc"
-                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({ "ts": monitorMonth.lastCheck , "lastUp": monitorMonth.lastUp , "lastDown": monitorMonth.lastDown, "failCount": monitorMonth.failCount }) ])
                           writecount=writecount+1
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
@@ -414,6 +414,15 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                 dbreclog=dbreclog+"|found db record:"+myrow["id"]
                 if(myrow["id"]=="lastCheck") {
                   monitorMonth["lastCheck"]=myrow["record"]["ts"] 
+                  if(hasOwn(myrow["record"],"lastUp")) {
+                      monitorMonth["lastUp"]=myrow["record"]["lastUp"] 
+                  }
+                  if(hasOwn(myrow["record"],"lastDown")) {
+                      monitorMonth["lastUp"]=myrow["record"]["lastDown"] 
+                  }
+                  if(hasOwn(myrow["record"],"failCount")) {
+                      monitorMonth["failCount"]=myrow["record"]["failCount"] 
+                  }
                 } else { 
                   monitorMonth[myrow["id"]]=myrow["record"]
                 }
@@ -566,6 +575,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     }
   } = { t: now, l: checkLocation, ms: {} }
   //let checksPerRound=13
+  
+  //monitorMonth["lastUp"]
+  if (!Object.hasOwn(monitorMonth, "lastUp")) {
+    monitorMonth.["lastUp"]={}
+    }
+  if (!Object.hasOwn(monitorMonth, "lastDown")) {
+    monitorMonth.["lastDown"]={}
+    }
+  if (!Object.hasOwn(monitorMonth, "failCount")) {
+    monitorMonth.["failCount"]={}
+    }
   for (const monitor of mymonitors) {
 
     monitorids.push(monitor.id)
@@ -574,7 +594,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     let localnow=Date.now()
     const defaultlastfetch=localnow-999999999
     if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
-    monitorMonth.lastFetched[monitor.id]=defaultlastfetch
+      monitorMonth.lastFetched[monitor.id]=defaultlastfetch
+    }
+    if (!Object.hasOwn(monitorMonth.lastUp  , monitor.id)) {
+      monitorMonth.lastUp[monitor.id]=null
+    }
+    if (!Object.hasOwn(monitorMonth.lastDown, monitor.id)) {
+      monitorMonth.lastDown[monitor.id]=null
+    }
+    if (!Object.hasOwn(monitorMonth.failCount, monitor.id)) {
+      monitorMonth.failCount[monitor.id]=0
     }
     cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
@@ -591,7 +620,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     if( timesec < realdebounce  ) {
       do_request=false;
       reasons="+t"
-    } 
+    }
     //subrequest limiter
     if(sentRequests > 3+checksPerRound ) {
       reasons=reasons+"+LimR"
@@ -672,8 +701,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       try {
         const redis = createRedis(monitor.url);
         const value = await redis.sendRawOnce("PING","");
-        const redecoder = new TextDecoder();
         monitorOperational=true
+        const redecoder = new TextDecoder();
         console.log("redis_ping_resp:" + decoder.decode(value)); 
         returnstatus=200
         checkResponse.status=200
@@ -689,6 +718,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       sentRequests=sentRequests+1
       monitorMonth.lastFetched[monitor.id]=localnow
     }
+    checknow=Date.now()
     if (do_request && config.settings.collectResponseTimes && monitorOperational) {
       // make sure location exists in current checkDay
       if (!monitorMonth.checks[checkDay].summary[checkLocation])
@@ -701,8 +731,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         }
       // increment number of checks and sum of ms
       const no = ++monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].n
-      const ms = monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].ms += requestTime
-      checknow=Date.now()
+      const ms =   monitorMonth.checks[checkDay].summary[checkLocation][monitor.id].ms += requestTime
       timediffcron=checknow-cronStarted
       cronSeconds=timediffcron/1000
       logline=logline+'@CRLF@'+" | "+` [ ${counter} / ${monitorCount}  ] ( ${sentRequests} )  ${reasons} |     Checking ${displayname} checkd: ${timesec} s ago | rqTime ${requestTime} |  crontime: ${cronSeconds} `
@@ -715,7 +744,15 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     }
 
     res.ms[monitor.id] = monitorOperational ? requestTime : null
-    if(monitorOperational) { monCountOkay=monCountOkay+1 } else { monCountDown=monCountDown+1 }
+    if(monitorOperational) { 
+      monCountOkay=monCountOkay+1 
+      monitorMonth.lastUp[monitor.id]=checknow
+      monitorMonth.failCount=0
+    } else { 
+      monCountDown=monCountDown+1
+      monitorMonth.lastDown[monitor.id]=checknow
+      monitorMonth.failCount=monitorMonth.failCount+1
+    }
     // go dark
     if(!monitorOperational ) {
       if (monitorStatusChanged || log_errors ) {
