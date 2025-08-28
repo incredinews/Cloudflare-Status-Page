@@ -212,8 +212,9 @@ for (const mymonitors of mymonitorbatches) {
                           cronSeconds=(Date.now()-cronStarted) /1000
                           try {
                           console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring))
-
-                          } catch (psqlreserr) { console.log("PG_ERR" );console.log(psqlreserr)}
+                          } catch (psqlreserr) { 
+                            console.log("PG_ERR" );console.log(psqlreserr)
+                          }
 
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
