@@ -8,12 +8,14 @@ import {
   getCheckLocation,
   getKVMonitors,
   setKVMonitors,
+  md5
 } from './helpers'
 //import { env } from 'cloudflare:workers'
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
 import { env } from 'cloudflare:workers'
+
 
 //export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
 export async function processCronTrigger( namespace: KVNamespace, statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context ) {
@@ -62,19 +64,19 @@ let monCountDown = 0 ;
 let monCountOkay = 0 ;
 let originfostr="{}"
 try {
-  originfostr=JSON.stringify(monitorMonth.info)
+  originfostr=await md5(JSON.stringify(monitorMonth.info))
 } catch (error) {
   console.log(err)
 }
 let origoperstr="{}"
 try {
-  origoperstr=JSON.stringify(monitorMonth.operational)
+  origoperstr=await md5(JSON.stringify(monitorMonth.operational))
 } catch (error) {
   console.log(err)
 }
 let origsummstr="{}"
 try {
-  origsummstr=JSON.stringify(monitorMonth.checks[checkDay].summary
+  origsummstr=await md5(JSON.stringify(monitorMonth.checks[checkDay].summary))
 } catch (error) {
   console.log(err)
 }

@@ -11,6 +11,7 @@ import {
   getCheckLocation,
   getKVMonitors,
   setKVMonitors,
+  md5
 } from './../../poller/src/functions/helpers'
 import { env } from 'cloudflare:workers'
 
@@ -19,7 +20,7 @@ function getDate(time: number) {
 }
 export default class UptimeFetcher extends WorkerEntrypoint {
   async fetch() { return new Response(null, {status: 404}); }   // Currently, entrypoints without a named handler are not supported
-  
+
   async postgrespush_statement(log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string) {
     let allres=JSON.parse(pingdata)
     let okay=true
@@ -59,17 +60,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           let info_as_str=JSON.stringify(monitorMonth.info)
-                          if(info_as_str != originfostr) {
+                          if(await md5(info_as_str) != originfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
                           }
                           let operationalstr=JSON.stringify(monitorMonth.operational)
-                          if(operationalstr != origoperationalstr) {
+                          if(await md5(operationalstr) != origoperationalstr) {
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
                           }
                           pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
                           pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
-                          if(origsummstr!=summstr) {
+                          if(origsummstr!=await md5(summstr)) {
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
                           }
