@@ -82,7 +82,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
-                          pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])  ])
+                          pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])  
                           writecount=writecount+1
                           }
                           if(origsummstr) {
