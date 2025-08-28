@@ -183,7 +183,8 @@ for (const mymonitors of mymonitorbatches) {
                   try {
                        cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
-                      let psres=await env.UPTIMEFETCHER.postgrespush_statement(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr)
+                      let psresAsStr=await env.UPTIMEFETCHER.postgrespush_statement(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr)
+                      let psres=JSON.parse(psresAsStr)
                       //end sql
                       console.log(psres.msg)
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
