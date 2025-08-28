@@ -413,13 +413,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                 dbreclog=dbreclog+"|found db record:"+myrow["id"]
                 if(myrow["id"]=="lastCheck") {
                   monitorMonth["lastCheck"]=myrow["record"]["ts"] 
-                  if(hasOwn(myrow["record"],"lastUp")) {
+                  if(Object.hasOwn(myrow["record"],"lastUp")) {
                       monitorMonth["lastUp"]=myrow["record"]["lastUp"] 
                   }
-                  if(hasOwn(myrow["record"],"lastDown")) {
+                  if(Object.hasOwn(myrow["record"],"lastDown")) {
                       monitorMonth["lastUp"]=myrow["record"]["lastDown"] 
                   }
-                  if(hasOwn(myrow["record"],"failCount")) {
+                  if(Object.hasOwn(myrow["record"],"failCount")) {
                       monitorMonth["failCount"]=myrow["record"]["failCount"] 
                   }
                 } else { 
