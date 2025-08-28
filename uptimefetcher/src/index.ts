@@ -24,6 +24,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   async postgrespush_statement(log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string) {
     let allres=JSON.parse(pingdata)
     let okay=true
+    let pingstring=""
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
 	      	return "FAIL";
@@ -76,7 +77,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                           let rescount=1
-                          let pingstring=""
                           for (const res of allres ) { 
                             if(JSON.stringify(res.ms)!='{}') {
                               pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
