@@ -180,7 +180,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           if(origoperationalstr) {
                           pingstring=pingstring+"+o"
                           //pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
-                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'oper'").replace('$2',"'"+operationalstr+"'")
+                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'operational'").replace('$2',"'"+JSON.stringify(monitorMonth.operational)+"'")
                           writecount=writecount+1
                           }
                           pingstring=pingstring+"+lc"
