@@ -256,7 +256,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
     } catch (operationalerror) { 
       okay=false
-    return(JSON.stringify({"status": okay , "msg": "DB_MAIN_ERR: operationalerror+" | "+pingstring }))
+    return(JSON.stringify({"status": okay , "msg": "DB_MAIN_ERR: "+operationalerror+" | "+pingstring } ) )
     }
   }
   async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
