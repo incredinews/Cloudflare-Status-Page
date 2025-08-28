@@ -193,8 +193,10 @@ for (const mymonitors of mymonitorbatches) {
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                           let rescount=1
                           for (const res of allres ) { 
+                            if(JSON.stringify(res.ms)!='{}') {
                             pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                            rescount=rescount+1
+                            }
                           }
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
@@ -213,20 +215,20 @@ for (const mymonitors of mymonitorbatches) {
                         stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
                         //stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
                       ]
-                      console.log("d1_batched")
+                      //console.log("d1_batched")
                       for (const res of allres ) { 
                            donebatch.push(stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms)))
                           }
-                      console.log("d1_batch_pushed_res")
+                      //console.log("d1_batch_pushed_res")
                       const dbResInfo = await statusdb.batch(donebatch);
-                      console.log("d1_batch_finished")
+                      //console.log("d1_batch_finished")
 
                       //console.log(JSON.stringify(dbResInfo))
                       let donewritestring=""
                       for (const d_one_res of dbResInfo ) {
                         donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
                       }
-                      console.log("d1.string.generated")
+                      //console.log("d1.string.generated")
                       //if (donewritestring!="") {
                       //  console.log(donewritestring+" |")
                       //}
