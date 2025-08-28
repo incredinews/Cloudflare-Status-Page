@@ -577,13 +577,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   
   //monitorMonth["lastUp"]
   if (!Object.hasOwn(monitorMonth, "lastUp")) {
-    monitorMonth.["lastUp"]={}
+    monitorMonth["lastUp"]={}
     }
   if (!Object.hasOwn(monitorMonth, "lastDown")) {
-    monitorMonth.["lastDown"]={}
+    monitorMonth["lastDown"]={}
     }
   if (!Object.hasOwn(monitorMonth, "failCount")) {
-    monitorMonth.["failCount"]={}
+    monitorMonth["failCount"]={}
     }
   for (const monitor of mymonitors) {
 
