@@ -221,11 +221,11 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               writecount=writecount+1
                               //pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                               pgquery=pgquery+" ; "+pgstmtping.replace('$1',"'"+res.t.toString()+"'").replace('$2',"'"+checkDay+"'").replace('$3',"'"+res.l.toString()+"'").replace('$4',"'"+JSON.stringify(res.ms)+"'")
-                              try {
-                                 pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
-                              } catch (pstrerror) {
-                                 console.log("pingstringerr"+pstrerror)
-                              }
+                              ///try {
+                              ///   pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
+                              ///} catch (pstrerror) {
+                              ///   console.log("pingstringerr"+pstrerror)
+                              ///}
                               rescount=rescount+1
                             }
                           }
