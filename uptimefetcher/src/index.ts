@@ -67,13 +67,11 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-                          let info_as_str=JSON.stringify(monitorMonth.info)
                           if(originfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
-                          let operationalstr=JSON.stringify(monitorMonth.operational)
                           if(origoperationalstr) {
                           pingstring=pingstring+"+o"
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
@@ -82,13 +80,11 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pingstring=pingstring+"+lc"
                           pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
                           writecount=writecount+1
-                          let lastfetchstr=JSON.stringify(monitorMonth.lastFetched)
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
                           pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , lastfetchstr  ])
                           writecount=writecount+1
                           }
-                          let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(origsummstr) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
@@ -175,14 +171,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-                          let info_as_str=JSON.stringify(monitorMonth.info)
                           if(originfostr) {
                           //pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'info'").replace('$2',"'"+info_as_str+"'")
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
-                          let operationalstr=JSON.stringify(monitorMonth.operational)
                           if(origoperationalstr) {
                           pingstring=pingstring+"+o"
                           //pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
@@ -194,11 +188,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastCheck'").replace('$2',"'"+JSON.stringify({"ts": monitorMonth.lastCheck })+"'")
                           writecount=writecount+1
 
-                          let lastfetchstr=JSON.stringify(monitorMonth.lastFetched)
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
                           //pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
-                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify({"ts": monitorMonth.lastFetched })+"'")
+                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify(monitorMonth.lastFetched)+"'")
                           writecount=writecount+1
                           }
 
@@ -418,7 +411,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
             if(Object.hasOwn(myrow,"id")) {
               // console.log("hit :"+myrow["id"])
               if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
-              dbreclog=dbreclog+"|found db record:"+myrow["id"]
+                dbreclog=dbreclog+"|found db record:"+myrow["id"]
                 if(myrow["id"]=="lastCheck") {
                   monitorMonth["lastCheck"]=myrow["record"]["ts"] 
                 } else { 
