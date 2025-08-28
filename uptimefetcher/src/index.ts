@@ -25,7 +25,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     let client
     let allres=JSON.parse(pingdata)
     let okay=true
-    
+    let writecount=0
     let pingstring=""
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
@@ -65,22 +65,28 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           let info_as_str=JSON.stringify(monitorMonth.info)
                           if(await md5(info_as_str) != originfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
+                          writecount=writecount+1
                           }
                           let operationalstr=JSON.stringify(monitorMonth.operational)
                           if(await md5(operationalstr) != origoperationalstr) {
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
+                          writecount=writecount+1
                           }
                           pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+                          writecount=writecount+1
                           pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
+                          writecount=writecount+1
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(origsummstr!=await md5(summstr)) {
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
+                            writecount=writecount+2
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                           let rescount=1
                           for (const res of allres ) { 
                             if(JSON.stringify(res.ms)!='{}') {
+                              writecount=writecount+1
                               pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                               try {
                                  pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
@@ -96,7 +102,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           try {
                           //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                           for (const residx in pgres) {
-                            pingstring=pingstring+" | "+JSON.stringify(pgres["info"].rows[0])
+                            pingstring=pingstring+" |ops: "+writecount.toString()+" | "+JSON.stringify(pgres["info"].rows[0])
                           }
                           pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s |"+pingstring
                           } catch (psqlreserr) { 
