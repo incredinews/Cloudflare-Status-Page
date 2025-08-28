@@ -200,6 +200,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify({"ts": monitorMonth.lastFetched })+"'")
                           writecount=writecount+1
                           }
+                          pingstring=pingstring+" @SEND@ "
                           pgres["main"] = await client.query({
                                 text: pgquery,
                               })
