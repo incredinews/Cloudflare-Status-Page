@@ -201,7 +201,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
                           }
                           pingstring=pingstring+" @SEND@ "
-                          pgres["main"] = await client.query({
+                          let pgmainres = await client.query({
                                 text: pgquery,
                               })
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
@@ -234,6 +234,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           cronSeconds=(Date.now()-cronStarted) /1000
                           try {
                           //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
+                          for (const residx in pgmainres) {
+                            if(Object.hasOwn(pgmainres[residx],"rows")) {
+                                pingstring=pingstring+" |+p "+JSON.stringify(pgmainres[residx].rows[0])
+                            } else {
+                              pingstring=pingstring+" |+p "+JSON.stringify(pgmainres[residx])
+                            }
+                          }
                           for (const residx in pgres) {
                             if(Object.hasOwn(pgres[residx],"rows")) {
                                 pingstring=pingstring+" |+p "+JSON.stringify(pgres[residx].rows[0])
