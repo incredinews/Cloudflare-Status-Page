@@ -423,7 +423,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                       monitorMonth["failCount"]=myrow["record"]["failCount"] 
                   }
                 } else { 
-                  monitorMonth[myrow["id"]]=myrow["record"]
+                  if(myrow["id"]=="config") { 
+                    console.log("FOUND_CONFIG")
+                    console.log(typeof(myrow["record"]))
+                    console.log(JSON.stringify(myrow["record"]))
+                    //for (const importmon of myrow["id"] ) { 
+                    //  
+                    //}
+
+                  } else {
+                    monitorMonth[myrow["id"]]=myrow["record"]
+                  }
                 }
                 //monitorMonth.lastFetched=myrow.record
               }
