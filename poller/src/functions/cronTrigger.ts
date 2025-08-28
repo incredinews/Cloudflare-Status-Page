@@ -182,9 +182,9 @@ for (const mymonitors of mymonitorbatches) {
                   try {
                        cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
-                      let psres=await env.UPTIMEFETCHER.postgrespush_statement(log_verbose,log_errors , monitorMonth,JSON.stringify(allres),originfostr,origoperstr, origsummstr) {
+                      let psres=await env.UPTIMEFETCHER.postgrespush_statement(log_verbose,log_errors , monitorMonth,JSON.stringify(allres),originfostr,origoperstr, origsummstr)
                       //end sql
-
+                      console.log(psres.msg)
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
                       // second conflict should not happen since the worker runs only once
