@@ -229,11 +229,11 @@ for (const mymonitors of mymonitorbatches) {
                       for (const res of allres ) { 
                            let resAsStr=JSON.stringify(res.ms)
                            if(resAsStr!='{}') {
-                             donebatch.push(stmtrest.bind(res.t,checkDay, res.l, resAsStr ))
+                             dOneBatch.push(stmtrest.bind(res.t,checkDay, res.l, resAsStr ))
                            }
                           }
                       //console.log("d1_batch_pushed_res")
-                      const dbResInfo = await statusdb.batch(donebatch);
+                      const dbResInfo = await statusdb.batch(dOneBatch);
                       //console.log("d1_batch_finished")
 
                       //console.log(JSON.stringify(dbResInfo))
