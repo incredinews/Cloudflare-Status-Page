@@ -224,7 +224,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               rescount=rescount+1
                             }
                           }
-                          console.log("PG_QUERY: "+pgquery)
+                          if(log_verbose) { console.log("PG_QUERY: "+pgquery) }
                           pingstring=pingstring+" @SEND@ "
                           let pgmainres = await client.query({
                                 text: pgquery,
