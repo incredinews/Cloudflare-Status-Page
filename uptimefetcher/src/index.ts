@@ -201,18 +201,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
                           }
                           pingstring=pingstring+" @SEND@ "
-                          let pgmainres = await client.query({
-                                text: pgquery,
-                              })
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(origsummstr!=await md5(summstr)) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
-                            pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
+                            //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
+                            pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")
                             let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
-                            pgres["summd"] = await client.query({
-                                text: copystatement,
-                              })
+                            ///pgres["summd"] = await client.query({
+                            ///    text: copystatement,
+                            ///  })
+                            pgquery=pgquery+" ; "+copystatement
                             writecount=writecount+2
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
@@ -220,7 +219,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           for (const res of allres ) { 
                             if(JSON.stringify(res.ms)!='{}') {
                               writecount=writecount+1
-                              pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                              //pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                              pgquery=pgquery+" ; "+pgstmping.replace('$1',"'"+res.t.toString()+"'").replace('$2',"'"+checkDay+"'").replace('$3',"'"+res.l.toString()+"'").replace('$4',"'"+JSON.stringify(res.ms)+"'")
                               try {
                                  pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
                               } catch (pstrerror) {
@@ -229,6 +229,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               rescount=rescount+1
                             }
                           }
+                          let pgmainres = await client.query({
+                                text: pgquery,
+                              })
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
                           cronSeconds=(Date.now()-cronStarted) /1000
@@ -236,16 +239,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                           for (const residx in pgmainres) {
                             if(Object.hasOwn(pgmainres[residx],"rows")) {
-                                pingstring=pingstring+" |+p "+JSON.stringify(pgmainres[residx].rows[0])
+                                pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx].rows[0])
                             } else {
-                              pingstring=pingstring+" |+p "+JSON.stringify(pgmainres[residx])
+                              pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx])
                             }
                           }
                           for (const residx in pgres) {
                             if(Object.hasOwn(pgres[residx],"rows")) {
-                                pingstring=pingstring+" |+p "+JSON.stringify(pgres[residx].rows[0])
+                                pingstring=pingstring+" |R: "+JSON.stringify(pgres[residx].rows[0])
                             } else {
-                              pingstring=pingstring+" |+p "+JSON.stringify(pgres[residx])
+                              pingstring=pingstring+" |R: "+JSON.stringify(pgres[residx])
                             }
                           }
                           pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
