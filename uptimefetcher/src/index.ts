@@ -79,13 +79,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
                           writecount=writecount+1
                           }
+                          pingstring=pingstring+"+lc"
                           pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
                           writecount=writecount+1
+                          pingstring=pingstring+"+lf"
                           pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
                           writecount=writecount+1
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(origsummstr!=await md5(summstr)) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
+                            pingstring=pingstring+"+s"
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
                             let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
                             pgres["summd"] = await client.query({
@@ -113,7 +116,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           try {
                           //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                           for (const residx in pgres) {
-                            pingstring=pingstring+" | "+JSON.stringify(pgres[residx].rows[0])
+                            pingstring=pingstring+" |+p "+JSON.stringify(pgres[residx].rows[0])
                           }
                           pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
                           } catch (psqlreserr) { 
