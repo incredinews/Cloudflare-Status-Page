@@ -755,12 +755,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     res.ms[monitor.id] = monitorOperational ? requestTime : null
     if(monitorOperational) { 
       monCountOkay=monCountOkay+1 
-      monitorMonth.lastUp[monitor.id]=checknow
-      monitorMonth.failCount=0
+      monitorMonth["lastUp"][monitor.id]=checknow
+      monitorMonth["failCount"][monitor.id]=0
     } else { 
       monCountDown=monCountDown+1
-      monitorMonth.lastDown[monitor.id]=checknow
-      monitorMonth.failCount=monitorMonth.failCount+1
+      monitorMonth["lastDown"][monitor.id]=checknow
+      monitorMonth["failCount"][monitor.id]=monitorMonth["failCount"][monitor.id]+1
     }
     // go dark
     if(!monitorOperational ) {

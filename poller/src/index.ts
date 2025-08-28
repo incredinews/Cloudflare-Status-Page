@@ -38,7 +38,6 @@ interface Env {
 
 export default {  
   async scheduled(event, env, ctx) {
-    console.log("sched_handler_init")
     //ctx.waitUntil(  (addEventListener as typeof AddEventListener)('scheduled', (event) => {
     //  console.log("fetch_hander_prcoc")
     //  event.waitUntil(processCronTrigger(event))
@@ -84,16 +83,22 @@ export default {
 		return "FAIL";
 	}
 	//console.log(env.DB_URL)
+  let prelog=""
 	let pgtarget="NONE"
     if(env.DB_URL!="HYPERDRIVE") {
-		console.log("pg://  native client  local_dev or hosted wrangler ")
+		//console.log("pg://  native client  local_dev or hosted wrangler ")
+    prelog="pg://  native client  local_dev or hosted wrangler "
         //const client = new Client(env.DB_URL);
 		pgtarget=env.DB_URL
 	} else {
-		console.log("pg:// hyperdrive client - cf edge")
+		//console.log("pg:// hyperdrive client - cf edge")
+    prelog="pg:// hyperdrive client - cf edge"
+
          //const client = new Client({connectionString: env.HYPERDRIVE.connectionString})
 		 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
 	}
+    console.log("sched_handler_init | "+prelog )
+
 	//console.log(pgtarget)
 //	const client = new Client(pgtarget)
 //    await client.connect();
