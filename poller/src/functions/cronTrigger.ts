@@ -33,7 +33,7 @@ export async function processCronTrigger( namespace: KVNamespace, statusdb: Env,
   //console.log(JSON.stringify(monitorMonth))
 let client: Client
 const checksPerRound=42
-const checksPerSubrequest=42
+const checksPerSubrequest=13
 const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 //const minChecksPerRound=6
 const checkDay = getDate(now)
@@ -193,14 +193,18 @@ for (const mymonitors of mymonitorbatches) {
                   try {
                        cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
+                      let infochanged=(originfostr==JSON.stringify(monitorMonth.info))                     ? false : true
+                      let operchanged=(origoperstr==JSON.stringify(monitorMonth.operational))              ? false : true 
+                      let summchanged=(origsummstr==JSON.stringify(monitorMonth.checks[checkDay].summary)) ? false : true
+                      let ftchchanged=(origlastfetchstr==JSON.stringify(monitorMonth.lastFetched))         ? false : true
                       //let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr,origlastfetchstr)
                       let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string( checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), 
-                      (originfostr==JSON.stringify(monitorMonth.info))                     ? false : true , 
-                      (origoperstr==JSON.stringify(monitorMonth.operational))              ? false : true , 
-                      (origsummstr==JSON.stringify(monitorMonth.checks[checkDay].summary)) ? false : true ,  
-                      (origlastfetchstr==JSON.stringify(monitorMonth.lastFetched))         ? false : true 
+                      infochanged , 
+                      operchanged, 
+                      summchanged ,  
+                      ftchchanged
                       )
-                      console.log("pg_pushed")
+                      if (log_verbose) { console.log("pg_pushed") }
                       let psres=JSON.parse(psresAsStr)
 
                       //end sql
@@ -208,18 +212,25 @@ for (const mymonitors of mymonitorbatches) {
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
                       // second conflict should not happen since the worker runs only once
-                      let donebatch=[
-                        stmtinfo.bind("info",        JSON.stringify(monitorMonth.info)),
-                        stmtinfo.bind("lastCheck",   JSON.stringify({"ts": monitorMonth.lastCheck })),
-                        stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched)),
-                        stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational)),
-                        stmtinfo.bind("summary_"+checkDay, JSON.stringify(monitorMonth.checks[checkDay].summary)),
-                        stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
-                        //stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
+                      let dOneBatch=[ 
+                        stmtinfo.bind("lastCheck",   JSON.stringify({"ts": monitorMonth.lastCheck })) ,
+
+
                       ]
+                      if(infochanged) {  dOneBatch.push( stmtinfo.bind("info",        JSON.stringify(monitorMonth.info))                                )  }
+                      if(summchanged) {  dOneBatch.push( stmtinfo.bind("summary_"+checkDay,  JSON.stringify(monitorMonth.checks[checkDay].summary))     )  }
+                      if(summchanged) {  dOneBatch.push( stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary))     )  }
+                      if(ftchchanged) {  dOneBatch.push( stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched))                         )  }
+                      if(operchanged) {  dOneBatch.push( stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational))                         )  }
+                      
+                        //stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
+                      
                       //console.log("d1_batched")
                       for (const res of allres ) { 
-                           donebatch.push(stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms)))
+                           let resAsStr=JSON.stringify(res.ms)
+                           if(resAsStr!='{}') {
+                             donebatch.push(stmtrest.bind(res.t,checkDay, res.l, resAsStr ))
+                           }
                           }
                       //console.log("d1_batch_pushed_res")
                       const dbResInfo = await statusdb.batch(donebatch);
