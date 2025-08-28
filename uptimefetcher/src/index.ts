@@ -70,10 +70,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           let info_as_str=JSON.stringify(monitorMonth.info)
                           if(await md5(info_as_str) != originfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
+                          pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
                           let operationalstr=JSON.stringify(monitorMonth.operational)
                           if(await md5(operationalstr) != origoperationalstr) {
+                          pingstring=pingstring+"+o"
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
                           writecount=writecount+1
                           }
