@@ -200,6 +200,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify({"ts": monitorMonth.lastFetched })+"'")
                           writecount=writecount+1
                           }
+                          pgres["main"] = await client.query({
+                                text: pgquery,
+                              })
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(origsummstr!=await md5(summstr)) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
