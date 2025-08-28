@@ -68,13 +68,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           if(originfostr) {
-                          pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
+                          pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)   ])
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
                           if(origoperationalstr) {
                           pingstring=pingstring+"+o"
-                          pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
+                          pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)   ]) 
                           writecount=writecount+1
                           }
                           pingstring=pingstring+"+lc"
@@ -82,7 +82,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
-                          pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , lastfetchstr  ])
+                          pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])  ])
                           writecount=writecount+1
                           }
                           if(origsummstr) {
