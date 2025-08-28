@@ -29,6 +29,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     let writecount=0
     let pingstring=""
     let strend=""
+    let cronSeconds=(Date.now()-cronStarted) /1000
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
 	      	return "FAIL";
