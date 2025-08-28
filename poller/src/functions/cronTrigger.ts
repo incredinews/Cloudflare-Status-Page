@@ -172,6 +172,10 @@ for (const mymonitors of mymonitorbatches) {
                       })
                     
                         // async/await
+         // } else { console.log(JSON.stringify(thisres))  }
+        } // end if crontime
+} // end for mymonitors batches
+
                         try {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
@@ -185,8 +189,8 @@ for (const mymonitors of mymonitorbatches) {
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
                           cronSeconds=(Date.now()-cronStarted) /1000
-                          console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-                        const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
+                      console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+                      const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
                       // second conflict should not happen since the worker runs only once
                       const dbResInfo = await statusdb.batch([
@@ -207,8 +211,6 @@ for (const mymonitors of mymonitorbatches) {
                       //  console.log(donewritestring+" |")
                       //}
                       cronSeconds=(Date.now()-cronStarted) /1000
-                    
-                    
                       console.log("D1_write_FIN crontime:"+cronSeconds.toString()+" s | "+donewritestring)
                     //  const { dbresults } = await statusdb.prepare(
                     //        'select * from info where id NOT like "summary_%"',
@@ -251,11 +253,13 @@ for (const mymonitors of mymonitorbatches) {
                       //console.log(JSON.stringify(resjson))
                     //
                         } catch (err) {
-                          console.log(err.stack)
+                          //console.log(err.stack)
+                          console.log(JSON.stringify(err))
                         }
-         // } else { console.log(JSON.stringify(thisres))  }
-          } // end if crontime
-        } // end for mymonitors batches
+
+
+
+
   } else { console.log("no checks scheduled")}
   if(client) { await client.end() }
     //ctx.waitUntil(client.end());
