@@ -81,6 +81,12 @@ try {
 } catch (error) {
   console.log(err)
 }
+let origlastfetchstr="{}"
+try {
+  origlastfetchstr=await md5(JSON.stringify(monitorMonth.lastFetched))
+} catch (error) {
+  console.log(err)
+}
 if( mymonitorbatches.length > 0 ) {
 let allres=[]
   //let checkoutput=""
@@ -183,7 +189,7 @@ for (const mymonitors of mymonitorbatches) {
                   try {
                        cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
-                      let psresAsStr=await env.UPTIMEFETCHER.postgrespush_statement(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr)
+                      let psresAsStr=await env.UPTIMEFETCHER.postgrespush_statement(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr,origlastfetchstr)
                       let psres=JSON.parse(psresAsStr)
                       //end sql
                       console.log(psres.msg)
