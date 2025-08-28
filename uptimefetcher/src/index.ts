@@ -83,8 +83,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           writecount=writecount+1
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(origsummstr!=await md5(summstr)) {
-                            pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
+                            //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
+                            let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
+                            pgres["summd"] = await client.query({
+                                text: copystatement,
+                              })
                             writecount=writecount+2
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
