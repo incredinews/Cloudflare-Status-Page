@@ -192,16 +192,19 @@ for (const mymonitors of mymonitorbatches) {
                           pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                           let rescount=1
+                          let pingstring=""
                           for (const res of allres ) { 
                             if(JSON.stringify(res.ms)!='{}') {
                             pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
-                           rescount=rescount+1
+                           pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0]
+                            rescount=rescount+1
+
                             }
                           }
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
                           cronSeconds=(Date.now()-cronStarted) /1000
-                      console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+                      console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring))
 
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
