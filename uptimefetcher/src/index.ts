@@ -200,18 +200,19 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify({"ts": monitorMonth.lastFetched })+"'")
                           writecount=writecount+1
                           }
-                          pingstring=pingstring+" @SEND@ "
+
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(origsummstr) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
+                            
                             pingstring=pingstring+"+s"
-                            //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
-                            pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")
+                            pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
+                            //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")
                             let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
-                            ///pgres["summd"] = await client.query({
-                            ///    text: copystatement,
-                            ///  })
-                            pgquery=pgquery+" ; "+copystatement
+                            pgres["summd"] = await client.query({
+                                text: copystatement,
+                              })
+                            //pgquery=pgquery+" ; "+copystatement
                             writecount=writecount+2
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
@@ -230,9 +231,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             }
                           }
                           console.log("PG_QUERY: "+pgquery)
+                          pingstring=pingstring+" @SEND@ "
                           let pgmainres = await client.query({
                                 text: pgquery,
                               })
+                          //let pgmainres = await client.query({
+                          //      text: pgquery,
+                          //    })
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
                           cronSeconds=(Date.now()-cronStarted) /1000
