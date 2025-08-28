@@ -111,9 +111,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           try {
                           //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                           for (const residx in pgres) {
-                            pingstring=pingstring+" |ops: "+writecount.toString()+" | "+JSON.stringify(pgres["info"].rows[0])
+                            pingstring=pingstring+" | "+JSON.stringify(pgres[residx].rows[0])
                           }
-                          pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s |"+pingstring
+                          pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
                           } catch (psqlreserr) { 
                             console.log("PG_ERR |"+pingstring );console.log(psqlreserr)
                           }
