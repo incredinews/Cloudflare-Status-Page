@@ -22,6 +22,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   async fetch() { return new Response(null, {status: 404}); }   // Currently, entrypoints without a named handler are not supported
 
   async postgrespush_statement(cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string) {
+    let client
     let allres=JSON.parse(pingdata)
     let okay=true
     
