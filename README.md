@@ -1,6 +1,19 @@
 # Cloudflare-Status-Page
+
+![665 commits after fork](commits.png)
+
+
 A website monitoring and status page application design to be deploy on cloudflare at no cost
 Forked from [JH0project](https://github.com/JH0project/Cloudflare-Status-Page)  with google analytics removed and redeployment of the cron job when changing config
+
+changed things:
+
+* use Postgresql ( and currently D1 )instead of KV
+* use rpc to a second worker for selecting monitors and running the check since the original project didnt even load with > 50 monitors and 10ms cpu Time was unreachable ( around 30-50 )
+* pings and info elements are written separately to the db
+* debounce ( min interval )
+* static website ( original project didnt even load )
+
 ![image](https://github.com/JH0project/Cloudflare-Status-Page/assets/48591478/e16d12eb-1985-423f-b2f5-1af6695e3aec)
 
 ## Installing

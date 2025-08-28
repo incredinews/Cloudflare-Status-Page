@@ -60,7 +60,24 @@ let cronSeconds=(Date.now()-cronStarted) /1000
 console.log("sorted_and_ready: "+selectres.count.toString()+" / "+selectres.total.toString()+" batches: "+selectres.batches+" | version: COMMITSHA | COMMITMSG | ")
 let monCountDown = 0 ;
 let monCountOkay = 0 ;
-
+let originfostr="{}"
+try {
+  originfostr=JSON.stringify(monitorMonth.info)
+} catch (error) {
+  console.log(err)
+}
+let origoperstr="{}"
+try {
+  origoperstr=JSON.stringify(monitorMonth.operational)
+} catch (error) {
+  console.log(err)
+}
+let origsummstr="{}"
+try {
+  origsummstr=JSON.stringify(monitorMonth.checks[checkDay].summary
+} catch (error) {
+  console.log(err)
+}
 if( mymonitorbatches.length > 0 ) {
 let allres=[]
   //let checkoutput=""
@@ -163,58 +180,8 @@ for (const mymonitors of mymonitorbatches) {
                   try {
                        cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_start_FIN crontime:"+cronSeconds.toString()+" s")
-                    
-                    	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
-                    	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
-                    	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
-                        //const values = ['aaaa', 'ababa']
-                      client = new Client(pgtarget);
-                      //const client = new Client(pgtarget)
-                      let pgres={}
-                      await client.connect();
-                      if (log_verbose) { console.log("DB connected") }
-                      client.on('error', (err) => {
-                              console.error('PG:something bad has happened:', err.stack)
-                            connect();
-                      })
-                      client.on('end', (client) => {
-                                  console.log('PG:2:disconnect')
-                                 //connect();
-                      })
-
-                    	    //const myfoo={"bar": "f000"}
-                          //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-                          pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
-                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
-                          pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
-                          pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)  ])
-                          pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-                          pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , JSON.stringify(monitorMonth.checks[checkDay].summary) ])
-                          //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
-                          let rescount=1
-                          let pingstring=""
-                          for (const res of allres ) { 
-                            if(JSON.stringify(res.ms)!='{}') {
-                            pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
-                            try {
-                               pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
-                            } catch (pstrerror) {
-                               console.log("pingstringerr"+pstrerror)
-                            }
-
-          
-                            rescount=rescount+1
-
-                            }
-                          }
-                          //console.log(res.rows[0])
-                          //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-                          cronSeconds=(Date.now()-cronStarted) /1000
-                          try {
-                          console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
-                          } catch (psqlreserr) { 
-                            console.log("PG_ERR" );console.log(psqlreserr)
-                          }
+                      let psres=await env.UPTIMEFETCHER.postgrespush_statement(log_verbose,log_errors , monitorMonth,JSON.stringify(allres),originfostr,origoperstr, origsummstr) {
+                      //end sql
 
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
                       const stmtrest = await statusdb.prepare('INSERT INTO ping (ts, day, loc, ms ) VALUES (?1, ?2, ?3,?4)  ON CONFLICT(ts) DO UPDATE SET ms=?4')
@@ -228,20 +195,20 @@ for (const mymonitors of mymonitorbatches) {
                         stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary)),
                         //stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
                       ]
-                      console.log("d1_batched")
+                      //console.log("d1_batched")
                       for (const res of allres ) { 
                            donebatch.push(stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms)))
                           }
-                      console.log("d1_batch_pushed_res")
+                      //console.log("d1_batch_pushed_res")
                       const dbResInfo = await statusdb.batch(donebatch);
-                      console.log("d1_batch_finished")
+                      //console.log("d1_batch_finished")
 
                       //console.log(JSON.stringify(dbResInfo))
                       let donewritestring=""
                       for (const d_one_res of dbResInfo ) {
                         donewritestring=donewritestring+"|"+d_one_res["success"]+" "+d_one_res["meta"]["duration"].toString() + " LOC: "+d_one_res["meta"]["served_by_region"]
                       }
-                      console.log("d1.string.generated")
+                      //console.log("d1.string.generated")
                       //if (donewritestring!="") {
                       //  console.log(donewritestring+" |")
                       //}
