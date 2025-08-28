@@ -197,7 +197,7 @@ for (const mymonitors of mymonitorbatches) {
                             if(JSON.stringify(res.ms)!='{}') {
                             pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
                             try {
-                               pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] 
+                               pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
                             } catch (pstrerror) {
                                console.log("pingstringerr"+pstrerror)
                             }
