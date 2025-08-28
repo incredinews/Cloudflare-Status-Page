@@ -100,7 +100,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           } catch (psqlreserr) { 
                             console.log("PG_ERR" );console.log(psqlreserr)
                           }
-    return(JSON.stringify("status": okay , "msg": pingstring ))
+    return(JSON.stringify({"status": okay , "msg": pingstring }))
   }
   async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
