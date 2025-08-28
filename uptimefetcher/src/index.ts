@@ -48,7 +48,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 	      	 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
 	      }
                             	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
-                    	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = $2 RETURNING id'
+                    	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = EXCLUDED.record RETURNING id'
                     	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
                         //const values = ['aaaa', 'ababa']
                       client = new Client(pgtarget);
@@ -70,6 +70,111 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           let info_as_str=JSON.stringify(monitorMonth.info)
                           if(await md5(info_as_str) != originfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
+                          pingstring=pingstring+"+i"
+                          writecount=writecount+1
+                          }
+                          let operationalstr=JSON.stringify(monitorMonth.operational)
+                          if(await md5(operationalstr) != origoperationalstr) {
+                          pingstring=pingstring+"+o"
+                          pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
+                          writecount=writecount+1
+                          }
+                          pingstring=pingstring+"+lc"
+                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+                          writecount=writecount+1
+                          pingstring=pingstring+"+lf"
+                          pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
+                          writecount=writecount+1
+                          let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
+                          if(origsummstr!=await md5(summstr)) {
+                            //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
+                            pingstring=pingstring+"+s"
+                            pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
+                            let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
+                            pgres["summd"] = await client.query({
+                                text: copystatement,
+                              })
+                            writecount=writecount+2
+                          }
+                          //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                          let rescount=1
+                          for (const res of allres ) { 
+                            if(JSON.stringify(res.ms)!='{}') {
+                              writecount=writecount+1
+                              pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
+                              try {
+                                 pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
+                              } catch (pstrerror) {
+                                 console.log("pingstringerr"+pstrerror)
+                              }
+                              rescount=rescount+1
+                            }
+                          }
+                          //console.log(res.rows[0])
+                          //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+                          cronSeconds=(Date.now()-cronStarted) /1000
+                          try {
+                          //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
+                          for (const residx in pgres) {
+                            pingstring=pingstring+" |+p "+JSON.stringify(pgres[residx].rows[0])
+                          }
+                          pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
+                          } catch (psqlreserr) { 
+                            console.log("PG_ERR |"+pingstring );console.log(psqlreserr)
+                          }
+    return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
+  }
+  async postgrespush_string( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: string,origoperationalstr: string, origsummstr: string) {
+    let monthname=checkDay.slice(0,7)
+    let client
+    let allres=JSON.parse(pingdata)
+    let okay=true
+    let writecount=0
+    let pingstring=""
+    let strend=""
+    let cronSeconds=(Date.now()-cronStarted) /1000
+      if(!env.DB_URL) { 
+	      	console.log("ERROR: no DB_URL")
+	      	return "FAIL";
+	      }
+	      //console.log(env.DB_URL)
+	      let pgtarget="NONE"
+          if(env.DB_URL!="HYPERDRIVE") {
+	      	if(log_verbose) { console.log("pg://  native client  local_dev or hosted wrangler ") }
+          strend="| pg://  native client  local_dev or hosted wrangler "
+              //const client = new Client(env.DB_URL);
+	      	pgtarget=env.DB_URL
+	      } else {
+	      	if(log_verbose) { console.log("pg:// hyperdrive client - cf edge") }
+          strend="| pg:// hyperdrive client - cf edge "
+               //const client = new Client({connectionString: env.HYPERDRIVE.connectionString})
+	      	 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
+	      }
+        let pgquery=""
+                            	//const stmt = 'INSERT INTO info(id, record) VALUES($1, $2) RETURNING *'
+                    	const pgstmtinfo = 'INSERT INTO info(id, record) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET record = EXCLUDED.record RETURNING id'
+                    	const pgstmtping = 'INSERT INTO ping(ts, day, loc, ms) VALUES($1, $2,$3,$4) ON CONFLICT (ts) DO NOTHING RETURNING ts'
+                        //const values = ['aaaa', 'ababa']
+                      client = new Client(pgtarget);
+                      //const client = new Client(pgtarget)
+                      let pgres={}
+                      await client.connect();
+                      if (log_verbose) { console.log("DB connected") }
+                      client.on('error', (err) => {
+                              console.error('PG:something bad has happened:', err.stack)
+                            connect();
+                      })
+                      client.on('end', (client) => {
+                                  console.log('PG:2:disconnect')
+                                 //connect();
+                      })
+
+                    	    //const myfoo={"bar": "f000"}
+                          //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
+                          let info_as_str=JSON.stringify(monitorMonth.info)
+                          if(await md5(info_as_str) != originfostr) {
+                          //pgres["info"] = await client.query(pgstmtinfo, [ "info" , info_as_str  ])
+                          pgquery=pgquery+
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
