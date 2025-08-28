@@ -108,7 +108,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               try {
                                  pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
                               } catch (pstrerror) {
-                                 console.log("pingstringerr"+pstrerror)
+                                 console.log("pingstringerr: "+pstrerror)
                               }
                               rescount=rescount+1
                             }
@@ -224,7 +224,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               ///try {
                               ///   pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
                               ///} catch (pstrerror) {
-                              ///   console.log("pingstringerr"+pstrerror)
+                              ///   console.log("pingstringerr: "+pstrerror)
                               ///}
                               rescount=rescount+1
                             }

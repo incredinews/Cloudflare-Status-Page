@@ -200,7 +200,9 @@ for (const mymonitors of mymonitorbatches) {
                       (origsummstr==JSON.stringify(monitorMonth.checks[checkDay].summary)) ? true : false ,  
                       (origlastfetchstr==JSON.stringify(monitorMonth.lastFetched)) ? true : false 
                       )
+                      console.log("pg_pushed")
                       let psres=JSON.parse(psresAsStr)
+
                       //end sql
                       console.log(psres.msg)
                       const stmtinfo = await statusdb.prepare('INSERT INTO info (id, record) VALUES (?1, ?2)  ON CONFLICT(id) DO UPDATE SET record=?2')
