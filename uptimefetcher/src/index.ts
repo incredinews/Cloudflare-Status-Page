@@ -115,7 +115,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
                           pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s |"+pingstring
                           } catch (psqlreserr) { 
-                            console.log("PG_ERR" );console.log(psqlreserr)
+                            console.log("PG_ERR |"+pingstring );console.log(psqlreserr)
                           }
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
   }
