@@ -557,7 +557,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       }
   }
 
-  async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number ,checksPerRound: number) { 
+  async checkMonitors( monitorMonth: MonitorMonth,myconfigjson: string ,log_verbose: boolean , log_errors: boolean , checkDay: string , monitorCount: number ,checksPerSubrequest: number) { 
   //let monitorMonth: MonitorMonth =
   let monitorids = []
   let logline=""
@@ -636,7 +636,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       reasons="+t"
     }
     //subrequest limiter
-    if(sentRequests > 3+checksPerRound ) {
+    if(sentRequests > 3+checksPerSubrequest ) {
       reasons=reasons+"+LimR"
       do_request=false
     } else {
