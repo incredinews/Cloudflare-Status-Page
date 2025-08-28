@@ -196,7 +196,10 @@ for (const mymonitors of mymonitorbatches) {
                           for (const res of allres ) { 
                             if(JSON.stringify(res.ms)!='{}') {
                             pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
-                           pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0]
+                            try { pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] } catch {
+                              console.log("pingstringerr")
+                            }
+          
                             rescount=rescount+1
 
                             }
