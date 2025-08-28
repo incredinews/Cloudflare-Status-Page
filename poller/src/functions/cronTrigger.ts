@@ -99,7 +99,7 @@ let allres=[]
 //      const allpromises=[]
 for (const mymonitors of mymonitorbatches) {   
         cronSeconds=(Date.now()-cronStarted) /1000 
-        if(cronSeconds<32)  {
+        if( cronSeconds < 32 && mymonitors.length > 0 )  {
           let sendconfig=config
           sendconfig.monitors=mymonitors
      //     allpromises.push(env.UPTIMEFETCHER.checkMonitors(monitorMonth, JSON.stringify(config), log_verbose,log_errors, checkDay , monitorCount))
