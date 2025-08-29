@@ -278,7 +278,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 , checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
       if(log_verbose)  { 
-        console.log("Check_per_round: "+checksPerRound.toString()+" | persubrequest: "+checksPerSubrequest.toString)
+        console.log("Check_per_round: "+checksPerRound.toString()+" | persubrequest: "+checksPerSubrequest.toString())
       }
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
@@ -505,13 +505,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           }
           //subrequest limiter
           if(gomonitors.length > checksPerRound ) {
-            reasons=reasons+"+LimR"
+            reasons=reasons+"+LimR."
             do_request=false
           } 
           if(do_request) {
             let mymonitor=monitor
             mymonitor.lastFetched=monitorMonth.lastFetched[monitor.id]
             gomonitors.push(mymonitor)
+            if(log_verbose) {
+              logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} |     Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `
+            }
           } else {
               //  console.log(` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `) 
               logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} | NOT Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `
@@ -532,7 +535,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           //    youngestmonitors.unshift(monitor.id)
           //  }
           counter=counter+1
-          }
+          } // end for monitors
           //console.log("end_for")
           //console.log("init_2_monitors_filtered:"+gomonitors.length.toString())
           

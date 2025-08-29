@@ -46,7 +46,8 @@ const lastmonthname=someLastMonthDay.slice(0, 7)
 
 //let timediffglobal=now-monitorMonth.lastCheck
   //console.log("selecting")
-let selectresjson=await env.UPTIMEFETCHER.selectMonitors( pgtarget , log_verbose , log_errors , checksPerRound , checksPerSubrequest )
+//                                   async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 , checksPerSubrequest: number = 14 ) { 
+let selectresjson=await env.UPTIMEFETCHER.selectMonitors( log_verbose , log_errors , checksPerRound , checksPerSubrequest )
 let selectres=JSON.parse(selectresjson)
 ///console.log(JSON.stringify(selectres))
 if(selectres.log!="" && log_verbose) {
