@@ -235,15 +235,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             let pgmainres = await client.query({
                                   text: pgquery,
                                 })
-                          } catch (psqlreserrsend) {
-                            console.log("PG_QRY_ERR |"+pingstring );console.log(psqlreserrsend);
-                            return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
-                          }
-
-
-                          //console.log(res.rows[0])
-                          //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
-
                           cronSeconds=(Date.now()-cronStarted) /1000
                           try {
                           for (const residx in pgmainres) {
@@ -265,6 +256,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           } catch (psqlreserr) { 
                             console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
                           }
+                          } catch (psqlreserrsend) {
+                            console.log("PG_QRY_ERR |"+pingstring );console.log(psqlreserrsend);
+                            return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
+                          }
+
+
+                          //console.log(res.rows[0])
+                          //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+
+
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
     } catch (operationalerror) { 
       okay=false
