@@ -20,7 +20,10 @@ function getDate(time: number) {
 }
 export default class UptimeFetcher extends WorkerEntrypoint {
   async fetch() { return new Response(null, {status: 404}); }   // Currently, entrypoints without a named handler are not supported
-
+  async save_data( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,configstr: string) {
+    let config=JSON.parse(configstr)
+    
+  }
   async postgrespush_statement( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: boolean,origoperationalstr: boolean, origsummstr: boolean,origlastfetchstr: boolean) {
     let monthname=checkDay.slice(0,7)
     let client
