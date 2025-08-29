@@ -32,6 +32,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     let writecount=0
     let pingstring=""
     let strend=""
+    monitorMonth["info"]["lastCheck"]=monitorMonth["lastCheck"]
     let cronSeconds=(Date.now()-cronStarted) /1000
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
@@ -82,7 +83,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
                           //pingstring=pingstring+"+lc"
                           //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({ "ts": monitorMonth.lastCheck }) ])
-                          writecount=writecount+1
+                          //writecount=writecount+1
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
                           pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])  
@@ -135,6 +136,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     let pingstring=""
     let strend=""
     let cronSeconds=(Date.now()-cronStarted) /1000
+    monitorMonth["info"]["lastCheck"]=monitorMonth["lastCheck"]
+
     try {
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
@@ -186,12 +189,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'operational'").replace('$2',"'"+JSON.stringify(monitorMonth.operational)+"'")
                           writecount=writecount+1
                           }
-                          if(allres.len>0) {
-                             pingstring=pingstring+"+lc"
-                             //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
-                             pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastCheck'").replace('$2',"'"+JSON.stringify({ "ts": monitorMonth.lastCheck })+"'")
-                             writecount=writecount+1
-                          }
+                          ///if(allres.len>0) {
+                          ///   pingstring=pingstring+"+lc"
+                          ///   //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+                          ///   pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastCheck'").replace('$2',"'"+JSON.stringify({ "ts": monitorMonth.lastCheck })+"'")
+                          ///   writecount=writecount+1
+                          ///}
 
 
                           if(origlastfetchstr) {
@@ -428,18 +431,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
               // console.log("hit :"+myrow["id"])
               if(["lastCheck","info","operational","lastFetched"].includes(myrow["id"])) {
                 dbreclog=dbreclog+"|found db record:"+myrow["id"]
-                if(myrow["id"]=="lastCheck") {
-                  monitorMonth["lastCheck"]=myrow["record"]["ts"] 
-                  ///if(Object.hasOwn(myrow["record"],"lastUp")) {
-                  ///    monitorMonth["info"]["lastUp"]=myrow["record"]["lastUp"] 
-                  ///}
-                  ///if(Object.hasOwn(myrow["record"],"lastDown")) {
-                  ///    monitorMonth["info"]["lastUp"]=myrow["record"]["lastDown"] 
-                  ///}
-                  ///if(Object.hasOwn(myrow["record"],"failCount")) {
-                  ///    monitorMonth["info"]["failCount"]=myrow["record"]["failCount"] 
-                  ///}
-                } else { 
                   if(myrow["id"]=="config") { 
                     console.log("FOUND_CONFIG")
                     console.log(typeof(myrow["record"]))
@@ -450,8 +441,11 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 
                   } else {
                     monitorMonth[myrow["id"]]=myrow["record"]
+                    if(myrow["id"]=="info") { 
+                      monitorMonth["lastCheck"]=myrow["record"]["lastCheck"]
+                    }
                   }
-                }
+                
                 //monitorMonth.lastFetched=myrow.record
               }
             }
@@ -554,7 +548,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           //mymonitors[0]=[]
           let curbatchsize=0
           let selectedmon=0
-          for (let i = 0; i < gomonitors.length; i += mybatchsize) {
+          for (let i = 0; i < gomonitors.length && i< checksPerRound ; i += mybatchsize) {
               let thisbatch=gomonitors.slice(i, i + mybatchsize)
               selectedmon=selectedmon+thisbatch.length
               if(thisbatch.length>0) {
