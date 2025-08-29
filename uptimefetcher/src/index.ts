@@ -496,15 +496,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       for (const monitor of config.monitors) {
           let localnow=Date.now()
           let cronSeconds=(localnow-cronStarted)/1000
-          //if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-          // }
-          if (!Object.hasOwn(monitorMonth.info[monitor.id], "lastFetch")) {
-            monitorMonth.info[monitor.id]["lastFetch"]=defaultlastfetch
+          if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+            monitorMonth["info"][monitor.id]={}
+           }
+          if (!Object.hasOwn(monitorMonth["info"][monitor.id], "lastFetch")) {
+            monitorMonth["info"][monitor.id]["lastFetch"]=defaultlastfetch
             }
           let reasons="";
           let displayname = monitor.name || monitor.id.toString();
           let do_request=true
-          const timesec=(Date.now()-monitorMonth.info[monitor.id]["lastFetch"])/1000
+          const timesec=(Date.now()-monitorMonth["info"][monitor.id]["lastFetch"])/1000
           const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
           if( (timesec+(counter*0.5)) < realdebounce  ) {
             do_request=false;
@@ -520,7 +521,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           } 
           if(do_request) {
             let mymonitor=monitor
-            mymonitor.lastFetch=monitorMonth.info[monitor.id]["lastFetch"]
+            mymonitor.lastFetch=monitorMonth["info"][monitor.id]["lastFetch"]
             gomonitors.push(mymonitor)
             if(log_verbose) {
               logline=logline+'@CRLF@'+` [ ${counter} / ${monitorCount}  ].( ${sentRequests} )  ${reasons} |     Checking ${displayname} .| lastFetch: ${timesec} s ago dbounce: ${realdebounce} @ time : ${monitorMonth.lastCheck/1000} .| crontime: ${cronSeconds} `
