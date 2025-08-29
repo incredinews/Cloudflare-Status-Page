@@ -228,15 +228,21 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
                           if(log_verbose) { console.log("PG_QUERY: "+pgquery) }
                           pingstring=pingstring+" @SEND@ "
-                          let pgmainres = await client.query({
-                                text: pgquery,
-                              })
+                          try {
+                            let pgmainres = await client.query({
+                                  text: pgquery,
+                                })
+                          } catch (psqlreserrsend) {
+                            console.log("PG_RES_ERR |"+pingstring );console.log(psqlreserrsend)
+                            return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
+                          }
+
 
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
+
                           cronSeconds=(Date.now()-cronStarted) /1000
                           try {
-                          //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                           for (const residx in pgmainres) {
                             if(Object.hasOwn(pgmainres[residx],"rows")) {
                               pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx].rows[0])
@@ -251,9 +257,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx])
                             }
                           }
+                          //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                           pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
                           } catch (psqlreserr) { 
-                            console.log("PG_ERR |"+pingstring );console.log(psqlreserr)
+                            console.log("PG_RES_ERR |"+pingstring );console.log(psqlreserr)
                           }
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
     } catch (operationalerror) { 
