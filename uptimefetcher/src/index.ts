@@ -179,14 +179,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           if(updateinfostr) {
                           //pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
-                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'info'").replace('$2',"'"+JSON.stringify(monitorMonth.info)+"'")
+
+                          pgquery=pgquery+pgstmtinfo.replace('$1',"'info'").replace('$2',"'"+JSON.stringify(monitorMonth.info)+"'")
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
                           if(updateoperationalstr) {
                           pingstring=pingstring+"+o"
                           //pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
-                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'operational'").replace('$2',"'"+JSON.stringify(monitorMonth.operational)+"'")
+                          if(pgquery="") { pgquery="" } else { pgquery+" ; " }
+                          pgquery=pgquery+pgstmtinfo.replace('$1',"'operational'").replace('$2',"'"+JSON.stringify(monitorMonth.operational)+"'")
                           writecount=writecount+1
                           }
                           ///if(allres.len>0) {
@@ -200,7 +202,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           if(updatelastfetchstr) {
                           pingstring=pingstring+"+lf"
                           //pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
-                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify(monitorMonth.lastFetched)+"'")
+                          if(pgquery="") { pgquery="" } else { pgquery+" ; " }
+                          pgquery=pgquery+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify(monitorMonth.lastFetched)+"'")
                           writecount=writecount+1
                           }
 
@@ -209,9 +212,11 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
+                            //if(pgquery="") { pgquery="" } else { pgquery+" ; " }
                             //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")
                             let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
-                            pgquery=pgquery+" ; "+copystatement
+                            if(pgquery="") { pgquery="" } else { pgquery+" ; " }
+                            pgquery=pgquery+copystatement
                             //pgres["summd"] = await client.query({
                             //    text: copystatement,
                             //  })
