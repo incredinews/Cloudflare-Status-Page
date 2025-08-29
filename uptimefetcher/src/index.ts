@@ -22,7 +22,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   async fetch() { return new Response(null, {status: 404}); }   // Currently, entrypoints without a named handler are not supported
   async save_data( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,configstr: string) {
     let config=JSON.parse(configstr)
-    
+
   }
   async postgrespush_statement( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: boolean,origoperationalstr: boolean, origsummstr: boolean,origlastfetchstr: boolean) {
     let monthname=checkDay.slice(0,7)
@@ -539,10 +539,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           batchcount=1
           mymonitors[0]=[]
           let curbatchsize=0
+          let selectedmon=0
           for (const monitor of gomonitors) {
             if(batchcount < 4) {
               mymonitors[batchcount-1].push(monitor)
               curbatchsize=curbatchsize+1
+              selectedmon=selectedmon+1
               //thisbatch.push(monitor)
               //if(mymonitors[batchcount-1].length > mybatchsize) {
               if(curbatchsize > mybatchsize) {
@@ -557,7 +559,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
             }
             
           }
-          console.log(JSON.stringify(mymonitors))
+          console.log("Selected monitors: "+let selectedmon=0)
+          console.log("MONOBJ: "+JSON.stringify(mymonitors))
           return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , "err": errorline, count: counter , total: monitorCount, batches: batchcount  } )
       } catch (error) {
         console.error(error)
