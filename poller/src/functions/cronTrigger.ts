@@ -97,7 +97,9 @@ let allres=[]
   //async checkMonitors( monitorMonthjson: string,mymonitorsjson: string ,myconfigjson: string ,log_verbose: boolean , log_errors: boolean ) { 
   // console.log("sending")
 //      const allpromises=[]
+let batchline=""
 for (const mymonitors of mymonitorbatches) {   
+         console.log("Starting batch sized: "+mymonitors.length+" | "+batchline)
         cronSeconds=(Date.now()-cronStarted) /1000 
         if( cronSeconds < 32 && mymonitors.length > 0 )  {
           let sendconfig=config
@@ -183,9 +185,8 @@ for (const mymonitors of mymonitorbatches) {
                       //await setKVMonitors(namespace,monthname, monitorMonth)
                        cronSeconds=(Date.now()-cronStarted) /1000
                        console.log("00_batch_FIN crontime:"+cronSeconds.toString()+" s")
-                                        
-                        // async/await
-                        allres.push(res)
+                      // async/await
+                      allres.push(res)
          // } else { console.log(JSON.stringify(thisres))  }
         } // end if crontime
 } // end for mymonitors batches
