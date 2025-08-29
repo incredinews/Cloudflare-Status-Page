@@ -506,7 +506,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           let do_request=true
           const timesec=(Date.now()-monitorMonth.info[monitor.id]["lastFetch"])/1000
           const realdebounce= Object.hasOwn(monitor,"debounce") ? monitor.debounce : preset_debounce
-          if( (timesec+10) < realdebounce  ) {
+          if( (timesec+(counter*0.5)) < realdebounce  ) {
             do_request=false;
             reasons="+t"
           } else { 
@@ -607,7 +607,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   let cronSeconds=0
   let timediffcron=0
   let counter=1;
-  const preset_debounce = config.settings.debounce || 300
+  const preset_debounce = config.debounce || (  42 + ( Object.keys(config.monitors).length * 3 )  ) 
   const res: {
     t: number
     l: string
