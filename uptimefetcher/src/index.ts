@@ -274,6 +274,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   }
   async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 , checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
+      if(log_verbose)  { 
+        console.log("Check_per_round: "+checksPerRound.toString()+" | persubrequest: "+checksPerSubrequest.toString)
+      }
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
 	      	return "FAIL";
@@ -484,7 +487,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       const defaultlastfetch=localnow-999999999
       //let counter=1;
       const preset_debounce = config.debounce || (  42 + ( Object.keys(config.monitors).length * 3 )  ) 
-      //const minChecksPerRound=6
       let gomonitors=[]
       //console.log("start_for")
       for (const monitor of config.monitors) {
@@ -508,7 +510,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
             do_request=true
           }
           //subrequest limiter
-          if(gomonitors.length > 42 ) {
+          if(gomonitors.length > checksPerRound ) {
             reasons=reasons+"+LimR"
             do_request=false
           } 
