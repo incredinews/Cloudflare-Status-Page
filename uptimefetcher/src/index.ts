@@ -197,12 +197,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           ///}
 
 
-                          if(updatelastfetchstr) {
-                          pingstring=pingstring+"+lf"
-                          //pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetch" , JSON.stringify(monitorMonth.lastFetch)  ])
-                          pgquery=pgquery+pgstmtinfo.replace('$1',"'lastFetch'").replace('$2',"'"+JSON.stringify(monitorMonth.lastFetch)+"'")+" ; "
-                          writecount=writecount+1
-                          }
+                          ///if(updatelastfetchstr) {
+                          ///pingstring=pingstring+"+lf"
+                          /////pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetch" , JSON.stringify(monitorMonth.lastFetch)  ])
+                          ///pgquery=pgquery+pgstmtinfo.replace('$1',"'lastFetch'").replace('$2',"'"+JSON.stringify(monitorMonth.lastFetch)+"'")+" ; "
+                          ///writecount=writecount+1
+                          ///}
 
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
                           if(updatesummstr) {
