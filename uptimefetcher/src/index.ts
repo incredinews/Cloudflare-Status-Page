@@ -529,8 +529,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           //const allpings = youngestmonitors.concat(oldestmonitors);
           gomonitors.sort((a, b) => a.lastFetched - b.lastFetched)
           //console.log("start_batch")
-          let mymonitors=[]
-          let thisbatch=[]
+          let mymonitors =[]
+          let thisbatch  =[]
           let mybatchsize=checksPerSubrequest
           if( checksPerSubrequest < 8 ) { mybatchsize= 8 }
           batchcount=1
@@ -554,6 +554,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
             }
             
           }
+          console.log(JSON.stringify(mymonitors))
           return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , "err": errorline, count: counter , total: monitorCount, batches: batchcount  } )
       } catch (error) {
         console.error(error)
