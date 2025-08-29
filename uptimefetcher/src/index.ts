@@ -24,7 +24,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     let config=JSON.parse(configstr)
 
   }
-  async postgrespush_statement( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,originfostr: boolean,origoperationalstr: boolean, origsummstr: boolean,origlastfetchstr: boolean) {
+  async postgrespush_statement( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string,updateinfostr: boolean,updateoperationalstr: boolean, updatesummstr: boolean,updatelastfetchstr: boolean) {
     let monthname=checkDay.slice(0,7)
     let client
     let allres=JSON.parse(pingdata)
@@ -71,12 +71,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-                          if(originfostr) {
+                          if(updateinfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)   ])
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
-                          if(origoperationalstr) {
+                          if(updateoperationalstr) {
                           pingstring=pingstring+"+o"
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)   ]) 
                           writecount=writecount+1
@@ -84,12 +84,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           //pingstring=pingstring+"+lc"
                           //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({ "ts": monitorMonth.lastCheck }) ])
                           //writecount=writecount+1
-                          if(origlastfetchstr) {
+                          if(updatelastfetchstr) {
                           pingstring=pingstring+"+lf"
                           pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])  
                           writecount=writecount+1
                           }
-                          if(origsummstr) {
+                          if(updatesummstr) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
@@ -127,7 +127,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
   }
-  async postgrespush_string( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string, originfostr: boolean,origoperationalstr: boolean, origsummstr: boolean,origlastfetchstr: boolean) {
+  async postgrespush_string( checkDay: string , cronStarted: number, log_verbose: boolean , log_errors: boolean , monitorMonth: MonitorMonth ,pingdata: string, updateinfostr: boolean,updateoperationalstr: boolean, updatesummstr: boolean,updatelastfetchstr: boolean) {
     let monthname=checkDay.slice(0,7)
     let client
     let allres=JSON.parse(pingdata)
@@ -177,13 +177,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
 
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
-                          if(originfostr) {
+                          if(updateinfostr) {
                           pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
                           //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'info'").replace('$2',"'"+JSON.stringify(monitorMonth.info)+"'")
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
-                          if(origoperationalstr) {
+                          if(updateoperationalstr) {
                           pingstring=pingstring+"+o"
                           //pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , operationalstr  ]) 
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'operational'").replace('$2',"'"+JSON.stringify(monitorMonth.operational)+"'")
@@ -197,7 +197,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           ///}
 
 
-                          if(origlastfetchstr) {
+                          if(updatelastfetchstr) {
                           pingstring=pingstring+"+lf"
                           //pgres["lfet"] = await client.query(pgstmtinfo, [ "lastFetched" , JSON.stringify(monitorMonth.lastFetched)  ])
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastFetched'").replace('$2',"'"+JSON.stringify(monitorMonth.lastFetched)+"'")
@@ -205,7 +205,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
 
                           let summstr=JSON.stringify(monitorMonth.checks[checkDay].summary)
-                          if(origsummstr) {
+                          if(updatesummstr) {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
