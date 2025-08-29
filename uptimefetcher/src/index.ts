@@ -246,10 +246,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             try {
                               for (const residx in pgmainres) {
                                 if(log_verbose) {console.log("residx: "+residx)}
-                                if(pgmainres[residx] && Object.hasOwn(pgmainres[residx],"rows")) {
-                                  pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx].rows[0])
+                                if(pgmainres[residx] && pgmainres[residx].constructor === Object  && Object.hasOwn(pgmainres[residx],"rows")) {
+                                  pingstring=pingstring+" |.R: "+JSON.stringify(pgmainres[residx].rows[0])
                                 } else {
-                                  pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx])
+                                  pingstring=pingstring+" |_R: "+JSON.stringify(pgmainres[residx])
                                 }
                               }
 
