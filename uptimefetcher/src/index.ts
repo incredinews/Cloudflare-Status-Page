@@ -602,18 +602,18 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     }
   } = { t: now, l: checkLocation, ms: {} }
   //let checksPerRound=13
-  let displayname = monitor.name || monitor.id.toString();
-  let monurl= monitor.hidden ?  config.hiddenURLdefault : monitor.url; 
-  monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
-  if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-      monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
-    } else {
-      monitorMonth.info[monitor.id]["name"]=displayname
-      monitorMonth.info[monitor.id]["url"]=monurl
-    }
   //monitorMonth["info"][monName]["lastUp"]
   
   for (const monitor of mymonitors) {
+    let displayname = monitor.name || monitor.id.toString();
+    let monurl= monitor.hidden ?  config.hiddenURLdefault : monitor.url; 
+    monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
+    if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+        monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
+      } else {
+        monitorMonth.info[monitor.id]["name"]=displayname
+        monitorMonth.info[monitor.id]["url"]=monurl
+      }
     for (const checkidx of ["lastUp","lastDown","failCount"]) {
       try {
         if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
