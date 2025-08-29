@@ -268,7 +268,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     return(JSON.stringify({"status": okay , "msg": "DB_MAIN_ERR: "+operationalerror+" | "+pingstring } ) )
     }
   }
-  async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 ,checksPerSubrequest: number = 14 ) { 
+  async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 , checksPerSubrequest: number = 14 ) { 
       //console.log("start_sel")
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
@@ -544,27 +544,11 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           let mybatchsize=checksPerSubrequest
           if( checksPerSubrequest < 8 ) { mybatchsize= 8 }
           batchcount=1
-          mymonitors[0]=[]
+          //mymonitors[0]=[]
           let curbatchsize=0
           let selectedmon=0
-          for (const monitor of gomonitors) {
-            if(batchcount < 4) {
-              mymonitors[batchcount-1].push(monitor)
-              curbatchsize=curbatchsize+1
-              selectedmon=selectedmon+1
-              //thisbatch.push(monitor)
-              //if(mymonitors[batchcount-1].length > mybatchsize) {
-              if(curbatchsize > mybatchsize) {
-              //if(thisbatch.length > mybatchsize ) { 
-              //  mymonitors.push(thisbatch)
-              //  thisbatch=[]
-                batchcount=batchcount+1
-                mymonitors[batchcount-1]=[]
-                curbatchsize=0
-                } 
-
-            }
-            
+          for (let i = 0; i < gomonitors.length; i += mybatchsize) {
+              mymonitors.push(gomonitors.slice(i, i + chunkSize))
           }
           console.log("Selected monitors: "+selectedmon)
           console.log("MONOBJ: "+JSON.stringify(mymonitors))

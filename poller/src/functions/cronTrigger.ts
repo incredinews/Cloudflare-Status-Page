@@ -33,7 +33,7 @@ export async function processCronTrigger( namespace: KVNamespace, statusdb: Env,
   //console.log(JSON.stringify(monitorMonth))
 let client: Client
 const checksPerRound=42
-const checksPerSubrequest=13
+const checksPerSubrequest=14
 const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
 //const minChecksPerRound=6
 const checkDay = getDate(now)
