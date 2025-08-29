@@ -248,13 +248,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                                   pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx])
                                 }
                             }
+                            }
                             for (const residx in pgres) {
                               if(Object.hasOwn(pgres[residx],"rows")) {
                                 pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx].rows[0])
                               } else {
                                 pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx])
                               }
-                            }
                             //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                             pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
                             } catch (psqlreserr) { 
