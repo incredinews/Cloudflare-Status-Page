@@ -629,7 +629,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         monitorMonth.info[monitor.id]["name"]=displayname
         monitorMonth.info[monitor.id]["url"]=monurl
       }
-    for (const checkidx of ["lastUp","lastDown","failCount"]) {
+    for (const checkidx of ["lastUp","lastDown","failCount","lastFetch"]) {
       try {
         if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
           //monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : -1 )
@@ -646,8 +646,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     //console.log(JSON.stringify(monitor))
     let localnow=Date.now()
     const defaultlastfetch=localnow-999999999
-    if (!Object.hasOwn(monitorMonth.lastFetch, monitor.id)) {
-      monitorMonth.lastFetch[monitor.id]=defaultlastfetch
+    if (monitorMonth.info[monitor.id]["lastFetch"]==0) {
+      monitorMonth.info[monitor.id]["lastFetch"]=defaultlastfetch
     }
     cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
