@@ -208,10 +208,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
                             //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")
                             let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
+                            pgquery=pgquery+" ; "+copystatement
                             //pgres["summd"] = await client.query({
                             //    text: copystatement,
                             //  })
-                            pgquery=pgquery+" ; "+copystatement
                             writecount=writecount+2
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
