@@ -622,10 +622,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       monitorMonth.lastFetched[monitor.id]=defaultlastfetch
     }
     if (!Object.hasOwn(monitorMonth["info"]["lastUp"]  , monitor.id)) {
-      monitorMonth["info"]["lastUp"][monitor.id]=null
+      monitorMonth["info"]["lastUp"][monitor.id]=0
     }
     if (!Object.hasOwn(monitorMonth["info"]["lastDown"], monitor.id)) {
-      monitorMonth["info"]["lastDown"][monitor.id]=null
+      monitorMonth["info"]["lastDown"][monitor.id]=0
     }
     if (!Object.hasOwn(monitorMonth["info"]["failCount"], monitor.id)) {
       monitorMonth["info"]["failCount"][monitor.id]=0
