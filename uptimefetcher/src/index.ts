@@ -215,7 +215,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             //pgres["summd"] = await client.query({
                             //    text: copystatement,
                             //  })
-                            
+
                             writecount=writecount+2
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
@@ -622,7 +622,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     for (const checkidx of ["lastUp","lastDown","failCount"]) {
       try {
         if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
-          monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : -1 )
+          //monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : -1 )
+          monitorMonth["info"][monitor.id][checkidx]=0
         }
 
       } catch (error) {
