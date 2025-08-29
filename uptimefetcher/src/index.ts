@@ -80,8 +80,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgres["oper"] = await client.query(pgstmtinfo, [ "operational" , JSON.stringify(monitorMonth.operational)   ]) 
                           writecount=writecount+1
                           }
-                          pingstring=pingstring+"+lc"
-                          pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({ "ts": monitorMonth.lastCheck }) ])
+                          //pingstring=pingstring+"+lc"
+                          //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({ "ts": monitorMonth.lastCheck }) ])
                           writecount=writecount+1
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
@@ -186,10 +186,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'operational'").replace('$2',"'"+JSON.stringify(monitorMonth.operational)+"'")
                           writecount=writecount+1
                           }
-                          pingstring=pingstring+"+lc"
-                          //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
-                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastCheck'").replace('$2',"'"+JSON.stringify({ "ts": monitorMonth.lastCheck })+"'")
-                          writecount=writecount+1
+                          if(allres.len>0) {
+                             pingstring=pingstring+"+lc"
+                             //pgres["lack"] = await client.query(pgstmtinfo, [ "lastCheck" , JSON.stringify({"ts": monitorMonth.lastCheck })  ])
+                             pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'lastCheck'").replace('$2',"'"+JSON.stringify({ "ts": monitorMonth.lastCheck })+"'")
+                             writecount=writecount+1
+                          }
+
 
                           if(origlastfetchstr) {
                           pingstring=pingstring+"+lf"
@@ -233,8 +236,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                                   text: pgquery,
                                 })
                           } catch (psqlreserrsend) {
-                            console.log("PG_RES_ERR |"+pingstring );console.log(psqlreserrsend);
-                            if( log_verbose ) { console.log(" asking db: "+pginit) }
+                            console.log("PG_QRY_ERR |"+pingstring );console.log(psqlreserrsend);
+                            if( log_verbose ) { console.log(" db question was db: "+pgquery) }
                             return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
                           }
 
