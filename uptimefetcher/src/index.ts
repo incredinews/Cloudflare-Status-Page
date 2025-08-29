@@ -604,11 +604,17 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   //monitorMonth["info"]["lastUp"]
   for (const monitor of mymonitors) {
     try {
-    for (const checkidx of ["lastUp","lastDown","failCount"]) {
-      if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
-        monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
-      }
-    }
+      for (const checkidx of ["lastUp","lastDown","failCount"]) {
+        if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
+          monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
+        }
+      }       
+     } catch (error) {
+       console.log("FAILED_ON_GEN: "+checkidx)
+    } 
+    try {
+
+
     monitorids.push(monitor.id)
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -763,7 +769,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
            monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
        }
     }
-
+    if(log_verbose) { console.log("calc_state") }
     res.ms[monitor.id] = monitorOperational ? requestTime : null
     if(monitorOperational) { 
       monCountOkay=monCountOkay+1 
@@ -813,7 +819,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   } // end dorequest
   counter=counter+1 
      } catch(monrounderr) {
-      console.log("ERROR_ON_MONITOR: "+monitor.id+" | "+monrounderr)
+      console.log("ERROR_ON_CHECK: "+monitor.id+" | "+monrounderr)
      }
   } //end for monitors
   let returnstr=JSON.stringify({"checkoutput": logline , "errlog": errline , "fullObj": monitorMonth , "res": res ,"up": monCountOkay ,"down": monCountDown , "monitors": monitorids , "loc": checkLocation } )
