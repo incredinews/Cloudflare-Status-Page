@@ -416,20 +416,20 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                 dbreclog=dbreclog+"|found db record:"+myrow["id"]
                 if(myrow["id"]=="lastCheck") {
                   monitorMonth["lastCheck"]=myrow["record"]["ts"] 
-                  if(Object.hasOwn(myrow["record"],"lastUp")) {
-                      monitorMonth["info"]["lastUp"]=myrow["record"]["lastUp"] 
-                  }
-                  if(Object.hasOwn(myrow["record"],"lastDown")) {
-                      monitorMonth["info"]["lastUp"]=myrow["record"]["lastDown"] 
-                  }
-                  if(Object.hasOwn(myrow["record"],"failCount")) {
-                      monitorMonth["info"]["failCount"]=myrow["record"]["failCount"] 
-                  }
+                  ///if(Object.hasOwn(myrow["record"],"lastUp")) {
+                  ///    monitorMonth["info"]["lastUp"]=myrow["record"]["lastUp"] 
+                  ///}
+                  ///if(Object.hasOwn(myrow["record"],"lastDown")) {
+                  ///    monitorMonth["info"]["lastUp"]=myrow["record"]["lastDown"] 
+                  ///}
+                  ///if(Object.hasOwn(myrow["record"],"failCount")) {
+                  ///    monitorMonth["info"]["failCount"]=myrow["record"]["failCount"] 
+                  ///}
                 } else { 
                   if(myrow["id"]=="config") { 
                     console.log("FOUND_CONFIG")
                     console.log(typeof(myrow["record"]))
-                    console.log(JSON.stringify(myrow["record"]))
+                    console.log("CFG_ADD:"+JSON.stringify(myrow["record"]))
                     //for (const importmon of myrow["id"] ) { 
                     //  
                     //}
