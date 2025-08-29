@@ -600,9 +600,14 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     }
   } = { t: now, l: checkLocation, ms: {} }
   //let checksPerRound=13
-
+  let displayname = monitor.name || monitor.id.toString();
+  let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
+  monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
   if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
-      monitorMonth.info[monitor.id]={}
+      monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
+    } else {
+      monitorMonth.info[monitor.id]["name"]=displayname
+      monitorMonth.info[monitor.id]["url"]=monurl
     }
   //monitorMonth["info"][monName]["lastUp"]
   
@@ -628,9 +633,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     }
     cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
-    let displayname = monitor.name || monitor.id.toString();
-    let monurl= monitor.hidden ?  "https://pages.cloudflare.com" : monitor.url; 
-    monitorMonth.info[monitor.id]= { "name": displayname , "url": monurl }
     //let laststr=monitorMonth.lastCheck
     //let nowstr=
     const timesec=((localnow-monitorMonth.lastFetched[monitor.id])/1000).toFixed(2)
