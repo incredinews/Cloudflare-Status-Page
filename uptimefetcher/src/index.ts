@@ -547,6 +547,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           let thisbatch  =[]
           let mybatchsize=checksPerSubrequest
           if( checksPerSubrequest < 8 ) { mybatchsize= 8 }
+
           batchcount=1
           //mymonitors[0]=[]
           let curbatchsize=0
@@ -554,8 +555,13 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           for (let i = 0; i < gomonitors.length; i += mybatchsize) {
               let thisbatch=gomonitors.slice(i, i + mybatchsize)
               selectedmon=selectedmon+thisbatch.length
+              if(thisbatch.length>0) {
+                if(log_verbose) { 
+                  console.log("add_batch sized:"+thisbatch.length.toString())
+                }
               mymonitors.push(thisbatch)
               batchcount=batchcount+1
+              }
           }
           console.log("Selected monitors: "+selectedmon)
           console.log("MONOBJ: "+JSON.stringify(mymonitors))
