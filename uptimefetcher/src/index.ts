@@ -603,8 +603,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   
   //monitorMonth["info"]["lastUp"]
   for (const monitor of mymonitors) {
-  try {
-
     monitorids.push(monitor.id)
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -814,9 +812,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     //}
   } // end dorequest
   counter=counter+1 
-     } catch(monrounderr) {
-      console.log("ERROR_ON_MONITOR: "+monitor.id+" | "+monrounderr)
-     }
   } //end for monitors
   let returnstr=JSON.stringify({"checkoutput": logline , "errlog": errline , "fullObj": monitorMonth , "res": res ,"up": monCountOkay ,"down": monCountDown , "monitors": monitorids , "loc": checkLocation } )
   //console.log("sending :"+returnstr)
