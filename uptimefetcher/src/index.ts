@@ -212,7 +212,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             //pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+checkDay  , summstr ])
                             pingstring=pingstring+"+s"
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
-                            //if(pgquery="") { pgquery="" } else { pgquery+" ; " }
+                            if(pgquery="") { pgquery="" } else { pgquery+" ; " }
                             //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")
                             let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
                             if(pgquery="") { pgquery="" } else { pgquery+" ; " }
@@ -253,25 +253,27 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                                 } else {
                                   pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx])
                                 }
+                              }
+
+                            } catch (psqlreserr) { 
+                              console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
                             }
-                            }
+
+                          } catch (psqlreserrsend) {
+                            console.log("PG_QRY_ERR |"+pingstring );console.log(psqlreserrsend);
+                            return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
+                          }
                             for (const residx in pgres) {
                               if(Object.hasOwn(pgres[residx],"rows")) {
                                 pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx].rows[0])
                               } else {
                                 pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx])
                               }
+                        }
                             //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                             pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
-                            } catch (psqlreserr) { 
-                              console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
-                            }
-                          } catch (psqlreserrsend) {
-                            console.log("PG_QRY_ERR |"+pingstring );console.log(psqlreserrsend);
-                            return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
-                          }
-                        }
-                          //console.log(res.rows[0])
+
+                        //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
 
 
@@ -778,7 +780,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
            monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
        }
     }
-    //if(log_verbose) { console.log("calc_state") }
+    if(log_verbose) { console.log("calc_state") }
     res.ms[monitor.id] = monitorOperational ? requestTime : null
     if(monitorOperational) { 
       monCountOkay=monCountOkay+1 
