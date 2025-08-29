@@ -215,6 +215,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             //pgres["summd"] = await client.query({
                             //    text: copystatement,
                             //  })
+                            
                             writecount=writecount+2
                           }
                           //pgres["ping"] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
