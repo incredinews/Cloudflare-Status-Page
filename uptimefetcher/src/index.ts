@@ -561,10 +561,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           }
           console.log("Selected monitors: "+let selectedmon=0)
           console.log("MONOBJ: "+JSON.stringify(mymonitors))
-          return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , "err": errorline, count: counter , total: monitorCount, batches: batchcount  } )
+          return JSON.stringify({ "statusObject": monitorMonth ,"mon": mymonitors,"log": logline , "err": errorline, count: counter , selected: selectedmon, total: monitorCount, batches: batchcount  } )
       } catch (error) {
         console.error(error)
-        return JSON.stringify({ "statusObject": monitorMonth ,"mon": {},"log": logline+"@CRLF@"+error , "err": error , count: counter , total: monitorCount, batches: batchcount  } )
+        return JSON.stringify({ "statusObject": monitorMonth ,"mon": {},"log": logline+"@CRLF@"+error , "err": error , count: counter , selected: 0 , total: monitorCount, batches: batchcount  } )
       }
   }
 
