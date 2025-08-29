@@ -122,7 +122,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           }
                           pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
                           } catch (psqlreserr) { 
-                            console.log("PG_ERR |"+pingstring );console.log(psqlreserr)
+                            console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
                           }
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
   }
@@ -233,7 +233,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                                   text: pgquery,
                                 })
                           } catch (psqlreserrsend) {
-                            console.log("PG_RES_ERR |"+pingstring );console.log(psqlreserrsend)
+                            console.log("PG_RES_ERR |"+pingstring );console.log(psqlreserrsend);
+                            if( log_verbose ) { console.log(" asking db: "+pginit) }
                             return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
                           }
 
@@ -260,7 +261,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                           //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
                           pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
                           } catch (psqlreserr) { 
-                            console.log("PG_RES_ERR |"+pingstring );console.log(psqlreserr)
+                            console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
                           }
     return(JSON.stringify({"status": okay , "msg": pingstring+strend }))
     } catch (operationalerror) { 
