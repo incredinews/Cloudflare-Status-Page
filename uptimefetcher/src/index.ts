@@ -549,7 +549,9 @@ export default class UptimeFetcher extends WorkerEntrypoint {
           let curbatchsize=0
           let selectedmon=0
           for (let i = 0; i < gomonitors.length; i += mybatchsize) {
-              mymonitors.push(gomonitors.slice(i, i + mybatchsize))
+              let thisbatch=gomonitors.slice(i, i + mybatchsize)
+              selectedmon=selectedmon+thisbatch.length
+              mymonitors.push(thisbatch)
               batchcount=batchcount+1
           }
           console.log("Selected monitors: "+selectedmon)
