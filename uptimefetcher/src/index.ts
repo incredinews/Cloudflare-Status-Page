@@ -230,38 +230,38 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             }
                           }
                           if(log_verbose) { console.log("PG_QUERY: "+pgquery) }
-                          pingstring=pingstring+" @SEND@ "
+                          if(pgquery!="") { 
+                            pingstring=pingstring+" @SEND@ "
                           try {
                             let pgmainres = await client.query({
                                   text: pgquery,
                                 })
-                          cronSeconds=(Date.now()-cronStarted) /1000
-                          try {
-                          for (const residx in pgmainres) {
-                            if(Object.hasOwn(pgmainres[residx],"rows")) {
-                              pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx].rows[0])
-                            } else {
-                              pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx])
+                            cronSeconds=(Date.now()-cronStarted) /1000
+                            try {
+                              for (const residx in pgmainres) {
+                                if(Object.hasOwn(pgmainres[residx],"rows")) {
+                                  pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx].rows[0])
+                                } else {
+                                  pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx])
+                                }
                             }
-                          }
-                          for (const residx in pgres) {
-                            if(Object.hasOwn(pgres[residx],"rows")) {
-                              pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx].rows[0])
-                            } else {
-                              pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx])
+                            for (const residx in pgres) {
+                              if(Object.hasOwn(pgres[residx],"rows")) {
+                                pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx].rows[0])
+                              } else {
+                                pingstring=pingstring+" |sR: "+JSON.stringify(pgres[residx])
+                              }
                             }
-                          }
-                          //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
-                          pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
-                          } catch (psqlreserr) { 
-                            console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
-                          }
+                            //console.log("PG_write_FIN crontime:"+cronSeconds.toString()+" s | "+JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+pingstring)
+                            pingstring="PG_write_FIN crontime:"+cronSeconds.toString()+" s | ops: "+writecount.toString()+" |"+pingstring
+                            } catch (psqlreserr) { 
+                              console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
+                            }
                           } catch (psqlreserrsend) {
                             console.log("PG_QRY_ERR |"+pingstring );console.log(psqlreserrsend);
                             return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
                           }
-
-
+                        }
                           //console.log(res.rows[0])
                           //console.log(JSON.stringify(pgres["info"].rows[0])+JSON.stringify(pgres["lack"].rows[0])+JSON.stringify(pgres["lfet"].rows[0])+JSON.stringify(pgres["oper"].rows[0])+JSON.stringify(pgres["ping"].rows[0]))
 
