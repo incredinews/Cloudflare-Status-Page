@@ -237,7 +237,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                                 })
                           } catch (psqlreserrsend) {
                             console.log("PG_QRY_ERR |"+pingstring );console.log(psqlreserrsend);
-                            if( log_verbose ) { console.log(" db question was db: "+pgquery) }
                             return(JSON.stringify({"status": false , "msg": pingstring+" "+psqlreserrsend+" "+strend  }))
                           }
 
@@ -616,7 +615,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     for (const checkidx of ["lastUp","lastDown","failCount"]) {
       try {
         if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
-          monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
+          monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : -1 )
         }
 
       } catch (error) {
