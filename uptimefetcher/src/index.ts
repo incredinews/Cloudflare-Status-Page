@@ -266,15 +266,15 @@ export default class UptimeFetcher extends WorkerEntrypoint {
       if(!env.DB_URL) { 
 	      	console.log("ERROR: no DB_URL")
 	      	return "FAIL";
-	      }
+	      }        
 	      //console.log(env.DB_URL)
 	      let pgtarget="NONE"
           if(env.DB_URL!="HYPERDRIVE") {
-	      	console.log("pg://  native client  local_dev or hosted wrangler ")
+	      	if(log_verbose) { console.log("pg://  native client  local_dev or hosted wrangler ") }
               //const client = new Client(env.DB_URL);
 	      	pgtarget=env.DB_URL
 	      } else {
-	      	console.log("pg:// hyperdrive client - cf edge")
+	      	if(log_verbose) {  console.log("pg:// hyperdrive client - cf edge") }
                //const client = new Client({connectionString: env.HYPERDRIVE.connectionString})
 	      	 pgtarget={connectionString: env.HYPERDRIVE.connectionString}
 	      }
@@ -604,11 +604,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   //monitorMonth["info"]["lastUp"]
   for (const monitor of mymonitors) {
   try {
-    for (const checkidx in ["lastUp","lastDown","failCount"]) {
-      if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
-        monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
-      }
-    }
+
     monitorids.push(monitor.id)
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -765,8 +761,14 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     }
 
     res.ms[monitor.id] = monitorOperational ? requestTime : null
+    for (const checkidx of ["lastUp","lastDown","failCount"]) {
+      if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
+        monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
+      }
+    }
     if(monitorOperational) { 
-      monCountOkay=monCountOkay+1 
+      monCountOkay=monCountOkay+1
+      }
       monitorMonth["info"][monitor.id]["lastUp"]=checknow
       monitorMonth["info"][monitor.id]["failCount"]=0
     } else { 
