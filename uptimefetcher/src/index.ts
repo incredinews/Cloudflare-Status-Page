@@ -780,7 +780,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
            monitorMonth.monitors[monitor.id].incidents.at(-1)!.end = now;
        }
     }
-    if(log_verbose) { console.log("calc_state") }
+    //if(log_verbose) { console.log("calc_state") }
     res.ms[monitor.id] = monitorOperational ? requestTime : null
     if(monitorOperational) { 
       monCountOkay=monCountOkay+1 
