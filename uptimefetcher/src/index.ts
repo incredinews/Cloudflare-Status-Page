@@ -577,14 +577,15 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   //let mymonitors: MonitorMonth = JSON.parse(mymonitorsjson)
   // the worker doesnt know all incidentes
   monitorMonth.checks[checkDay].incidents=[]
-  if(!Object.hasOwn(config,"hiddenURLdefault")) {
-    config["hiddenURLdefault"]="https://pages.cloudflare.com"
-  }
   let config = JSON.parse(myconfigjson)
   let monCountDown = 0 ;
   let monCountOkay = 0 ;
   //let monitorCount=config.monitors.length
   let mymonitors=config.monitors
+  if(!Object.hasOwn(config,"hiddenURLdefault")) {
+    config["hiddenURLdefault"]="https://pages.cloudflare.com"
+  }
+  
   const checkLocation = await getCheckLocation()
   // the first went to fetch location
   let sentRequests=1;
