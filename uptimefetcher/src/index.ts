@@ -603,15 +603,16 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   
   //monitorMonth["info"]["lastUp"]
   for (const monitor of mymonitors) {
-    try {
       for (const checkidx of ["lastUp","lastDown","failCount"]) {
+    try {
         if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
           monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
         }
-      }       
+
      } catch (error) {
        console.log("FAILED_ON_GEN: "+checkidx)
     } 
+    }
     try {
 
 
