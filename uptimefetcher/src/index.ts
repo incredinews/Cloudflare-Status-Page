@@ -602,17 +602,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
   //let checksPerRound=13
   
   //monitorMonth["info"]["lastUp"]
-  if (!Object.hasOwn(monitorMonth["info"], "lastUp"))    {
-    monitorMonth["info"]["lastUp"]={}
-  }
-  if (!Object.hasOwn(monitorMonth["info"], "lastDown"))  {
-    monitorMonth["info"]["lastDown"]={}
-  }
-  if (!Object.hasOwn(monitorMonth["info"], "failCount")) {
-    monitorMonth["info"]["failCount"]={}
-  }
   for (const monitor of mymonitors) {
-
+    for (const checkidx in ["lastUp","lastDown","failCount"]) {
+      if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
+        monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
+      }
+    }
     monitorids.push(monitor.id)
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -771,12 +766,12 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     res.ms[monitor.id] = monitorOperational ? requestTime : null
     if(monitorOperational) { 
       monCountOkay=monCountOkay+1 
-      monitorMonth["info"]["lastUp"][monitor.id]=checknow
-      monitorMonth["info"]["failCount"][monitor.id]=0
+      monitorMonth["info"][monitor.id]["lastUp"]=checknow
+      monitorMonth["info"][monitor.id]["failCount"]=0
     } else { 
       monCountDown=monCountDown+1
-      monitorMonth["info"]["lastDown"][monitor.id]=checknow
-      monitorMonth["info"]["failCount"][monitor.id]=monitorMonth["info"]["failCount"][monitor.id]+1
+      monitorMonth["info"][monitor.id]["lastDown"]=checknow
+      monitorMonth["info"][monitor.id]["failCount"]=monitorMonth["info"][monitor.id]["failCount"]+1
     }
     // go dark
     if(!monitorOperational ) {
