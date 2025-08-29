@@ -211,7 +211,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             pingstring=pingstring+"+s"
                             pgres["summ"] = await client.query(pgstmtinfo, [ "summary_"+monthname , summstr ])
                             if(pgquery=="") { pgquery="" } else { pgquery+" ; " }
-                            //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")
+                            //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'summary_"+monthname+"'").replace('$2',"'"+summstr+"'")+" ; "
                             let copystatement="INSERT INTO info(record, id) SELECT record,'"+"summary_"+checkDay+"' FROM info WHERE id='"+"summary_"+monthname+"' ON CONFLICT (id) DO update set record=EXCLUDED.record RETURNING id";
                             pgquery=pgquery+copystatement+" ; "
                             //pgres["summd"] = await client.query({
@@ -226,7 +226,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             if(JSON.stringify(res.ms)!='{}') {
                               writecount=writecount+1
                               //pgres["ping_"+rescount.toString()] = await client.query(pgstmtping, [ res.t,checkDay, res.l, JSON.stringify(res.ms) ])
-                              pgquery=pgstmtping.replace('$1',"'"+res.t.toString()+"'").replace('$2',"'"+checkDay+"'").replace('$3',"'"+res.l.toString()+"'").replace('$4',"'"+JSON.stringify(res.ms)+"'")+" ; "
+                              pgquery=pgquery+pgstmtping.replace('$1',"'"+res.t.toString()+"'").replace('$2',"'"+checkDay+"'").replace('$3',"'"+res.l.toString()+"'").replace('$4',"'"+JSON.stringify(res.ms)+"'")+" ; "
                               ///try {
                               ///   pingstring=pingstring+"|"+JSON.stringify(pgres["ping_"+rescount.toString()].rows[0] )
                               ///} catch (pstrerror) {
