@@ -621,7 +621,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
         }
 
       } catch (error) {
-       console.log("FAILED_ON_GEN: "+checkidx)
+       console.log("FAILED_ON_GEN: "+checkidx )
      } 
     }
     try {
