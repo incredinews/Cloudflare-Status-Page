@@ -29,7 +29,7 @@ export async function processCronTrigger( namespace: KVNamespace, statusdb: Env,
   let now = Date.now()
   const cronStarted = now
 
-  //console.log("init_1_lastFetched")
+  //console.log("init_1_lastFetch")
   //console.log(JSON.stringify(monitorMonth))
 let client: Client
 const checksPerRound=42
@@ -85,13 +85,13 @@ try {
 } catch (error) {
   console.log(err)
 }
-let origlastfetchstr="{}"
-try {
-  //origlastfetchstr=await md5(JSON.stringify(monitorMonth.lastFetched))
-  origlastfetchstr=JSON.stringify(monitorMonth.lastFetched)
-} catch (error) {
-  console.log(err)
-}
+//let origlastfetchstr="{}"
+//try {
+//  //origlastfetchstr=await md5(JSON.stringify(monitorMonth.lastFetch))
+//  origlastfetchstr=JSON.stringify(monitorMonth.lastFetch)
+//} catch (error) {
+//  console.log(err)
+//}
 if( mymonitorbatches.length > 0 ) {
 let allres=[]
   //let checkoutput=""
@@ -144,8 +144,8 @@ for (const mymonitors of mymonitorbatches) {
                          for (const fetchedmonid of subfetchres.monitors) { 
                             parseline=parseline+"+op"
                             monitorMonth.operational[fetchedmonid]=subfetchres.fullObj.operational[fetchedmonid]
-                            parseline=parseline+"+lf"
-                            monitorMonth.lastFetched[fetchedmonid]=subfetchres.fullObj.lastFetched[fetchedmonid]
+                            //parseline=parseline+"+lf"
+                            //monitorMonth.info[fetchedmonid]["lastFetch"]=subfetchres.fullObj.info[fetchedmonid]["lastFetch"]
                             parseline=parseline+"+if"
                             monitorMonth.info[fetchedmonid]=subfetchres.fullObj.info[fetchedmonid]
                             //parseline=parseline+"+in"
@@ -198,13 +198,12 @@ for (const mymonitors of mymonitorbatches) {
                       let infochanged=(originfostr==JSON.stringify(monitorMonth.info))                     ? false : true
                       let operchanged=(origoperstr==JSON.stringify(monitorMonth.operational))              ? false : true 
                       let summchanged=(origsummstr==JSON.stringify(monitorMonth.checks[checkDay].summary)) ? false : true
-                      let ftchchanged=(origlastfetchstr==JSON.stringify(monitorMonth.lastFetched))         ? false : true
+                      //let ftchchanged=(origlastfetchstr==JSON.stringify(monitorMonth.lastFetch))         ? false : true
                       //let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string(checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), originfostr,origoperstr, origsummstr,origlastfetchstr)
                       let psresAsStr=await env.UPTIMEFETCHER.postgrespush_string( checkDay,cronStarted,log_verbose,log_errors , monitorMonth, JSON.stringify(allres), 
                       infochanged , 
                       operchanged, 
-                      summchanged ,  
-                      ftchchanged
+                      summchanged 
                       )
                       if (log_verbose) { console.log("pg_pushed") }
                       let psres=JSON.parse(psresAsStr)
@@ -222,7 +221,7 @@ for (const mymonitors of mymonitorbatches) {
                       if(infochanged) {  dOneBatch.push( stmtinfo.bind("info",        JSON.stringify(monitorMonth.info))                                )  }
                       if(summchanged) {  dOneBatch.push( stmtinfo.bind("summary_"+checkDay,  JSON.stringify(monitorMonth.checks[checkDay].summary))     )  }
                       if(summchanged) {  dOneBatch.push( stmtinfo.bind("summary_"+monthname, JSON.stringify(monitorMonth.checks[checkDay].summary))     )  }
-                      if(ftchchanged) {  dOneBatch.push( stmtinfo.bind("lastFetched", JSON.stringify(monitorMonth.lastFetched))                         )  }
+                      //if(ftchchanged) {  dOneBatch.push( stmtinfo.bind("lastFetch", JSON.stringify(monitorMonth.lastFetch))                         )  }
                       if(operchanged) {  dOneBatch.push( stmtinfo.bind("operational", JSON.stringify(monitorMonth.operational))                         )  }
                       
                         //stmtrest.bind(res.t,checkDay, res.l, JSON.stringify(res.ms))
