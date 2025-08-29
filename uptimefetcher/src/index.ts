@@ -600,22 +600,24 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     }
   } = { t: now, l: checkLocation, ms: {} }
   //let checksPerRound=13
+
+  if (!Object.hasOwn(monitorMonth.info, monitor.id)) {
+      monitorMonth.info[monitor.id]={}
+    }
+  //monitorMonth["info"][monName]["lastUp"]
   
-  //monitorMonth["info"]["lastUp"]
   for (const monitor of mymonitors) {
-      for (const checkidx of ["lastUp","lastDown","failCount"]) {
-    try {
+    for (const checkidx of ["lastUp","lastDown","failCount"]) {
+      try {
         if(!Object.hasOwn(monitorMonth["info"][monitor.id],checkidx)) {
           monitorMonth["info"][monitor.id][checkidx]=(( checkidx=="failCount" ) ? 0 : null )
         }
 
-     } catch (error) {
+      } catch (error) {
        console.log("FAILED_ON_GEN: "+checkidx)
-    } 
+     } 
     }
     try {
-
-
     monitorids.push(monitor.id)
     //console.error("start_mon "+ monitor.id.toString()+" ++ last: "+monitor.lastFetched )
     //console.log(JSON.stringify(monitor))
@@ -623,15 +625,6 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     const defaultlastfetch=localnow-999999999
     if (!Object.hasOwn(monitorMonth.lastFetched, monitor.id)) {
       monitorMonth.lastFetched[monitor.id]=defaultlastfetch
-    }
-    if (!Object.hasOwn(monitorMonth["info"]["lastUp"]  , monitor.id)) {
-      monitorMonth["info"]["lastUp"][monitor.id]=0
-    }
-    if (!Object.hasOwn(monitorMonth["info"]["lastDown"], monitor.id)) {
-      monitorMonth["info"]["lastDown"][monitor.id]=0
-    }
-    if (!Object.hasOwn(monitorMonth["info"]["failCount"], monitor.id)) {
-      monitorMonth["info"]["failCount"][monitor.id]=0
     }
     cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
