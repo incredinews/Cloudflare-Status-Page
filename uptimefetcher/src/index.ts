@@ -245,7 +245,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                             cronSeconds=(Date.now()-cronStarted) /1000
                             try {
                               for (const residx in pgmainres) {
-                                if(Object.hasOwn(pgmainres[residx],"rows")) {
+                                if(log_verbose) {console.log("residx: "+residx)}
+                                if(pgmainres[residx] && Object.hasOwn(pgmainres[residx],"rows")) {
                                   pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx].rows[0])
                                 } else {
                                   pingstring=pingstring+" |R: "+JSON.stringify(pgmainres[residx])
@@ -253,7 +254,10 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                               }
 
                             } catch (psqlreserr) { 
-                              console.log("PG_RES_PROC_ERR |"+pingstring );console.log(psqlreserr)
+                              if(log_errors) { console.log("PG_RES_PROC_ERR |"+pingstring ) } 
+                              if(log_verbose) { console.log(psqlreserr) }
+                              if(log_verbose) { console.log(JSON.stringify(pgmainres)) }
+
                             }
 
                           } catch (psqlreserrsend) {
