@@ -178,8 +178,8 @@ export default class UptimeFetcher extends WorkerEntrypoint {
                     	    //const myfoo={"bar": "f000"}
                           //const res = await client.query(stmt, [ "testme111" , JSON.stringify(myfoo)  ])
                           if(updateinfostr) {
-                          pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
-                          //pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'info'").replace('$2',"'"+JSON.stringify(monitorMonth.info)+"'")
+                          //pgres["info"] = await client.query(pgstmtinfo, [ "info" , JSON.stringify(monitorMonth.info)  ])
+                          pgquery=pgquery+" ; "+pgstmtinfo.replace('$1',"'info'").replace('$2',"'"+JSON.stringify(monitorMonth.info)+"'")
                           pingstring=pingstring+"+i"
                           writecount=writecount+1
                           }
