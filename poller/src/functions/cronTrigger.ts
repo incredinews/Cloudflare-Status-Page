@@ -14,8 +14,8 @@ import { env } from 'cloudflare:workers'
 
 //export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
 export async function processCronTrigger( namespace: KVNamespace, statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context ) {
-  let log_verbose=true
-  let log_errors=true
+  let log_verbose=false
+  let log_errors=false
   if(log_verbose) { console.log("cron_function_init "+trigger) }
   // Get Worker PoP and save it to monitorMonthMetadata
 //  const checkLocation = await getCheckLocation()
