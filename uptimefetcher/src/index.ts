@@ -647,7 +647,7 @@ export default class UptimeFetcher extends WorkerEntrypoint {
     let localnow=Date.now()
     const defaultlastfetch=localnow-999999999
     if (monitorMonth.info[monitor.id]["lastFetch"]==0) {
-      monitorMonth.info[monitor.id]["lastFetch"]=defaultlastfetch
+        monitorMonth.info[monitor.id]["lastFetch"]=defaultlastfetch
     }
     cronSeconds=(localnow-cronStarted)/1000
     const realdebounce=monitor.debounce||preset_debounce
