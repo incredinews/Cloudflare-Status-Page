@@ -4,19 +4,13 @@ import type { ScheduledEvent } from '@cloudflare/workers-types'
 import { MonitorMonth } from './../../../types/src/KvMonitors'
 import { createRedis } from "redis-on-workers";
 import { Client } from "pg";
-import {
-  getCheckLocation,
-  getKVMonitors,
-  setKVMonitors,
-  md5
-} from './helpers'
+import {  getCheckLocation,  getKVMonitors,  setKVMonitors,  md5 } from './helpers'
 
 //import { env } from 'cloudflare:workers'
 function getDate(time: number) {
   return new Date(time).toISOString().split('T')[0]
 }
 import { env } from 'cloudflare:workers'
-
 
 //export async function processCronTrigger(namespace: KVNamespace,statusdb: Env, client: Client,  trigger, event: ScheduledEvent, ctx: context) {
 export async function processCronTrigger( namespace: KVNamespace, statusdb: Env, pgtarget: string,  trigger, event: ScheduledEvent, ctx: context ) {
@@ -32,21 +26,17 @@ export async function processCronTrigger( namespace: KVNamespace, statusdb: Env,
 
   //console.log("init_1_lastFetch")
   //console.log(JSON.stringify(monitorMonth))
-let client: Client
-const checksPerRound=42
-const checksPerSubrequest=14
-const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
-//const minChecksPerRound=6
-const checkDay = getDate(now)
-const lastDay = getDate(now - 86400000)
-const someLastMonthDay = getDate(now - (86400000*33 ))
-const monthname=lastDay.slice(0, 7)
-const lastmonthname=someLastMonthDay.slice(0, 7)
-
-//monitorMonth.checks[checkDay].summary
-
-//let timediffglobal=now-monitorMonth.lastCheck
-  //console.log("selecting")
+  let client: Client
+  const checksPerRound=42
+  const checksPerSubrequest=12
+  const preset_debounce = config.debounce || (  42 + ( config.monitors.length * 3 )  ) 
+  //const minChecksPerRound=6
+  const checkDay = getDate(now)
+  const lastDay = getDate(now - 86400000)
+  const someLastMonthDay = getDate(now - (86400000*33 ))
+  const monthname=lastDay.slice(0, 7)
+  const lastmonthname=someLastMonthDay.slice(0, 7)
+  //monitorMonth.checks[checkDay].summary   //let timediffglobal=now-monitorMonth.lastCheck  //console.log("selecting")
 //                                   async selectMonitors( log_verbose: boolean , log_errors: boolean , checksPerRound: number = 42 , checksPerSubrequest: number = 14 ) { 
 let selectresjson=await env.UPTIMEFETCHER.selectMonitors( log_verbose , log_errors , checksPerRound , checksPerSubrequest )
 let selectres=JSON.parse(selectresjson)
